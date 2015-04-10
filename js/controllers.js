@@ -180,6 +180,7 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
 
   if(data["Mentor"]) {
     $scope.user.type.push("Mentor");
+    $scope.mentees = [];
   }
   if(data["Mentee"]) {
     $scope.user.type.push("Mentee");
