@@ -178,4 +178,16 @@
 			<action file='db.php'><![CDATA[removeWishlistMentor($_REST['wishlist']);]]></action>
 		</delete>
 	</command>
+
+		<command id='assignAllMentees' security='public'>
+		<description><![CDATA[Assign all unassigned mentees.]]></description>
+			
+		<index>
+			<action file='db.php'><![CDATA[assignAllMentees();]]></action>
+		</index>
+
+		<post>
+			<action file='db.php'><![CDATA[assignAllMentees();]]></action>
+		</post>
+	</command>
 </api>

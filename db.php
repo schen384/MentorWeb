@@ -1062,4 +1062,28 @@
 		$result = deleteDBEntries($dbQueryWishlist);
 		print($result);
 	}
+
+	function assignAllMentees() {
+		$query = "SELECT settingValue FROM GlobalSettings WHERE settingName='MaxMenteesPerMentor'";
+		$result = getDBResultRecord($query);
+		$maxCount = $result["settingValue"];
+		//Get all unmatched mentees
+		$menteeQuery = "SELECT Mentee.username FROM Mentee WHERE Mentee.username NOT IN (SELECT mentee FROM Matches)";
+		$mentors = getDBResultArray($menteeQuery);
+
+		//Get all mentors with open spots
+		mentorQuery = "SELECT Mentor.username AS username, COUNT(*) AS count
+						 FROM Mentor LEFT JOIN Matches ON Mentor.username = Matches 
+						 GROUP BY Mentor.username ON Mentor.username = Matches.Mentor HAVING COUNT(*) < $maxCount";
+		$mentorIndex = 0
+		$currentCount = $mentors[0]['count']
+		for ($mentees as $mentee) {
+		    insertQuery = sprintf("INSERT INTO Matches (mentor, mentee) VALUES ('%s', '%s')", $mentors[$mentorIndex]['username'], $mentee);
+		    $currentCount++;
+		    if ($currentCount = $maxCount) {
+		        $mentorIndex++;
+		        $currentCount = $mentors[$mentorIndex]["count"];
+		    }
+		}
+	}
 ?>
