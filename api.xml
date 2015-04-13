@@ -90,7 +90,46 @@
 	</command>
 		
 
-		<command id='getMenteeMatch' security='protected'>
+	<command id='getMatches' security='protected'>
+		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+
+		<index>
+			<action file='db.php'><![CDATA[getMatches();]]></action>
+		</index>
+
+		<get>
+			<action file='db.php'><![CDATA[getMatches();]]></action>
+		</get>
+	</command>
+		
+
+	<command id='getUnmatchedMentors' security='protected'>
+		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+
+		<index>
+			<action file='db.php'><![CDATA[getUnmatchedMentors();]]></action>
+		</index>
+
+		<get>
+			<action file='db.php'><![CDATA[getUnmatchedMentors();]]></action>
+		</get>
+	</command>
+		
+
+	<command id='getUnmatchedMentees' security='protected'>
+		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+
+		<index>
+			<action file='db.php'><![CDATA[getUnmatchedMentees();]]></action>
+		</index>
+
+		<get>
+			<action file='db.php'><![CDATA[getUnmatchedMentees();]]></action>
+		</get>
+	</command>
+		
+
+	<command id='getMenteeMatch' security='protected'>
 		<description><![CDATA[Gets the mentor that matches the currently logged in user.]]></description>
 
 		<index>

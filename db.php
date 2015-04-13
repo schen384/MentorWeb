@@ -1062,4 +1062,45 @@
 		$result = deleteDBEntries($dbQueryWishlist);
 		print($result);
 	}
+
+	function getMatches() {
+		$dbQuery = "SELECT Mentors.username AS mentor_username,
+							Mentors.first_name AS mentor_first_name,
+							Mentors.last_name AS mentor_last_name,
+							Mentees.username AS mentee_username,
+							Mentees.first_name AS mentee_first_name,
+							Mentees.last_name AS mentee_last_name
+					FROM Matches
+					JOIN USER AS Mentees ON Matches.mentee_user = Mentees.username
+					JOIN USER AS Mentors ON Matches.mentor_user = Mentors.username";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function getUnmatchedMentors() {
+		$dbQuery = "SELECT Mentor.username,
+							USER.first_name,
+							USER.last_name
+					FROM Mentor JOIN USER
+					ON Mentor.username = USER.username
+					LEFT JOIN Matches
+					ON Mentor.username = Matches.mentor_user
+					WHERE Matches.mentor_user IS NULL
+					AND Mentor.approved = 1";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function getUnmatchedMentees() {
+		$dbQuery = "SELECT Mentee.username,
+							USER.first_name,
+							USER.last_name
+					FROM Mentee JOIN USER
+					ON Mentee.username = USER.username
+					LEFT JOIN Matches
+					ON Mentee.username = Matches.mentee_user
+					WHERE Matches.mentee_user IS NULL";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
 ?>
