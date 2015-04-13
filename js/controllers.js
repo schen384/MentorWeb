@@ -509,41 +509,55 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
 }]);
 
 appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
-  var matchesList = [
-    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sally', menteeUsername: 'sa'},
-    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sandy', menteeUsername: 'sb'},
-    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sissy', menteeUsername: 'sc'},
-    {mentorName: 'kaylee', mentorUsername: 'kn', menteeName: 'sindy', menteeUsername: 'sd'},
-    {mentorName: 'kaylee', mentorUsername: 'kn', menteeName: 'sydny', menteeUsername: 'se'},
-    {mentorName: null, mentorUsername: null, menteeName: 'sarah', menteeUsername: 'sf'},
-    {mentorName: 'kandie', mentorUsername: 'kl', menteeName: null, menteeUsername: null},
-  ];
-  var matches = {};
+  var matchesList = [];
   var unmatchedMentors = [];
   var unmatchedMentees = [];
+  $.ajax({
+    url: "api/getMatches",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      matchesList = result;
+    },
+    type: 'GET'
+  });
+  $.ajax({
+    url: "api/getUnmatchedMentors",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentors = result;
+    },
+    type: 'GET'
+  }); 
+  $.ajax({
+    url: "api/getUnmatchedMentees",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentees = result;
+    },
+    type: 'GET'
+  }); 
+
+  var matches = {};
   matchesList.forEach(function (match) {
     var mentor = {
-      first_name: match.mentorName,
-      last_name: match.mentorName,
-      username: match.mentorUsername
+      first_name: match.mentor_first_name,
+      last_name: match.mentor_last_name,
+      username: match.mentor_username
     }
     var mentee = {
-      first_name: match.menteeName,
-      last_name: match.menteeName,
-      username: match.menteeUsername
+      first_name: match.mentee_first_name,
+      last_name: match.mentee_last_name,
+      username: match.mentee_username
     }
-
-    if (!mentor.username) {
-      unmatchedMentees.push(mentee);
-    } else if (!mentee.username) {
-      unmatchedMentors.push(mentor);
+    
+    if (mentor.username in matches) {
+      matches[mentor.username].mentees.push(mentee);
     } else {
-      if (mentor.username in matches) {
-        matches[mentor.username].mentees.push(mentee);
-      } else {
-        matches[mentor.username] = mentor;
-        matches[mentor.username].mentees = [mentee];
-      }
+      matches[mentor.username] = mentor;
+      matches[mentor.username].mentees = [mentee];
     }
   });
 
