@@ -500,6 +500,55 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
   }
 }]);
 
+appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
+  var matchesList = [
+    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sally', menteeUsername: 'sa'},
+    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sandy', menteeUsername: 'sb'},
+    {mentorName: 'kelsey', mentorUsername: 'ks', menteeName: 'sissy', menteeUsername: 'sc'},
+    {mentorName: 'kaylee', mentorUsername: 'kn', menteeName: 'sindy', menteeUsername: 'sd'},
+    {mentorName: 'kaylee', mentorUsername: 'kn', menteeName: 'sydny', menteeUsername: 'se'},
+    {mentorName: null, mentorUsername: null, menteeName: 'sarah', menteeUsername: 'sf'},
+    {mentorName: 'kandie', mentorUsername: 'kl', menteeName: null, menteeUsername: null},
+  ];
+  var matches = {};
+  var unmatchedMentors = [];
+  var unmatchedMentees = [];
+  matchesList.forEach(function (match) {
+    var mentor = {
+      first_name: match.mentorName,
+      last_name: match.mentorName,
+      username: match.mentorUsername
+    }
+    var mentee = {
+      first_name: match.menteeName,
+      last_name: match.menteeName,
+      username: match.menteeUsername
+    }
+
+    if (!mentor.username) {
+      unmatchedMentees.push(mentee);
+    } else if (!mentee.username) {
+      unmatchedMentors.push(mentor);
+    } else {
+      if (mentor.username in matches) {
+        matches[mentor.username].mentees.push(mentee);
+      } else {
+        matches[mentor.username] = mentor;
+        matches[mentor.username].mentees = [mentee];
+      }
+    }
+  });
+
+  var mentors = [];
+  for (var mentor in matches) {
+    mentors.push(matches[mentor]);
+  }
+
+  $scope.mentors = mentors;
+  $scope.unmatchedMentors = unmatchedMentors;
+  $scope.unmatchedMentees = unmatchedMentees;
+}]);
+
 appControllers.controller('UserProfileController', ['$scope', '$http', '$location', function($scope, $http, $location) {
   $scope.myMentor = $scope.$parent.myMentor;
 

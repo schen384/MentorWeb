@@ -70,6 +70,10 @@ myApp.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/requesting-period.html',
     controller: 'RequestingPeriodController'
   }).
+  when('/viewMatches', {
+    templateUrl: 'partials/view-matches.html',
+    controller: 'ViewMatchesController'
+  }).
   when('/logout', {
     templateUrl: 'partials/logout.html',
     controller: 'LogoutController'
