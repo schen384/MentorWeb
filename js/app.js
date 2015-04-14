@@ -70,6 +70,18 @@ myApp.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/requesting-period.html',
     controller: 'RequestingPeriodController'
   }).
+  when('/viewMatches', {
+    templateUrl: 'partials/view-matches.html',
+    controller: 'ViewMatchesController'
+  }).
+  when('/approveMentors', {
+    templateUrl: 'partials/approve-mentors.html',
+    controller: 'ApproveMentorController'
+  }).
+  when('/setMentorMax', {
+    templateUrl: 'partials/set-mentor-max.html',
+    controller: 'SetMentorMaxController'
+  }).
   when('/logout', {
     templateUrl: 'partials/logout.html',
     controller: 'LogoutController'

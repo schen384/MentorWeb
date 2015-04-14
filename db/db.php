@@ -1,5 +1,5 @@
 <?php
-	include 'db_helper.php';
+	include_once('db_helper.php');
 	header("Access-Control-Allow-Origin: *");
 
 	function welcome() {
@@ -33,12 +33,10 @@
 			if (!empty($result)){$userType = "Mentor";}
 		}
 
-		if (empty($result)) {
-			$dbQuery = sprintf("SELECT username FROM Admin WHERE username = '%s'",
-													$_USER['uid']);
-			$result = getDBResultsArray($dbQuery);
-			if (!empty($result)){$userType = "Admin";}
+		if (empty($result) && userIsAdmin()) {
+			$userType = "Admin";
 		}
+
 		// echo $userType;
 		// array_push($result, $userType);
 		 $userInfo["userType"] = $userType;
@@ -127,7 +125,6 @@
 	}
 
 	function addMentee() {
-		echo "addMentee \n";
 		global $_USER;	
 		$user = $_USER['uid'];
 		$fname = mysql_real_escape_string($_POST['fname']);
@@ -262,9 +259,22 @@
 			$ttProgResult = getDBRegInserted($ttProgQuery);
 		}
 
+		updateMaxMenteesPerMentor();
+
 		header("Content-type: application/json");
 		// echo json_encode($uresult);
 		// echo json_encode($mresult);
+	}
+
+	function updateMaxMenteesPerMentor() {
+		include_once("mentor_maximum.php");
+
+		$currentValue = retrieveMaxMenteesPerMentor();
+		$minValue = calcMinMaxMenteesPerMentor();
+
+		if ($currentValue < $minValue) {
+			setMaxMenteesPerMentor($minValue);
+		}
 	}
 
 	function getMenteeMatch() {
@@ -313,6 +323,12 @@
 	 }
 
 	 function listMentors() {
+		$dbQuery = "SELECT * FROM USER JOIN Mentor ON USER.username = Mentor.username JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username WHERE Mentor.username = USER.username AND (SELECT COUNT(*) FROM Matches WHERE Mentor.username = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	 function listUnapprovedMentors() {
 		$dbQuery = "SELECT * FROM USER
 													JOIN Mentor
 														ON  USER.username = Mentor.username
@@ -328,9 +344,39 @@
 														ON Mentor_International_Experience.username = Mentor.username
 													JOIN Mentor_Career_Dev_Program
 														ON Mentor_Career_Dev_Program.username = Mentor.username
-													WHERE Mentor.username = USER.username"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+													WHERE Mentor.approved = 0"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
 		echo json_encode($result);
+	}
+
+	 function listApprovedMentors() {
+		$dbQuery = "SELECT * FROM USER
+													JOIN Mentor
+														ON  USER.username = Mentor.username
+													JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = Mentor.username
+													JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = Mentor.username
+													JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+													JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = Mentor.username
+													JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = Mentor.username
+													JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = Mentor.username
+													WHERE Mentor.approved = 1"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function approveMentor($mentors) {
+		foreach ($mentors as $mentor) {
+			$mentor = mysql_real_escape_string($mentor);
+			$dbQuery = sprintf("UPDATE Mentor SET approved = 1 WHERE Mentor.username = '%s'", $mentor);
+			$result = getDBResultsArray($dbQuery);
+			echo json_encode($result);
+		}
 	}
 
 	function addMentorLoop($mentor) {
@@ -950,9 +996,9 @@
 	// 	echo json_encode($_POST);
 	// }
 
-	//==================================
+	//**********************************
 	// RequestPeriod Code
-	//==================================
+	//**********************************
 	/**
 	 * Function that determines whether or not the given request period is currently open
 	 */
@@ -1021,23 +1067,15 @@
 	function getWishlistContents() {
 		global $_USER;
 		$dbQueryWishlist = sprintf("SELECT * FROM Wishlist
-										JOIN Mentor
-											ON  Wishlist.mentor = Mentor.username
-										JOIN USER
-											ON Mentor.username = USER.username
-										JOIN Mentor_Breadth_Track
-											ON Mentor_Breadth_Track.username = Mentor.username
-										JOIN Mentor_BME_Organization
-											ON Mentor_BME_Organization.username = Mentor.username
-										JOIN Mentor_Tutor_Teacher_Program
-											ON Mentor_Tutor_Teacher_Program.username = Mentor.username
-										JOIN Mentor_BME_Academic_Experience
-											ON Mentor_BME_Academic_Experience.username = Mentor.username
-										JOIN Mentor_International_Experience
-											ON Mentor_International_Experience.username = Mentor.username
-										JOIN Mentor_Career_Dev_Program
-											ON Mentor_Career_Dev_Program.username = Mentor.username
-										WHERE Wishlist.mentee = '%s'", $_USER['uid']);
+		JOIN Mentor ON  Wishlist.mentor = Mentor.username
+		JOIN USER ON Mentor.username = USER.username
+		JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username
+		JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username
+		JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+		JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
+		JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
+		JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
+		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
 		$result=getDBResultsArray($dbQueryWishlist);
 		header("Content-type: application/json");
 		echo json_encode($result);
@@ -1061,5 +1099,54 @@
 		$dbQueryWishlist = sprintf("DELETE FROM Wishlist WHERE mentee='%s' AND mentor='%s'", $_USER['uid'], $username);
 		$result = deleteDBEntries($dbQueryWishlist);
 		print($result);
+	}
+
+	function getMatches() {
+		$dbQuery = "SELECT Mentors.username AS mentor_username,
+							Mentors.first_name AS mentor_first_name,
+							Mentors.last_name AS mentor_last_name,
+							Mentees.username AS mentee_username,
+							Mentees.first_name AS mentee_first_name,
+							Mentees.last_name AS mentee_last_name
+					FROM Matches
+					JOIN USER AS Mentees ON Matches.mentee_user = Mentees.username
+					JOIN USER AS Mentors ON Matches.mentor_user = Mentors.username";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function getUnmatchedMentors() {
+		$dbQuery = "SELECT Mentor.username,
+							USER.first_name,
+							USER.last_name
+					FROM Mentor JOIN USER
+					ON Mentor.username = USER.username
+					LEFT JOIN Matches
+					ON Mentor.username = Matches.mentor_user
+					WHERE Matches.mentor_user IS NULL
+					AND Mentor.approved = 1";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function getUnmatchedMentees() {
+		$dbQuery = "SELECT Mentee.username,
+							USER.first_name,
+							USER.last_name
+					FROM Mentee JOIN USER
+					ON Mentee.username = USER.username
+					LEFT JOIN Matches
+					ON Mentee.username = Matches.mentee_user
+					WHERE Matches.mentee_user IS NULL";
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+	
+	function mentorHasSpace($username){
+		$countHasName = sprintf("SELECT TRUE FROM Mentor WHERE Mentor.username = '%s'
+			AND (SELECT COUNT(*) FROM Matches WHERE username = mentor_user) < (SELECT settingValue 				FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $username);
+		$result = mysql_num_rows(mysql_query($countHasName));
+		header("Content-type: application/json");
+		echo json_encode($result == 1);
 	}
 ?>
