@@ -126,7 +126,7 @@
 		
 
 	<command id='getMatches' security='protected'>
-		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+		<description><![CDATA[Gets a list of mentor/mentee matches with names and usernames.]]></description>
 
 		<index>
 			<action file='db/db.php'><![CDATA[getMatches();]]></action>
@@ -139,7 +139,7 @@
 		
 
 	<command id='getUnmatchedMentors' security='protected'>
-		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+		<description><![CDATA[Gets a list of unmatched approved mentors.]]></description>
 
 		<index>
 			<action file='db/db.php'><![CDATA[getUnmatchedMentors();]]></action>
@@ -152,7 +152,7 @@
 		
 
 	<command id='getUnmatchedMentees' security='protected'>
-		<description><![CDATA[Gets a list of mentor/mentee matches with names and username.]]></description>
+		<description><![CDATA[Gets a list of unmatched mentees.]]></description>
 
 		<index>
 			<action file='db/db.php'><![CDATA[getUnmatchedMentees();]]></action>
