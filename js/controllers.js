@@ -227,6 +227,14 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
     {
       // TODO: create image
       image: "/images/wireframe/image.png",
+      title: "View Matches",
+      description: "View mentor/mentee matches and unmatched users",
+      meta: "Meta",
+      link: "#/viewMatches"
+    },
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
       title: "Approve Mentors",
       description: "Approve registered users to mentor students",
       meta: "Meta",
@@ -575,6 +583,66 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
     }
     $scope.go('/homescreen');
   }
+}]);
+
+appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
+  var matchesList = [];
+  var unmatchedMentors = [];
+  var unmatchedMentees = [];
+  $.ajax({
+    url: "api/getMatches",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      matchesList = result;
+    }
+  });
+  $.ajax({
+    url: "api/getUnmatchedMentors",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentors = result;
+    }
+  }); 
+  $.ajax({
+    url: "api/getUnmatchedMentees",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentees = result;
+    }
+  }); 
+
+  var matches = {};
+  matchesList.forEach(function (match) {
+    var mentor = {
+      first_name: match.mentor_first_name,
+      last_name: match.mentor_last_name,
+      username: match.mentor_username
+    }
+    var mentee = {
+      first_name: match.mentee_first_name,
+      last_name: match.mentee_last_name,
+      username: match.mentee_username
+    }
+    
+    if (mentor.username in matches) {
+      matches[mentor.username].mentees.push(mentee);
+    } else {
+      matches[mentor.username] = mentor;
+      matches[mentor.username].mentees = [mentee];
+    }
+  });
+
+  var mentors = [];
+  for (var mentor in matches) {
+    mentors.push(matches[mentor]);
+  }
+
+  $scope.mentors = mentors;
+  $scope.unmatchedMentors = unmatchedMentors;
+  $scope.unmatchedMentees = unmatchedMentees;
 }]);
 
 appControllers.controller('SetMentorMaxController', ['$scope', '$http', function($scope, $http) {
