@@ -845,3 +845,8 @@ div#trigger-requesting-period {
 .user-profile.message.ui {
   z-index: 1;
 }
+.widget {
+  display: inline-block;
+  width: 25%;
+  padding-top: 2%;
+}
