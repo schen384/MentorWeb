@@ -163,6 +163,15 @@
 			<action file='db/db.php'><![CDATA[getMenteeMatch();]]></action>
 		</get>
 	</command>
+		
+
+	<command id='getMentorMatches' security='protected'>
+		<description><![CDATA[Gets the mentees that match the currently logged in user.]]></description>
+
+		<index>
+			<action file='db/db.php'><![CDATA[getMentorMatches();]]></action>
+		</index>
+	</command>
 
 	<command id='chooseMentor' security='protected'>
 		<description><![CDATA[Matches a mentor with the currently logged in user.]]></description>
