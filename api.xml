@@ -50,35 +50,35 @@
 	</command>
 
 	<command id='listUnapprovedMentors' security='protected'>
-		<description><![CDATA[Returns a list of mentors.]]></description>
+		<description><![CDATA[Returns a list of unapproved mentors.]]></description>
 
 		<index>
-			<description><![CDATA[Return a list of mentors]]></description>
+			<description><![CDATA[Return a list of unapproved mentors]]></description>
 
 			 <action file='db/db.php'><![CDATA[listUnapprovedMentors();]]></action>
 		</index>
 	</command>
 
 	<command id='listApprovedMentors' security='protected'>
-		<description><![CDATA[Returns a list of mentors.]]></description>
+		<description><![CDATA[Returns a list of approved mentors.]]></description>
 
 		<index>
-			<description><![CDATA[Return a list of mentors]]></description>
+			<description><![CDATA[Return a list of approved mentors]]></description>
 
 			 <action file='db/db.php'><![CDATA[listApprovedMentors();]]></action>
 		</index>
 	</command>
 
 	<command id='approveMentor' security='protected'>
-		<description><![CDATA[Returns a list of mentors.]]></description>
+		<description><![CDATA[Approves the list of usernames provided for mentoring.]]></description>
 
 		<index>
-			<description><![CDATA[Return a list of mentors]]></description>
+			<description><![CDATA[Approves the list of usernames provided for mentoring.]]></description>
 
 			 <action file='db/db.php'><![CDATA[approveMentor($_POST['usernames']);]]></action>
 		</index>
 		<post>
-			<description><![CDATA[Return a list of mentors]]></description>
+			<description><![CDATA[Approves the list of usernames provided for mentoring.]]></description>
 
 			 <action file='db/db.php'><![CDATA[approveMentor($_POST['usernames']);]]></action>
 		</post>
