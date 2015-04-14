@@ -6,7 +6,8 @@
 		</div>
 
 		<div class="view">
-			<div class="user-profile message ui" ng-repeat="mentee in mentees">
+			<div ng-repeat="mentee in mentees">
+			<div class="user-profile message ui">
 				<!-- upper profile stuff -->
 				<div class="user-profile personal ui grid">
 					<div class="six wide column" id="name">
@@ -88,6 +89,8 @@
 					<div class="menu-text2">Organizations, Extracurricular Activities, Interests, Skills, etc</div>
 					<div class="menu-text">{{mentee.extra_info}}</div>
 				</div>
+			</div>
+			<div class="ui divider"></div>
 			</div>
 		</div>
 	</div>

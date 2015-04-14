@@ -180,6 +180,17 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
 
   if(data["Mentor"]) {
     $scope.user.type.push("Mentor");
+    $scope.mentees = [];
+    $.ajax({
+      url: "api/getMentorMatches",
+      dataType: "json",
+      async: true,
+      success: function(result) {
+        $scope.mentees = result;
+        $scope.$apply();
+      },
+      error: $scope.ajaxError
+    });
   }
   if(data["Mentee"]) {
     $scope.user.type.push("Mentee");

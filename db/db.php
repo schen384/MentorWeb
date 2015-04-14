@@ -284,6 +284,25 @@
 		echo json_encode($result);
 	}
 
+	function getMentorMatches() {
+		global $_USER;
+		$dbQuery = sprintf("SELECT *
+							FROM USER LEFT JOIN Mentee ON USER.username = Mentee.username 
+							LEFT JOIN Mentee_Breadth_Track ON USER.username = Mentee_Breadth_Track.username
+							LEFT JOIN Mentee_BME_Organization ON USER.username = Mentee_BME_Organization.username
+							LEFT JOIN Mentee_Tutor_Teacher_Program ON USER.username = Mentee_Tutor_Teacher_Program.username
+							LEFT JOIN Mentee_BME_Academic_Experience ON USER.username = Mentee_BME_Academic_Experience.username
+							LEFT JOIN Mentee_International_Experience ON USER.username = Mentee_International_Experience.username
+							LEFT JOIN Mentee_Career_Dev_Program ON USER.username = Mentee_Career_Dev_Program.username
+							LEFT JOIN Ethnicity ON USER.username = Ethnicity.username
+							LEFT JOIN Matches ON USER.username = Matches.mentee_user
+							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
+							WHERE Matches.mentor_user = '%s'", $_USER['uid']);
+		$result = getDBResultsArray($dbQuery);
+
+		echo json_encode($result);
+	}
+
 	function chooseMentor() {
 		echo var_dump($_POST);
 		global $_USER;

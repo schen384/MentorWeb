@@ -783,11 +783,6 @@ nav {
   margin: 0em 0em 1em;
 }
 
-/* http://dev.m.gatech.edu/d/mcox41/w/MentorWeb/content/index.html#/homescreen (admin page) */
-section.homescreen.page.ng-scope .ng-scope:first-child {
-  height: 380px;
-}
-
 /* http://dev.m.gatech.edu/d/mcox41/w/MentorWeb/content/index.html#/requestingPeriod */
 #mentor-note .text-message {
   margin: auto 0;
@@ -849,4 +844,9 @@ div#trigger-requesting-period {
 }
 .user-profile.message.ui {
   z-index: 1;
+}
+.widget {
+  display: inline-block;
+  width: 25%;
+  padding-top: 2%;
 }
