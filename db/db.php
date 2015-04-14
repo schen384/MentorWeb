@@ -328,6 +328,57 @@
 		echo json_encode($result);
 	}
 
+	 function listUnapprovedMentors() {
+		$dbQuery = "SELECT * FROM USER
+													JOIN Mentor
+														ON  USER.username = Mentor.username
+													JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = Mentor.username
+													JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = Mentor.username
+													JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+													JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = Mentor.username
+													JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = Mentor.username
+													JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = Mentor.username
+													WHERE Mentor.approved = 0"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	 function listApprovedMentors() {
+		$dbQuery = "SELECT * FROM USER
+													JOIN Mentor
+														ON  USER.username = Mentor.username
+													JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = Mentor.username
+													JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = Mentor.username
+													JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+													JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = Mentor.username
+													JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = Mentor.username
+													JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = Mentor.username
+													WHERE Mentor.approved = 1"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	}
+
+	function approveMentor($mentors) {
+		foreach ($mentors as $mentor) {
+			$mentor = mysql_real_escape_string($mentor);
+			$dbQuery = sprintf("UPDATE Mentor SET approved = 1 WHERE Mentor.username = '%s'", $mentor);
+			$result = getDBResultsArray($dbQuery);
+			echo json_encode($result);
+		}
+	}
+
 	function addMentorLoop($mentor) {
 		echo "addMEntor in PHP \n";
 		global $_USER;	

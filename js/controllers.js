@@ -224,7 +224,15 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
       meta: "Meta",
       link: "#/requestingPeriod"
     },
-	{
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
+      title: "Approve Mentors",
+      description: "Approve registered users to mentor students",
+      meta: "Meta",
+      link: "#/approveMentors"
+    },
+    {
       // TODO: create image
       image: "/images/wireframe/image.png",
       title: "Mentor Max",
@@ -263,7 +271,7 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
   $('.ui.accordion').accordion();
 
   $.ajax({
-    url: "api/listMentors",
+    url: "api/listApprovedMentors",
     dataType: "json",
       async: true,
       success: function(data, textStatus, jqXHR) {
@@ -490,6 +498,36 @@ appControllers.controller('WishListController', ['$scope', '$http', function($sc
       });
     });
   }
+}]);
+
+appControllers.controller('ApproveMentorController', ['$scope', '$http', function($scope, $http) {
+  $scope.mentors = []
+  $.ajax({
+    url: "api/listUnapprovedMentors",
+    dataType: "json",
+    async: true,
+    success: function(data) {
+      $scope.mentors = data;
+      $scope.$apply();
+    }
+  });
+
+  $scope.approve = function() {
+    var usernames = []
+    $scope.mentors.forEach(function(element) {
+      if (element.newapprove) {
+        usernames.push(element.username);
+      }
+    });
+    $.ajax({
+      url: "api/approveMentor",
+      dataType: "json",
+      async: true,
+      type: 'POST',
+      data: {'usernames': usernames}
+    });
+    $scope.go('/homescreen');
+  };
 }]);
 
 appControllers.controller('RequestingPeriodController', ['$scope', '$http', function($scope, $http) {
