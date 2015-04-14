@@ -585,7 +585,6 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
   }
 }]);
 
-<<<<<<< HEAD
 appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
   var matchesList = [];
   var unmatchedMentors = [];
@@ -647,7 +646,8 @@ appControllers.controller('ViewMatchesController', ['$scope', '$http', function(
   $scope.mentors = mentors;
   $scope.unmatchedMentors = unmatchedMentors;
   $scope.unmatchedMentees = unmatchedMentees;
-=======
+}]);
+
 appControllers.controller('SetMentorMaxController', ['$scope', '$http', function($scope, $http) {
   var max = {};
   var min = {};
@@ -696,7 +696,6 @@ appControllers.controller('SetMentorMaxController', ['$scope', '$http', function
         }
       });
   }
->>>>>>> master
 }]);
 
 appControllers.controller('UserProfileController', ['$scope', '$http', '$location', function($scope, $http, $location) {
