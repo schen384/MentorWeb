@@ -595,8 +595,7 @@ appControllers.controller('ViewMatchesController', ['$scope', '$http', function(
     async: false,
     success: function(result) {
       matchesList = result;
-    },
-    type: 'GET'
+    }
   });
   $.ajax({
     url: "api/getUnmatchedMentors",
@@ -604,8 +603,7 @@ appControllers.controller('ViewMatchesController', ['$scope', '$http', function(
     async: false,
     success: function(result) {
       unmatchedMentors = result;
-    },
-    type: 'GET'
+    }
   }); 
   $.ajax({
     url: "api/getUnmatchedMentees",
@@ -613,8 +611,7 @@ appControllers.controller('ViewMatchesController', ['$scope', '$http', function(
     async: false,
     success: function(result) {
       unmatchedMentees = result;
-    },
-    type: 'GET'
+    }
   }); 
 
   var matches = {};

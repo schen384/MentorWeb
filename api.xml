@@ -131,10 +131,6 @@
 		<index>
 			<action file='db/db.php'><![CDATA[getMatches();]]></action>
 		</index>
-
-		<get>
-			<action file='db/db.php'><![CDATA[getMatches();]]></action>
-		</get>
 	</command>
 		
 
@@ -144,10 +140,6 @@
 		<index>
 			<action file='db/db.php'><![CDATA[getUnmatchedMentors();]]></action>
 		</index>
-
-		<get>
-			<action file='db/db.php'><![CDATA[getUnmatchedMentors();]]></action>
-		</get>
 	</command>
 		
 
@@ -157,10 +149,6 @@
 		<index>
 			<action file='db/db.php'><![CDATA[getUnmatchedMentees();]]></action>
 		</index>
-
-		<get>
-			<action file='db/db.php'><![CDATA[getUnmatchedMentees();]]></action>
-		</get>
 	</command>
 		
 
