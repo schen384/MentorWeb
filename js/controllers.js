@@ -180,6 +180,17 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
 
   if(data["Mentor"]) {
     $scope.user.type.push("Mentor");
+    $scope.mentees = [];
+    $.ajax({
+      url: "api/getMentorMatches",
+      dataType: "json",
+      async: true,
+      success: function(result) {
+        $scope.mentees = result;
+        $scope.$apply();
+      },
+      error: $scope.ajaxError
+    });
   }
   if(data["Mentee"]) {
     $scope.user.type.push("Mentee");
@@ -205,7 +216,9 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
       dataType: "json",
           async: true,
           success: function(data, textStatus, jqXHR) {
-            getMentorData(data[0].mentor_user);
+            if(data != ""){
+				getMentorData(data[0].mentor_user);
+			}
           },
           error: $scope.ajaxError
     });
@@ -221,6 +234,30 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
       description: "Open and close the requesting period for mentors",
       meta: "Meta",
       link: "#/requestingPeriod"
+    },
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
+      title: "View Matches",
+      description: "View mentor/mentee matches and unmatched users",
+      meta: "Meta",
+      link: "#/viewMatches"
+    },
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
+      title: "Approve Mentors",
+      description: "Approve registered users to mentor students",
+      meta: "Meta",
+      link: "#/approveMentors"
+    },
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
+      title: "Mentor Max",
+      description: "Set the maximum number of mentees any one mentor can have per semester",
+      meta: "Meta",
+      link: "#/setMentorMax"
     }];
   }
 
@@ -253,7 +290,7 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
   $('.ui.accordion').accordion();
 
   $.ajax({
-    url: "api/listMentors",
+    url: "api/listApprovedMentors",
     dataType: "json",
       async: true,
       success: function(data, textStatus, jqXHR) {
@@ -321,7 +358,22 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
     });
   }
   $scope.notification = function() {
-    $('#mentor-note').dimmer('toggle');
+  	// check for mentor being full first
+  	$.ajax({
+	      url: "api/mentorStatus/" + $scope.miniProfileData.username, 
+	      async: true,
+	      type: 'GET',
+	      success: function(result) {
+		if(result){
+			$('#mentor-note').dimmer('toggle');
+		}
+		else{
+			alert("It appears that this mentor is no longer available, please select another one.");
+		}
+	      },
+	    });
+  	
+    //$('#mentor-note').dimmer('toggle');
   }
   $scope.chooseMentor = function() {
     $scope.$parent.myMentor = $scope.miniProfileData;
@@ -407,7 +459,21 @@ appControllers.controller('WishListController', ['$scope', '$http', function($sc
     $scope.miniProfileData = user;
   }
   $scope.notification = function() {
-    $('#mentor-note').dimmer('toggle');
+  	// check for mentor being full first
+  	$.ajax({
+	      url: "api/mentorStatus/" + $scope.miniProfileData.username, 
+	      async: true,
+	      type: 'GET',
+	      success: function(result) {
+		if(result){
+			$('#mentor-note').dimmer('toggle');
+		}
+		else{
+			alert("It appears that this mentor is no longer available, please select another one.");
+		}
+	      },
+	    });
+    //$('#mentor-note').dimmer('toggle');
   }
   $scope.removeFromWishlist = function() {
     $scope.miniProfileData.favorited = "";
@@ -451,6 +517,36 @@ appControllers.controller('WishListController', ['$scope', '$http', function($sc
       });
     });
   }
+}]);
+
+appControllers.controller('ApproveMentorController', ['$scope', '$http', function($scope, $http) {
+  $scope.mentors = []
+  $.ajax({
+    url: "api/listUnapprovedMentors",
+    dataType: "json",
+    async: true,
+    success: function(data) {
+      $scope.mentors = data;
+      $scope.$apply();
+    }
+  });
+
+  $scope.approve = function() {
+    var usernames = []
+    $scope.mentors.forEach(function(element) {
+      if (element.newapprove) {
+        usernames.push(element.username);
+      }
+    });
+    $.ajax({
+      url: "api/approveMentor",
+      dataType: "json",
+      async: true,
+      type: 'POST',
+      data: {'usernames': usernames}
+    });
+    $scope.go('/homescreen');
+  };
 }]);
 
 appControllers.controller('RequestingPeriodController', ['$scope', '$http', function($scope, $http) {
@@ -497,6 +593,116 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
       });
     }
     $scope.go('/homescreen');
+  }
+}]);
+
+appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
+  var matchesList = [];
+  var unmatchedMentors = [];
+  var unmatchedMentees = [];
+  $.ajax({
+    url: "api/getMatches",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      matchesList = result;
+    }
+  });
+  $.ajax({
+    url: "api/getUnmatchedMentors",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentors = result;
+    }
+  }); 
+  $.ajax({
+    url: "api/getUnmatchedMentees",
+    dataType: "json",
+    async: false,
+    success: function(result) {
+      unmatchedMentees = result;
+    }
+  }); 
+
+  var matches = {};
+  matchesList.forEach(function (match) {
+    var mentor = {
+      first_name: match.mentor_first_name,
+      last_name: match.mentor_last_name,
+      username: match.mentor_username
+    }
+    var mentee = {
+      first_name: match.mentee_first_name,
+      last_name: match.mentee_last_name,
+      username: match.mentee_username
+    }
+    
+    if (mentor.username in matches) {
+      matches[mentor.username].mentees.push(mentee);
+    } else {
+      matches[mentor.username] = mentor;
+      matches[mentor.username].mentees = [mentee];
+    }
+  });
+
+  var mentors = [];
+  for (var mentor in matches) {
+    mentors.push(matches[mentor]);
+  }
+
+  $scope.mentors = mentors;
+  $scope.unmatchedMentors = unmatchedMentors;
+  $scope.unmatchedMentees = unmatchedMentees;
+}]);
+
+appControllers.controller('SetMentorMaxController', ['$scope', '$http', function($scope, $http) {
+  var max = {};
+  var min = {};
+  $.ajax({
+    url: "api/mentorMax",
+    dataType: "json",
+    async: false,
+    type: 'GET',
+    success: function(data) {
+      max = data;
+	  $scope.maxNumber = max;
+    }
+  });
+  $.ajax({
+    url: "api/minMentorMax",
+    dataType: "json",
+    async: false,
+    type: 'GET',
+    success: function(data) {
+      min = data;
+	  $scope.minNumber = min;
+    }
+  });
+
+  $scope.notification = function() {
+  	var newMaxVal = $('#max_number').val();
+  	if(newMaxVal == '' || newMaxVal < $scope.minNumber){
+  		alert("Note: you must enter a value for the new max");
+  	}
+  	else{
+		$('#mentor-note').dimmer('toggle');
+	}
+  }
+  $scope.triggerSetMax = function(data) {
+  	var newMaxVal = $('#max_number').val();
+  	
+  	// save new max val
+  	$.ajax({
+        url: "api/mentorMax",
+        dataType: "json",
+        data: {'newMax': newMaxVal},
+        async: false,
+        type: 'POST',
+        success: function(data){
+        	$scope.go('/homescreen');
+        }
+      });
   }
 }]);
 
