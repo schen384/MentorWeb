@@ -597,6 +597,18 @@ appControllers.controller('RequestingPeriodController', ['$scope', '$http', func
 }]);
 
 appControllers.controller('ViewMatchesController', ['$scope', '$http', function($scope, $http) {
+  $scope.notification = function() {
+    $('#match-note').dimmer('toggle');
+  };
+  $scope.matchAll = function() {
+    $.ajax({
+      url: "api/assignAllMentees",
+      async: true,
+      type: 'POST'
+    });
+    $scope.go('/homescreen');
+  };
+
   var matchesList = [];
   var unmatchedMentors = [];
   var unmatchedMentees = [];

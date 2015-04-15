@@ -39,6 +39,29 @@
                 <td>{{mentee.first_name}} {{mentee.last_name}} ({{mentee.username}})</td>
             </tr>
         </table>
+        <button ng-click="notification()" style="margin-left: 25%;">Match All</button>
+    </div>
+
+    <div id="match-note" class="ui page dimmer">
+      <div class="ui info message note-message">
+        <i class="close icon" ng-click="notification()"></i>
+        <div class="title">
+          Match Confirmation
+        </div>
+        <div class="back-strip">
+          <div class="text-message">
+            Are you sure you want to want to match all unmatched mentors and mentees? THIS CANNOT BE UNDONE.
+          </div>
+        </div>
+        <div class="ui options">
+          <div class="ui Negative medium button" ng-click="notification()">
+            Cancel
+          </div>
+          <div class="ui positive medium button" ng-click="matchAll()">
+            Yes
+          </div>
+        </div>
+      </div>
     </div>
 
 </section>
