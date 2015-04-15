@@ -1126,21 +1126,23 @@
 		$maxCount = $result["settingValue"];
 		//Get all unmatched mentees
 		$menteeQuery = "SELECT Mentee.username FROM Mentee WHERE Mentee.username NOT IN (SELECT mentee FROM Matches)";
-		$mentors = getDBResultArray($menteeQuery);
+		$mentees = getDBResultArray($menteeQuery);
 
 		//Get all mentors with open spots
-		mentorQuery = "SELECT Mentor.username AS username, COUNT(*) AS count
+		$mentorQuery = sprintf("SELECT Mentor.username AS username, COUNT(*) AS count
 						 FROM Mentor LEFT JOIN Matches ON Mentor.username = Matches 
-						 GROUP BY Mentor.username ON Mentor.username = Matches.Mentor HAVING COUNT(*) < $maxCount";
-		$mentorIndex = 0
-		$currentCount = $mentors[0]['count']
-		for ($mentees as $mentee) {
-		    insertQuery = sprintf("INSERT INTO Matches (mentor, mentee) VALUES ('%s', '%s')", $mentors[$mentorIndex]['username'], $mentee);
-		    $currentCount++;
-		    if ($currentCount = $maxCount) {
-		        $mentorIndex++;
-		        $currentCount = $mentors[$mentorIndex]["count"];
-		    }
+						 GROUP BY Mentor.username ON Mentor.username = Matches.Mentor HAVING COUNT(*) < %s", $maxCount);
+		$mentors = getDBResultArray($mentorQuery);
+		$mentorIndex = 0;
+		$currentCount = $mentors[0]['count'];
+		foreach ($mentees as $mentee) {
+			$insertQuery = sprintf("INSERT INTO Matches (mentor, mentee) VALUES ('%s', '%s')", $mentors[$mentorIndex]['username'], $mentee);
+			$result = getDBRegInserted($insertQuery);
+			$currentCount++;
+			if ($currentCount = $maxCount) {
+				$mentorIndex++;
+				$currentCount = $mentors[$mentorIndex]["count"];
+			}
 		}
 	}
 
