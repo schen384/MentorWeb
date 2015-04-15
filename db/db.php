@@ -1130,8 +1130,10 @@
 
 		//Get all mentors with open spots
 		$mentorQuery = sprintf("SELECT Mentor.username AS username, COUNT(*) AS count
-						 FROM Mentor LEFT JOIN Matches ON Mentor.username = Matches 
-						 GROUP BY Mentor.username ON Mentor.username = Matches.Mentor HAVING COUNT(*) < %s", $maxCount);
+						 FROM Mentor JOIN Matches ON Mentor.username = Matches.Mentor
+						 GROUP BY Mentor.username HAVING COUNT(*) < %s ", $maxCount);
+		$mentorQuery .= " UNION ALL SELECT Mentor.username AS username, 0 AS count
+						 FROM Mentor WHERE Mentor.username NOT IN (SELECT mentor FROM Matches)";
 		$mentors = getDBResultArray($mentorQuery);
 		$mentorIndex = 0;
 		$currentCount = $mentors[0]['count'];
