@@ -250,6 +250,18 @@
 		</delete>
 	</command>
 
+	<command id='assignAllMentees' security='public'>
+		<description><![CDATA[Assign all unassigned mentees.]]></description>
+			
+		<index>
+			<action file='db/db.php'><![CDATA[assignAllMentees();]]></action>
+		</index>
+
+		<post>
+			<action file='db/db.php'><![CDATA[assignAllMentees();]]></action>
+		</post>
+	</command>
+
 	<command id='mentorMax' security='public'>
 		<description><![CDATA[Manages the value of the maximum mentees per mentor setting.]]></description>
 			

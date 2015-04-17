@@ -14,7 +14,7 @@
 												$_USER['uid']);
 		$result = getDBResultsArray($dbQuery);
 		if (!empty($result)) {
-			$userType = "User";
+			$userType = "User";	
 			$userInfo["firstName"] = $result["0"]["first_name"];
 			$userInfo["lastName"] = $result["0"]["last_name"];
 		}
@@ -1118,6 +1118,35 @@
 		$dbQueryWishlist = sprintf("DELETE FROM Wishlist WHERE mentee='%s' AND mentor='%s'", $_USER['uid'], $username);
 		$result = deleteDBEntries($dbQueryWishlist);
 		print($result);
+	}
+
+	function assignAllMentees() {
+		$query = "SELECT settingValue FROM GlobalSettings WHERE settingName='MaxMenteesPerMentor'";
+		$result = getDBResultRecord($query);
+		$maxCount = $result["settingValue"];
+		//Get all unmatched mentees
+		$menteeQuery = "SELECT Mentee.username FROM Mentee WHERE Mentee.username NOT IN (SELECT mentee_user FROM Matches)";
+		$mentees = getDBResultsArray($menteeQuery);
+		//Get all mentors with open spots
+		$mentorQuery = sprintf("SELECT Mentor.username AS username, COUNT(*) AS count
+						 FROM Mentor JOIN Matches ON Mentor.username = Matches.mentor_user
+						 GROUP BY Mentor.username HAVING COUNT(*) < %s ", $maxCount);
+		$mentorQuery .= " UNION ALL SELECT Mentor.username AS username, 0 AS count
+						 FROM Mentor WHERE Mentor.username NOT IN (SELECT mentor_user FROM Matches)
+						 AND Mentor.approved = 1";
+		$mentors = getDBResultsArray($mentorQuery);
+		$mentorIndex = 0;
+		$currentCount = $mentors[0]['count'];
+		
+		foreach ($mentees as $mentee) {
+			$insertQuery = sprintf("INSERT INTO Matches (mentor_user, mentee_user) VALUES ('%s', '%s')", $mentors[$mentorIndex]['username'], $mentee['username']);
+			$result = getDBRegInserted($insertQuery);
+			$currentCount++;
+			if ($currentCount == $maxCount) {
+				$mentorIndex++;
+				$currentCount = $mentors[$mentorIndex]["count"];
+			}
+		}
 	}
 
 	function getMatches() {
