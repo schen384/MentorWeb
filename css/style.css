@@ -848,5 +848,6 @@ div#trigger-requesting-period {
 .widget {
   display: inline-block;
   width: 25%;
+  min-width: 18em;
   padding-top: 2%;
 }
