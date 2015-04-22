@@ -33,13 +33,13 @@
 		</put>
 	</command>
 
-	<command id='listMentors' security='protected'>
-		<description><![CDATA[Returns a list of mentors.]]></description>
+	<command id='listMatchableMentors' security='protected'>
+		<description><![CDATA[Returns a list of mentors who can be matched.]]></description>
 
 		<index>
-			<description><![CDATA[Return a list of mentors]]></description>
+			<description><![CDATA[Return a list of mentors who can be matched.]]></description>
 
-			 <action file='db/db.php'><![CDATA[listMentors();]]></action>
+			 <action file='db/db.php'><![CDATA[listMatchableMentors();]]></action>
 		</index>
 	</command>
 

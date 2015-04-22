@@ -290,7 +290,7 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
   $('.ui.accordion').accordion();
 
   $.ajax({
-    url: "api/listApprovedMentors",
+    url: "api/listMatchableMentors",
     dataType: "json",
       async: true,
       success: function(data, textStatus, jqXHR) {
