@@ -344,7 +344,7 @@
 				LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
 				LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
 				WHERE Mentor.username = USER.username
-					AND Mentor.approved = 0
+					AND Mentor.approved = 1
 					AND (SELECT COUNT(*) FROM Matches WHERE Mentor.username = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
 		echo json_encode($result);
@@ -1097,7 +1097,10 @@
 		JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
 		JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
 		JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
-		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
+		WHERE
+			Wishlist.mentee = '%s'
+			AND Mentor.approved = 1
+			AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
 		$result=getDBResultsArray($dbQueryWishlist);
 		header("Content-type: application/json");
 		echo json_encode($result);
