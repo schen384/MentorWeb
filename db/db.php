@@ -119,11 +119,6 @@
 		echo json_encode($result);
 	}//end submitRegForm
 
-	function listMentor(){
-		echo "list Mentor";
-
-	}
-
 	function addMentee() {
 		global $_USER;	
 		$user = $_USER['uid'];

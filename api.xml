@@ -15,12 +15,6 @@
 	<command id='mentor' security='public'>
 		<description><![CDATA[Manages data regarding mentors.]]></description>
 
-		<index>
-			<description><![CDATA[Return a list of mentors]]></description>
-
-			 <action file='db/db.php'><![CDATA[listMentor();]]></action>
-		</index>
-
 		<get>
 			<description><![CDATA[This is how to retreive informatio on a single mentor]]></description>
 			<action file='db/db.php'><![CDATA[getMentor($_REST['mentor']);]]></action>
