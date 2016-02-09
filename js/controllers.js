@@ -148,10 +148,10 @@ appControllers.controller('UserController', ['$scope', '$http', function($scope,
 }]);
 
 appControllers.controller('LoadingController', ['$scope', '$http', function($scope, $http) {
-  $http.get('http://dev.m.gatech.edu/d/schen384/w/mentoringweb/content/api/welcome').success(function(data) {
-    $scope.user = data['username'];
-    $scope.userType = data['userType'];
-  });
+  // $http.get('http://dev.m.gatech.edu/d/schen384/w/mentoringweb/content/api/welcome').success(function(data) {
+  //   $scope.user = data['username'];
+  //   $scope.userType = data['userType'];
+  // });
 }]);
 
 appControllers.controller('HomeController', ['$scope', '$http', '$location', function($scope, $http, $location) {

@@ -3,3 +3,4 @@ error_log
 db/config.php
 images/Thumbs.db
 sftp-config.json
+json-gen/json-generator-user-template.js
