@@ -92,5 +92,6 @@ myApp.config(['$routeProvider', function($routeProvider) {
   }).
   otherwise({
     redirectTo: '/loading'
+    // redirectTo: '/homescreen'
   });
 }]);

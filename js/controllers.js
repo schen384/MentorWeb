@@ -147,7 +147,8 @@ appControllers.controller('UserController', ['$scope', '$http', function($scope,
   });
 }]);
 
-appControllers.controller('LoadingController', ['$scope', '$http', function($scope, $http) {
+appControllers.controller('LoadingController', ['$location','$scope', '$http', function($location,$scope, $http) {
+  $location.path('/welcome');
   // $http.get('http://dev.m.gatech.edu/d/schen384/w/mentoringweb/content/api/welcome').success(function(data) {
   //   $scope.user = data['username'];
   //   $scope.userType = data['userType'];
