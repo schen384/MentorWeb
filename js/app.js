@@ -82,6 +82,10 @@ myApp.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/set-mentor-max.html',
     controller: 'SetMentorMaxController'
   }).
+  when('/contact', {
+    templateUrl: 'partials/contact.html',
+    controller: 'contactController'
+  }).
   when('/logout', {
     templateUrl: 'partials/logout.html',
     controller: 'LogoutController'

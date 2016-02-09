@@ -373,6 +373,7 @@
 														ON Mentor_International_Experience.username = Mentor.username
 													LEFT JOIN Mentor_Career_Dev_Program
 														ON Mentor_Career_Dev_Program.username = Mentor.username
+
 													WHERE Mentor.approved = 0"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
 		echo json_encode($result);

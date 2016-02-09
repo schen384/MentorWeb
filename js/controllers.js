@@ -80,6 +80,10 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
   });
 }]);
 
+appControllers.controller('contactController', ['$scope','$location', function($scope,$location) {
+  console.log("contact controller");
+}]);
+
 appControllers.controller('EditProfileController', ['$scope', '$http', '$location', function($scope, $http, $location) {
   var data = {};
   $.ajax({
@@ -119,6 +123,7 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
 appControllers.controller('WelcomeController', ['$scope', '$http', '$location', function($scope, $http, $location) {
   $scope.go = function() {
     var serviceUrl = encodeURIComponent(config.baseUrl);
+    console.log(serviceUrl);
     window.location.replace("https://login.gatech.edu/cas/login?service=" + serviceUrl);
   };
 }]);
@@ -143,10 +148,10 @@ appControllers.controller('UserController', ['$scope', '$http', function($scope,
 }]);
 
 appControllers.controller('LoadingController', ['$scope', '$http', function($scope, $http) {
-  // $http.get('http://dev.m.gatech.edu/d/mosborne8/w/mentoringweb/content/api/welcome').success(function(data) {
-  //   $scope.user = data['username'];
-  //   $scope.userType = data['userType'];
-  // });
+  $http.get('http://dev.m.gatech.edu/d/schen384/w/mentoringweb/content/api/welcome').success(function(data) {
+    $scope.user = data['username'];
+    $scope.userType = data['userType'];
+  });
 }]);
 
 appControllers.controller('HomeController', ['$scope', '$http', '$location', function($scope, $http, $location) {
@@ -179,6 +184,7 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
   }
 
   if(data["Mentor"]) {
+    console.log("Its a mentor")
     $scope.user.type.push("Mentor");
     $scope.mentees = [];
     $.ajax({
