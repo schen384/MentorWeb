@@ -4,7 +4,7 @@
 
 	function welcome() {
 		global $_USER;
-
+		
 		//$userid = array('username' => $_USER['uid']);
 		//echo var_dump($_USER);
 		$userInfo = array('username' => $_USER['uid']);

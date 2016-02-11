@@ -1,39 +1,35 @@
 var appControllers = angular.module('appControllers', ['ngAnimate', 'ngResource']);
 
-// appControllers.directive('accessibleForm', function () {
-//     return {
-//         restrict: 'A',
-//         link: function (scope, elem) {
-
-//             // set up event handler on the form element
-//             elem.on('submit', function () {
-
-//                 // find the first invalid element
-//                 var firstInvalid = angular.element(
-//                     elem[0].querySelector('.ng-invalid'))[0];
-
-//                 // if we find one, set focus
-//                 if (firstInvalid) {
-//                     firstInvalid.focus();
-//                 }
-//             });
-//         }
-//     };
-// });
 
 appControllers.controller('mainController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+   
+   $scope.$on("$routeChangeError", function(evt,current,previous,rejection){
+    if(rejection == "not_logged_in"){
+      console.log("mainCtrl: not logged in: redirecting");
+      var serviceUrl = encodeURIComponent(config.baseUrl);
+      console.log(serviceUrl);
+      window.location.replace("https://login.gatech.edu/cas/login?service=" + serviceUrl);
+    } else {
+      //OR DO SOMETHING ELSE
+    }
+   });
    $scope.go = function(path) {
+
     $location.path(path);
     //$location.reload(true);
     //$scope.$parent.$apply();
   };
+
   $scope.ajaxError = function ajaxError(jqXHR, textStatus, errorThrown){
     console.log('ajaxError '+jqXHR+' '+textStatus+' '+errorThrown);
     console.log("Main Controller Called");
+    // $location.path('/');
   }
 }]);
 
 appControllers.controller('HeaderController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+  
+  console.log("Header Controller");
   $scope.$parent.headerType = {
     none: 1,
     mentee: 0,
@@ -43,6 +39,7 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
   $scope.headerType = $scope.$parent.headerType;
 
   $scope.refreshHeader = function() {
+    
     var data = {};
     if(window.location.href.indexOf("welcome") > -1 || window.location.href.indexOf("register") > -1) {
       $scope.$parent.headerType.none = 1;
@@ -56,6 +53,9 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
           async: false,
           success: function(result) {
             data = result;
+          },
+          error: function(result) {
+            $location.path("/loading");
           },
           type: 'GET'
         }); 
@@ -75,7 +75,29 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
   }
 
   $scope.$parent.refreshHeader = $scope.refreshHeader;
-  $scope.$on('$locationChangeSuccess', function() {   
+  $scope.$on('$locationChangeStart', function(event) { 
+    // if($scope.$parent.headerType == null || $scope.$parent.headerType.none == 1) {
+    //   $location.path('/welcome');
+    // }
+    // $.ajax({
+    //       url: "api/user",
+    //       dataType: "json",
+    //       async: false,
+    //       success: function(result) {
+    //         console.log("User logged in - locationChangeStart");
+    //       },
+    //       error: function(result) {
+    //         $location.path("/welcome");
+    //         // event.preventDefault();
+
+    //       },
+    //       type: 'GET'
+    //     }); 
+
+  });
+  $scope.$on('$locationChangeSuccess', function() { 
+    //add authentication validation?
+
     $scope.refreshHeader();
   });
 }]);
@@ -139,23 +161,32 @@ appControllers.controller('ForkController', ['$scope', '$http', function($scope,
 
 }]);
 
-appControllers.controller('UserController', ['$scope', '$http', function($scope, $http) {
-  $.get('api/welcome').success(function(data) {
-    $scope.user = data;
-    $scope.userType = data['userType'];
-    $scope.$parent.username = data['username'];
-  });
-}]);
-
 appControllers.controller('LoadingController', ['$location','$scope', '$http', function($location,$scope, $http) {
-  $location.path('/welcome');
-  // $http.get('http://dev.m.gatech.edu/d/schen384/w/mentoringweb/content/api/welcome').success(function(data) {
-  //   $scope.user = data['username'];
-  //   $scope.userType = data['userType'];
-  // });
+  console.log('loading first');
+  if($scope.$parent.headerType == null) {
+    $location.url('/welcome');
+  } else {
+    $location.url('/homescreen');  
+  }
 }]);
 
-appControllers.controller('HomeController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+
+// appControllers.controller('UserController', ['$scope', '$http','$location', function($scope, $http,$location) {
+//   console.log("before calling welcome api *********")
+//   $.get('api/welcome').success(function(data) {
+//     $scope.user = data;
+//     $scope.userType = data['userType'];
+//     $scope.$parent.username = data['username'];
+//   }).error(function(data) {
+//     if(data.status == 403) {
+//       console.log(data.status);
+//       // $location.path('/welcome');
+//     }
+//   });
+// }]);
+
+appControllers.controller('UserController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+  
   $scope.user = {type:[],
     none: 1,
     mentee: 0,
@@ -171,8 +202,8 @@ appControllers.controller('HomeController', ['$scope', '$http', '$location', fun
       success: function(result) {
         data = result;
       },
-      type: 'GET'
-      // error: ajaxError
+      type: 'GET',
+      // error: $ajaxError
     });
   $scope.user.name = data["Name"];
   $scope.$parent.username = data["Name"];
@@ -1695,3 +1726,25 @@ $scope.reset = function() {
   }
 
 }]);
+
+
+// appControllers.directive('accessibleForm', function () {
+//     return {
+//         restrict: 'A',
+//         link: function (scope, elem) {
+
+//             // set up event handler on the form element
+//             elem.on('submit', function () {
+
+//                 // find the first invalid element
+//                 var firstInvalid = angular.element(
+//                     elem[0].querySelector('.ng-invalid'))[0];
+
+//                 // if we find one, set focus
+//                 if (firstInvalid) {
+//                     firstInvalid.focus();
+//                 }
+//             });
+//         }
+//     };
+// });

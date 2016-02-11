@@ -4,6 +4,51 @@ var myApp = angular.module('myApp', [
   'iso.directives'
 ]);
 
+// myApp.factory('Auth', function($http, $q, $window) {
+//   var userInfo;
+
+//   function login() {
+//     var deferred = $q.defer();
+
+//     $.get('api/welcome')
+//     .success(function(data) {
+//         // $scope.user = data;
+//         // $scope.userType = data['userType'];
+//         // $scope.$parent.username = data['username'];
+//         deferred.resolve();
+//     })
+//     .error(function(error) {
+//         deferred.reject();
+//     });
+
+//     return deferred.promise;
+//   }
+
+//   return {
+//     login: login
+//   };
+  
+// });
+
+var checkLoggedOut = ['$q', '$timeout', '$http', '$location', '$rootScope', function($q, $timeout, $http, $location, $rootScope){
+  deferred = $q.defer();
+    $.get('api/user').success(function(user){
+      if (user){
+        $timeout(deferred.resolve)
+      }
+      else {
+        $timeout(deferred.reject)
+        $location.url('/welcome')
+      }
+    }).error(function(){
+      $timeout(deferred.reject)
+      $location.url('/welcome')
+    })
+
+  return deferred.promise;
+   
+}];
+
 myApp.config(['$routeProvider', function($routeProvider) {
   $routeProvider.
   when('/welcome', {
@@ -36,7 +81,21 @@ myApp.config(['$routeProvider', function($routeProvider) {
   }).
   when('/homescreen', {
     templateUrl: 'partials/homescreen.html',
-    controller: 'UserController'
+    controller: 'UserController',
+    resolve: checkLoggedOut
+    // resolve:{
+    //   auth: function($q) {
+    //     var deferred = $q.defer();
+    //     $.get('api/user')
+    //     .success(function(data) {
+    //       deferred.resolve();
+    //     })
+    //     .error(function(error) {
+    //       deferred.reject("not_logged_in");
+    //     });
+    //     return deferred.promise;
+    //   }
+    // }
   }).
   when('/searchmentors', {
     templateUrl: 'partials/searchmentors.html',
@@ -91,7 +150,7 @@ myApp.config(['$routeProvider', function($routeProvider) {
     controller: 'LogoutController'
   }).
   otherwise({
-    redirectTo: '/loading'
-    // redirectTo: '/homescreen'
+    // redirectTo: '/loading'
+    redirectTo: '/homescreen'
   });
 }]);
