@@ -2,3 +2,6 @@ error_log
 /js/config.js
 db/config.php
 images/Thumbs.db
+/sftp-config.json
+
+
