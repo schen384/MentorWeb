@@ -1,0 +1,23 @@
+<section class="user-profile page">
+
+	<div class="user-profile message-wrapper">
+		<div class="user-profile header">
+			<h1>Admin Tools</h1>
+		</div>
+
+		<div class="view">
+			<div class="widget" ng-repeat="widget in widgets">
+				<div class="user-profile message ui">
+					<div class="content">
+						<img ng-src="{{widget.image}}" align="center">
+						<div class="menu-text" align="center">{{widget.title}}</div>
+						<div class="menu-text2">{{widget.description}}</div>
+					</div>
+					<div class="ui button" style="background-color: #ddd;">
+						<a href="{{widget.link}}" style="color: #999;">Open Widget</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+</section>
