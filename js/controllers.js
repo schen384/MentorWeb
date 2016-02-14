@@ -266,32 +266,28 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
     $scope.user.type.push("Admin");
     $scope.widgets = [
     {
-      // TODO: create image
-      image: "/images/wireframe/image.png",
+      icon: "fa fa-toggle-on fa-3x",
       title: "Toggle Requesting Period",
       description: "Open and close the requesting period for mentors",
       meta: "Meta",
       link: "#/requestingPeriod"
     },
     {
-      // TODO: create image
-      image: "/images/wireframe/image.png",
+      icon: "fa fa-retweet fa-3x",
       title: "View Matches",
       description: "View mentor/mentee matches and unmatched users",
       meta: "Meta",
       link: "#/viewMatches"
     },
     {
-      // TODO: create image
-      image: "/images/wireframe/image.png",
+      icon: "fa fa-user fa-3x",
       title: "Approve Mentors",
       description: "Approve registered users to mentor students",
       meta: "Meta",
       link: "#/approveMentors"
     },
     {
-      // TODO: create image
-      image: "/images/wireframe/image.png",
+      icon: "fa fa-sort-numeric-desc fa-3x",
       title: "Mentor Max",
       description: "Set the maximum number of mentees any one mentor can have per semester",
       meta: "Meta",
