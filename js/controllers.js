@@ -163,11 +163,11 @@ appControllers.controller('ForkController', ['$scope', '$http', function($scope,
 
 appControllers.controller('LoadingController', ['$location','$scope', '$http', function($location,$scope, $http) {
   console.log('loading first');
-  if($scope.$parent.headerType == null) {
-    $location.url('/welcome');
-  } else {
-    $location.url('/homescreen');  
-  }
+  // if($scope.$parent.headerType == null) {
+  //   $location.url('/welcome');
+  // } else {
+  //   $location.url('/homescreen');  
+  // }
 }]);
 
 
@@ -215,53 +215,6 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
     $scope.user.none = 0;
   }
 
-  if(data["Mentor"]) {
-    console.log("Its a mentor")
-    $scope.user.type.push("Mentor");
-    $scope.mentees = [];
-    $.ajax({
-      url: "api/getMentorMatches",
-      dataType: "json",
-      async: true,
-      success: function(result) {
-        $scope.mentees = result;
-        $scope.$apply();
-      },
-      error: $scope.ajaxError
-    });
-  }
-  if(data["Mentee"]) {
-    $scope.user.type.push("Mentee");
-    $scope.profile_title = "Your Mentor";
-
-    function getMentorData(mentorUsername) {
-      $.ajax({
-        url: "api/mentor/" + mentorUsername,
-        dataType: "json",
-        async: true,
-        success: function(result) {
-          $scope.show_identifier = true;
-          $scope.myMentor = result[0];
-          $scope.$apply();
-        },
-        type: 'GET',
-        error: $scope.ajaxError
-      });
-    }
-
-    $.ajax({
-      url: "api/getMenteeMatch",
-      dataType: "json",
-          async: true,
-          success: function(data, textStatus, jqXHR) {
-            if(data != ""){
-				getMentorData(data[0].mentor_user);
-			}
-          },
-          error: $scope.ajaxError
-    });
-  }
-  
   if(data["Admin"]) {
     $scope.user.type.push("Admin");
     $scope.widgets = [
@@ -299,6 +252,54 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
     }];
   }
 
+  else if (data["Mentor"]) {
+    console.log("Its a mentor")
+    $scope.user.type.push("Mentor");
+    $scope.mentees = [];
+    $.ajax({
+      url: "api/getMentorMatches",
+      dataType: "json",
+      async: true,
+      success: function(result) {
+        $scope.mentees = result;
+        $scope.$apply();
+      },
+      error: $scope.ajaxError
+    });
+  }
+  else if (data["Mentee"]) {
+    $scope.user.type.push("Mentee");
+    $scope.profile_title = "Your Mentor";
+
+    function getMentorData(mentorUsername) {
+      $.ajax({
+        url: "api/mentor/" + mentorUsername,
+        dataType: "json",
+        async: true,
+        success: function(result) {
+          $scope.show_identifier = true;
+          $scope.myMentor = result[0];
+          $scope.$apply();
+        },
+        type: 'GET',
+        error: $scope.ajaxError
+      });
+    }
+
+    $.ajax({
+      url: "api/getMenteeMatch",
+      dataType: "json",
+          async: true,
+          success: function(data, textStatus, jqXHR) {
+            if(data != ""){
+				getMentorData(data[0].mentor_user);
+			}
+          },
+          error: $scope.ajaxError
+    });
+  }
+  
+
 }]);
 
 appControllers.controller('SearchController', ['$scope', '$http', function($scope, $http) {
@@ -332,6 +333,7 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
     dataType: "json",
       async: true,
       success: function(data, textStatus, jqXHR) {
+        console.log(data);
         $scope.userData = data;
         $scope.miniProfileData = $scope.userData[0];
         $scope.wishButton = {};
@@ -424,10 +426,10 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
       type: 'POST',
     async: false,
     success: function(data){
-    $scope.go('/user-profile');
+      $scope.go('/user-profile');
     },
-      error: function(data) {
-    console.log(data);
+    error: function(data) {
+      console.log(data);
     }
     }); 
   }
@@ -564,6 +566,7 @@ appControllers.controller('ApproveMentorController', ['$scope', '$http', functio
     dataType: "json",
     async: true,
     success: function(data) {
+      console.log(data);
       $scope.mentors = data;
       $scope.$apply();
     }
