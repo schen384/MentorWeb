@@ -102,8 +102,8 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
   });
 }]);
 
-appControllers.controller('contactController', ['$scope','$location', function($scope,$location) {
-  console.log("contact controller");
+
+appControllers.controller('ContactController', ['$scope','$location', function($scope,$location) {
 }]);
 
 appControllers.controller('EditProfileController', ['$scope', '$http', '$location', function($scope, $http, $location) {
@@ -255,8 +255,8 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
           async: true,
           success: function(data, textStatus, jqXHR) {
             if(data != ""){
-				getMentorData(data[0].mentor_user);
-			}
+              getMentorData(data[0].mentor_user);
+            }
           },
           error: $scope.ajaxError
     });
@@ -396,21 +396,21 @@ appControllers.controller('SearchController', ['$scope', '$http', function($scop
     });
   }
   $scope.notification = function() {
-  	// check for mentor being full first
-  	$.ajax({
-	      url: "api/mentorStatus/" + $scope.miniProfileData.username, 
-	      async: true,
-	      type: 'GET',
-	      success: function(result) {
-		if(result){
-			$('#mentor-note').dimmer('toggle');
-		}
-		else{
-			alert("It appears that this mentor is no longer available, please select another one.");
-		}
-	      },
-	    });
-  	
+    // check for mentor being full first
+    $.ajax({
+        url: "api/mentorStatus/" + $scope.miniProfileData.username, 
+        async: true,
+        type: 'GET',
+        success: function(result) {
+    if(result){
+      $('#mentor-note').dimmer('toggle');
+    }
+    else{
+      alert("It appears that this mentor is no longer available, please select another one.");
+    }
+        },
+      });
+    
     //$('#mentor-note').dimmer('toggle');
   }
   $scope.chooseMentor = function() {
@@ -497,20 +497,21 @@ appControllers.controller('WishListController', ['$scope', '$http', function($sc
     $scope.miniProfileData = user;
   }
   $scope.notification = function() {
-  	// check for mentor being full first
-  	$.ajax({
-	      url: "api/mentorStatus/" + $scope.miniProfileData.username, 
-	      async: true,
-	      type: 'GET',
-	      success: function(result) {
-		if(result){
-			$('#mentor-note').dimmer('toggle');
-		}
-		else{
-			alert("It appears that this mentor is no longer available, please select another one.");
-		}
-	      },
-	    });
+
+    // check for mentor being full first
+    $.ajax({
+        url: "api/mentorStatus/" + $scope.miniProfileData.username, 
+        async: true,
+        type: 'GET',
+        success: function(result) {
+    if(result){
+      $('#mentor-note').dimmer('toggle');
+    }
+    else{
+      alert("It appears that this mentor is no longer available, please select another one.");
+    }
+        },
+      });
     //$('#mentor-note').dimmer('toggle');
   }
   $scope.removeFromWishlist = function() {
@@ -716,7 +717,7 @@ appControllers.controller('SetMentorMaxController', ['$scope', '$http', function
     type: 'GET',
     success: function(data) {
       max = data;
-	  $scope.maxNumber = max;
+      $scope.maxNumber = max;
     }
   });
   $.ajax({
@@ -726,31 +727,32 @@ appControllers.controller('SetMentorMaxController', ['$scope', '$http', function
     type: 'GET',
     success: function(data) {
       min = data;
-	  $scope.minNumber = min;
+      $scope.minNumber = min;
     }
   });
 
   $scope.notification = function() {
-  	var newMaxVal = $('#max_number').val();
-  	if(newMaxVal == '' || newMaxVal < $scope.minNumber){
-  		alert("Note: you must enter a value for the new max");
-  	}
-  	else{
-		$('#mentor-note').dimmer('toggle');
-	}
+
+    var newMaxVal = $('#max_number').val();
+    if(newMaxVal == '' || newMaxVal < $scope.minNumber){
+      alert("Note: you must enter a value for the new max");
+    }
+    else{
+    $('#mentor-note').dimmer('toggle');
+    }
   }
-  $scope.triggerSetMax = function(data) {
-  	var newMaxVal = $('#max_number').val();
-  	
-  	// save new max val
-  	$.ajax({
+    $scope.triggerSetMax = function(data) {
+    var newMaxVal = $('#max_number').val();
+    
+    // save new max val
+    $.ajax({
         url: "api/mentorMax",
         dataType: "json",
         data: {'newMax': newMaxVal},
         async: false,
         type: 'POST',
         success: function(data){
-        	$scope.go('/homescreen');
+          $scope.go('/homescreen');
         }
       });
   }
@@ -1747,4 +1749,5 @@ $scope.reset = function() {
 //             });
 //         }
 //     };
+
 // });

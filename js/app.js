@@ -143,7 +143,7 @@ myApp.config(['$routeProvider', function($routeProvider) {
   }).
   when('/contact', {
     templateUrl: 'partials/contact.html',
-    controller: 'contactController'
+    controller: 'ContactController'
   }).
   when('/logout', {
     templateUrl: 'partials/logout.html',
@@ -153,4 +153,5 @@ myApp.config(['$routeProvider', function($routeProvider) {
     // redirectTo: '/loading'
     redirectTo: '/homescreen'
   });
+
 }]);

@@ -7840,7 +7840,7 @@ img.ui.image {
   vertical-align: middle;
   margin: -0.25em 0.25em 0em;
   background-color: #E8E8E8;
-  border-color: #E8E8E8;
+  border-color: transparent;
   padding: 0.5em 0.8em;
   color: rgba(0, 0, 0, 0.65);
   text-transform: uppercase;
