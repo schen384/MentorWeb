@@ -1,14 +1,17 @@
 $(document).ready(function(){
-	console.log("link check");
+	console.log("link check!");
 	var data = "";
 	$.ajax({
     'async': false,
     'global': false,
     'url': "api/welcome",
     'dataType': "json",
-    'success': function (dataReq) {
+    success: function (dataReq) {
         data = dataReq;
         console.log(dataReq);
+    },
+    error: function() {
+    	console.log("error at welcome.js ajax call");
     }
   });
 

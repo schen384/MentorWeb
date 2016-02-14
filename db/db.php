@@ -287,7 +287,7 @@
 	function getMentorMatches() {
 		global $_USER;
 		$dbQuery = sprintf("SELECT *
-							FROM USER 
+							FROM USER LEFT JOIN Mentee ON USER.username = Mentee.username 
 							LEFT JOIN Mentee_Breadth_Track ON USER.username = Mentee_Breadth_Track.username
 							LEFT JOIN Mentee_BME_Organization ON USER.username = Mentee_BME_Organization.username
 							LEFT JOIN Mentee_Tutor_Teacher_Program ON USER.username = Mentee_Tutor_Teacher_Program.username
@@ -297,7 +297,6 @@
 							LEFT JOIN Ethnicity ON USER.username = Ethnicity.username
 							LEFT JOIN Matches ON USER.username = Matches.mentee_user
 							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
-							LEFT JOIN Mentee ON USER.username = Mentee.username 
 							WHERE Matches.mentor_user = '%s'", $_USER['uid']);
 		$result = getDBResultsArray($dbQuery);
 
@@ -305,7 +304,7 @@
 	}
 
 	function chooseMentor() {
-		
+		echo var_dump($_POST);
 		global $_USER;
 		// $dbQuery = sprintf("INSERT INTO Matches FROM Mentee WHERE username = '%s'",
 		// 										$_USER['uid']);
@@ -322,7 +321,7 @@
 		$user = $mentor;
 
 		$dbQuery = sprintf("SELECT *
-							FROM USER 
+							FROM USER LEFT JOIN Mentor ON USER.username = Mentor.username 
 							LEFT JOIN Mentor_Breadth_Track ON USER.username = Mentor_Breadth_Track.username
 							LEFT JOIN Mentor_BME_Organization ON USER.username = Mentor_BME_Organization.username
 							LEFT JOIN Mentor_Tutor_Teacher_Program ON USER.username = Mentor_Tutor_Teacher_Program.username
@@ -334,7 +333,6 @@
 							LEFT JOIN Mentee_Mentor_Organization ON USER.username = Mentee_Mentor_Organization.username
 							LEFT JOIN Matches ON USER.username = Matches.mentor_user
 							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
-							LEFT JOIN Mentor ON USER.username = Mentor.username 
 							WHERE USER.username = '%s'", $user); // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		
 		$result = getDBResultsArray($dbQuery);
@@ -345,13 +343,13 @@
 
 	 function listMentors() {
 		$dbQuery = "SELECT * FROM USER
-				LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = USER.username
-				LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = USER.username
-				LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = USER.username
-				LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = USER.username
-				LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = USER.username
-				LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = USER.username
-				LEFT JOIN Mentor ON USER.username = USER.username
+				LEFT JOIN Mentor ON USER.username = Mentor.username
+				LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username
+				LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username
+				LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+				LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
+				LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
+				LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
 				WHERE Mentor.username = USER.username
 					AND (SELECT COUNT(*) FROM Matches
 					WHERE Mentor.username = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
@@ -361,22 +359,20 @@
 
 	 function listUnapprovedMentors() {
 		$dbQuery = "SELECT * FROM USER
-													
-													LEFT JOIN Mentor_Breadth_Track
-														ON  USER.username = Mentor_Breadth_Track.username 
-													LEFT JOIN Mentor_BME_Organization
-														ON Mentor_BME_Organization.username = USER.username
-													LEFT JOIN Mentor_Tutor_Teacher_Program
-														ON Mentor_Tutor_Teacher_Program.username = USER.username
-													LEFT JOIN Mentor_BME_Academic_Experience
-														ON Mentor_BME_Academic_Experience.username = USER.username
-													LEFT JOIN Mentor_International_Experience
-														ON Mentor_International_Experience.username = USER.username
-													LEFT JOIN Mentor_Career_Dev_Program
-														ON Mentor_Career_Dev_Program.username = USER.username
-
 													LEFT JOIN Mentor
 														ON  USER.username = Mentor.username
+													LEFT JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = Mentor.username
+													LEFT JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = Mentor.username
+													LEFT JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+													LEFT JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = Mentor.username
+													LEFT JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = Mentor.username
+													LEFT JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = Mentor.username
 
 													WHERE Mentor.approved = 0"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
@@ -385,21 +381,20 @@
 
 	 function listApprovedMentors() {
 		$dbQuery = "SELECT * FROM USER
-													
-													LEFT JOIN Mentor_Breadth_Track
-														ON Mentor_Breadth_Track.username = USER.username
-													LEFT JOIN Mentor_BME_Organization
-														ON Mentor_BME_Organization.username = USER.username
-													LEFT JOIN Mentor_Tutor_Teacher_Program
-														ON Mentor_Tutor_Teacher_Program.username = USER.username
-													LEFT JOIN Mentor_BME_Academic_Experience
-														ON Mentor_BME_Academic_Experience.username = USER.username
-													LEFT JOIN Mentor_International_Experience
-														ON Mentor_International_Experience.username = USER.username
-													LEFT JOIN Mentor_Career_Dev_Program
-														ON Mentor_Career_Dev_Program.username = USER.username
 													LEFT JOIN Mentor
 														ON  USER.username = Mentor.username
+													LEFT JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = Mentor.username
+													LEFT JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = Mentor.username
+													LEFT JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+													LEFT JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = Mentor.username
+													LEFT JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = Mentor.username
+													LEFT JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = Mentor.username
 													WHERE Mentor.approved = 1"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
 		echo json_encode($result);
@@ -1101,16 +1096,16 @@
 
 	function getWishlistContents() {
 		global $_USER;
-		$dbQueryWishlist = sprintf("SELECT * FROM USER
-		LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = USER.username
-		LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = USER.username
-		LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = USER.username
-		LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = USER.username
-		LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = USER.username
-		LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = USER.username
-		LEFT JOIN Wishlist ON Wishlist.mentor = USER.username
-		LEFT JOIN Mentor ON  USER.username = Mentor.username
-		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", "jreddaway3");
+		$dbQueryWishlist = sprintf("SELECT * FROM Wishlist
+		JOIN Mentor ON  Wishlist.mentor = Mentor.username
+		JOIN USER ON Mentor.username = USER.username
+		JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username
+		JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username
+		JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username
+		JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
+		JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
+		JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
+		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
 		$result=getDBResultsArray($dbQueryWishlist);
 		header("Content-type: application/json");
 		echo json_encode($result);

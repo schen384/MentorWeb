@@ -2,6 +2,21 @@ MentorWeb readme
 
 MentorWeb is a web based application made for Georgia Tech students to better find mentors allowing them to better get a grasp of Georgia Tech campus and lifestyle and academic problems. 
 
+-Spring 2016-
+
+1.Aside from the setup below, if you are using sublime plugin for sftp connection, remember to ignore the sftp-config.json file before pushing your code
+	steps:
+		I have added it into the .gitignore and pushed to the repo
+		
+
+2.There is a place where you might need to change the 'gtaccount' to your account name 
+	json-gen/json-generator-user-template.js
+
+  I don't know what this does as of right now and will update as soon as I figure it out.
+  For now , I set this file to be ignored as well.
+
+
+
 -Setup and Configuration-
 1. Clone the repo onto your local machine
 2. Follow the RNOC steps here, http://gtjourney.gatech.edu/gt-devhub/documentation for setting up the code on your prism account
