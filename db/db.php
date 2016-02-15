@@ -1110,7 +1110,7 @@
 		LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = USER.username
 		LEFT JOIN Wishlist ON Wishlist.mentor = USER.username
 		LEFT JOIN Mentor ON  USER.username = Mentor.username
-		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", "jreddaway3");
+		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
 		$result=getDBResultsArray($dbQueryWishlist);
 		header("Content-type: application/json");
 		echo json_encode($result);
