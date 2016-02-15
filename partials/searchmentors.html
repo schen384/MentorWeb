@@ -117,23 +117,28 @@
       </div>
     </div>
 
+<!-- <div ok-filter-group="breadth-track" ok-filter-type="multi" class="active content">
+        <div class="ui form">
+          <div class="grouped inline fields"> -->
+
+
   	<div class="ui item">
 		  <div class="title">
 		    <i class="dropdown icon"></i>
 		    Communication Method
 		  </div>
-		  <div ok-filter-group="comm-method" class="content">
+		  <div ok-filter-group="comm-method" ok-filter-type="multi" class="active content">
 		    <div class="ui form">
 				  <div class="grouped inline fields">
 				    <div class="field">
-				      <div class="ui radio checkbox">
-				        <input type="radio" name="comm-methods" ></input>
+				      <div class="ui checkbox checkbox">
+				        <input type="checkbox" name="phone" ></input>
 				        <label ok-sel=".Phone">Phone</label>
 				      </div>
 				    </div>
 				    <div class="field">
-				      <div class="ui radio checkbox">
-				        <input type="radio" name="comm-methods" ></input>
+				      <div class="ui checkbox checkbox">
+				        <input type="checkbox" name="email" ></input>
 				        <label ok-sel=".Email">Email</label>
 				      </div>
 				    </div>
@@ -141,6 +146,7 @@
 				</div>
 		  </div>
 		</div>
+
 		<div class="ui item">
 		  <div class="title">
 		    <i class="dropdown icon"></i>
@@ -153,6 +159,7 @@
         </div>
 		  </div>
 		</div>
+
 		<div class="ui item">
 			<div class="title">
 		    <i class="dropdown icon"></i>
@@ -236,14 +243,12 @@
 
           <!-- <div ng-bind-html="wishButton"></div> -->
 
-          <div class="search-mentor button-align">
-            <div id="wishlist-add-button" class="ui toggle button" ng-click="wishButton.fn()">
-              {{wishButton.contentText}}
-            </div>
-            <br>
-            <div id="wishlist-choose-mentor" class="ui toggle button" ng-click="notification()" ng-if="chooseAvailable">
-              Choose as my Mentor
-            </div>
+          <div id="wishlist-add-button" class="ui toggle button" ng-click="wishButton.fn()">
+            {{wishButton.contentText}}
+          </div>
+          <br>
+          <div id="wishlist-choose-mentor" class="ui toggle button" ng-click="notification()" ng-if="chooseAvailable">
+            Choose as my Mentor
           </div>
 
         </div>
