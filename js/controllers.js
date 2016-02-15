@@ -292,13 +292,8 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
           async: true,
           success: function(data, textStatus, jqXHR) {
             if(data != ""){
-<<<<<<< HEAD
-				      getMentorData(data[0].mentor_user);
-			      }
-=======
               getMentorData(data[0].mentor_user);
             }
->>>>>>> a9e64433f6b406c4e57b302ef132a2dac3c6edd1
           },
           error: $scope.ajaxError
     });
