@@ -27,7 +27,7 @@
 	  </div>
 	 <div class="field">
 	  	<div class="ui tiny header">Preferred Communication Method</div>
-	  	<div class="field" ng-repeat="comm in comms">
+	  	<div class="field" ng-repeat="comm in userInfo.comms">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="prefComm" ng-model="form.prefComm" value="{{comm.name}}"/>
 			  	<label ng-click="newValue(comm.name, 'prefComm')">{{comm.name}}</label>
@@ -37,7 +37,7 @@
 
 	  <div class="field">
 	    <div class="ui tiny header">Are you a first generation college student (that is, your parents have not completed a bachelor's degree at a 4-year college or university)?</div>
-	    <div class="field" ng-repeat="opt in yesno">
+	    <div class="field" ng-repeat="opt in userInfo.yesno">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="first_gen_college_student" ng-model="form.first_gen_college_student" ng-value="{{opt.value}}"/>
 			  	<label ng-click="newValue(opt.value, 'first_gen_college_student')">{{opt.name}}</label>
@@ -78,7 +78,7 @@
 
 	  <div class="field">
 	    <div class="ui tiny header">Are you an international student?</div>
-	    <div class="field" ng-repeat="opt in yesno">
+	    <div class="field" ng-repeat="opt in userInfo.yesno">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="international_student" ng-model="form.international_student" ng-value="{{opt.value}}"/>
 			  	<label ng-click="newValue(opt.value, 'international_student')">{{opt.name}}</label>
@@ -98,18 +98,18 @@
 
   	 <div class="field">
 	  <div class="ui tiny header">Which breadth track(s) do you expect to complete? For each track you select, please elaborate. For example, for Research Option, which lab(s) have you worked in, for Minor/Certificate, what is the name of your minor/certificate, etc.</div>
-	  <div class="field" ng-repeat="opt in breadthTracks">
-	  <div class="ui checkbox">
-	  	<input type="checkbox" name="selectedBreadthTrack[]" value="{{opt}}" ng-checked="form.breadth_track.indexOf(opt) > -1">
-	  	<label ng-click="toggleSelection(opt, 'breadth_track')">{{opt.name}}</label>
-	  </div>
-	  <input type="text" ng-click="print()" ng-show="form.breadth_track.indexOf(opt) > -1" name="description" ng-model-options="{ updateOn: 'change' }" ng-model="opt.desc" placeholder="Please Elaborate">
+	  <div class="field" ng-repeat="opt in userInfo.breadthTracks">
+		  <div class="ui checkbox">
+		  	<input type="checkbox" name="selectedBreadthTrack[]" value="{{opt}}" ng-checked="form.breadth_track.indexOf(opt) > -1">
+		  	<label ng-click="toggleSelection(opt, 'breadth_track')">{{opt.name}}</label>
+		  </div>
+		  <input type="text" ng-click="print()" ng-show="form.breadth_track.indexOf(opt) > -1" name="description" ng-model-options="{ updateOn: 'change' }" ng-model="opt.desc" placeholder="Please Elaborate">
 	  </div>
 	 </div>
 
 	 <div class="field">
 	  	<div class="ui tiny header">What depth focus do you plan to choose, or have you chosen already?</div>
-	  	<div class="field" ng-repeat="val in dfocusVals" ng-click="newValue(val.name, 'dfocus')">
+	  	<div class="field" ng-repeat="val in userInfo.dfocusVals" ng-click="newValue(val.name, 'dfocus')">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="dfocus" ng-model="form.dfocus" value="{{val.name}}"/>
 			  	<label>{{val.name}}</label>
@@ -165,7 +165,7 @@
 
 	<div class="field">
 	  	<div class="ui tiny header">After you graduate from Georgia Tech, what do you plan to do?</div>
-	  	<div class="field" ng-repeat="opt in postGradPlans" ng-click="newValue(opt.name, 'post_grad_plan')">
+	  	<div class="field" ng-repeat="opt in userInfo.postGradPlans" ng-click="newValue(opt.name, 'post_grad_plan')">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="post_grad_plan" ng-model="form.post_grad_plan" value="{{opt.name}}"/>
 			  	<label>{{opt.name}}</label>
@@ -181,7 +181,7 @@
 	<h2 class="ui inverted black block header">Organizations or Experiences That May Interest You</h2><br/>
 	<div class="field">
 	  	<div class="ui tiny header">Are you interested in participating in any of the following BME student organizations? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in bmeOrganizations">
+	  		<div class="field" ng-repeat="opt in userInfo.bmeOrganizations">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedBmeOrganizations[]" value="{{opt}}" ng-checked="form.bme_organization.indexOf(opt) > -1">
 	  				<label ng-click="toggleSelection(opt, 'bme_organization')">{{opt.name}}</label>
@@ -191,7 +191,7 @@
 
 	 <div class="field">
 	  	<div class="ui tiny header">Are you interested in any of the following tutor/facilitator/teaching programs? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in tutorTeachPrograms">
+	  		<div class="field" ng-repeat="opt in userInfo.tutorTeachPrograms">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedTutorTeacherPrograms[]" value="{{opt}}" ng-checked="form.tutor_teacher_program.indexOf(opt) > -1">
 	  				<label ng-click="toggleSelection(opt, 'tutor_teacher_program')">{{opt.name}}</label>
@@ -201,7 +201,7 @@
 
 	  <div class="field">
 	 	<div class="ui tiny header">Are you interested in any of the following BME academic expereinces? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in bmeAcademicPrograms">
+	 	<div class="field" ng-repeat="opt in userInfo.bmeAcademicPrograms">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedBmeAcademPrograms[]" value="{{opt}}" ng-checked="form.bme_academ_exp.indexOf(opt) > -1">
 	  				<label ng-click="toggleSelection(opt, 'bme_academ_exp')">{{opt.name}}</label>
@@ -211,7 +211,7 @@
 
 	 <div class="field">
 	 	<div class="ui tiny header">Are you interested in any of the following academic international experiences? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in internationalPrograms">
+	 	<div class="field" ng-repeat="opt in userInfo.internationalPrograms">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedInternationalPrograms[]" value="{{opt}}" ng-checked="form.international_experience.indexOf(opt) > -1">
 	  				<label ng-click="toggleSelection(opt, 'international_experience')">{{opt.name}}</label>
@@ -221,7 +221,7 @@
 
 	 <div class="field">
 	 	<div class="ui tiny header">Are you interested in pursuing any of the following career development programs? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in carrerDevPrograms">
+	 	<div class="field" ng-repeat="opt in userInfo.carrerDevPrograms">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedCareerDevPrograms[]" value="{{opt}}" ng-checked="form.career_dev_program.indexOf(opt) > -1">
 	  				<label ng-click="toggleSelection(opt, 'career_dev_program')">{{opt.name}}</label>

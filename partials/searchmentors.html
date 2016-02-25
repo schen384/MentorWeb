@@ -252,7 +252,7 @@
 
     <div id="mentor-note" class="ui page dimmer" ng-click="noteHeight()">
       <div class="ui info message note-message">
-        <i class="close icon" ng-click="notification()"></i>
+        <i class="close icon" ng-click="toggleNote()"></i>
         <div class="title">
           Mentor Confirmation
         </div>
@@ -270,7 +270,7 @@
           </div>
         </div>
         <div class="ui options">
-          <div class="ui Negative medium button" ng-click="notification()">
+          <div class="ui Negative medium button" ng-click="toggleNote()"> <!--notification() -->
             Cancel
           </div>
           <div class="ui positive medium button" ng-click="chooseMentor()">

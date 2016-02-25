@@ -39,6 +39,15 @@
 		</put>
 	</command>
 
+	<command id='mentorUpdate' security='public'>
+		<description><![CDATA[Update mentor profile.]]></description>
+
+		<post>
+			<description><![CDATA[Update profile.]]></description>
+			<action file='db/db.php'><![CDATA[updateMentorProfile();]]></action>
+		</post>
+	</command>
+	
 	<command id='listMentors' security='protected'>
 		<description><![CDATA[Returns a list of mentors.]]></description>
 
@@ -104,6 +113,11 @@
 
 			 <action file='db/db.php'><![CDATA[listMentee();]]></action>
 		</index>
+
+		<get>
+			<description><![CDATA[This is how to retreive informatio on a single mentee]]></description>
+			<action file='db/db.php'><![CDATA[getMentee($_REST['mentee']);]]></action>
+		</get>
 
 		<post>
 			<description><![CDATA[This is how new mentees submit the registration form to create a new profile.]]></description>
