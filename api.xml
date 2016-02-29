@@ -47,6 +47,15 @@
 			<action file='db/db.php'><![CDATA[updateMentorProfile();]]></action>
 		</post>
 	</command>
+
+	<command id='menteeUpdate' security='public'>
+		<description><![CDATA[Update mentee profile.]]></description>
+
+		<post>
+			<description><![CDATA[Update profile.]]></description>
+			<action file='db/db.php'><![CDATA[updateMenteeProfile();]]></action>
+		</post>
+	</command>
 	
 	<command id='listMentors' security='protected'>
 		<description><![CDATA[Returns a list of mentors.]]></description>

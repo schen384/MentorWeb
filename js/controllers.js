@@ -75,26 +75,6 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
   }
 
   $scope.$parent.refreshHeader = $scope.refreshHeader;
-  $scope.$on('$locationChangeStart', function(event) { 
-    // if($scope.$parent.headerType == null || $scope.$parent.headerType.none == 1) {
-    //   $location.path('/welcome');
-    // }
-    // $.ajax({
-    //       url: "api/user",
-    //       dataType: "json",
-    //       async: false,
-    //       success: function(result) {
-    //         console.log("User logged in - locationChangeStart");
-    //       },
-    //       error: function(result) {
-    //         $location.path("/welcome");
-    //         // event.preventDefault();
-
-    //       },
-    //       type: 'GET'
-    //     }); 
-
-  });
   $scope.$on('$locationChangeSuccess', function() { 
     //add authentication validation?
 
@@ -106,11 +86,13 @@ appControllers.controller('HeaderController', ['$scope', '$http', '$location', f
 appControllers.controller('ContactController', ['$scope','$location', function($scope,$location) {
 }]);
 
-appControllers.controller('EditProfileController', ['$scope', '$http', '$location','UserInfoService', function($scope, $http, $location,$UserInfoService) {
+appControllers.controller('EditProfileController', ['$scope', '$http', '$location','UserInfoService','FieldText', function($scope, $http, $location,$UserInfoService,$FieldText) {
   var data = {};
-  $scope.form = [];
+  $scope.form = {};
+  $scope.field_text = {};
+  $scope.mentor_specific = false;
   $scope.userInfo = $UserInfoService.userInfo;
-  // $('.ui.radio.checkbox').checkbox();
+
   $('.ui.checkbox').checkbox();
   $('select.dropdown').dropdown();
   $UserInfoService.formui();
@@ -134,10 +116,12 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
     type: 'GET'
     // error: ajaxError
   }); 
-  if(data["Mentor"]) {
-    $scope.viewMentorForm = 1;
-    $scope.viewMenteeForm = 0;
 
+  if(data["Mentor"]) {
+    $scope.mentor_specific = true;
+    // $scope.viewMentorForm = 1;
+    // $scope.viewMenteeForm = 0;
+    $scope.field_text = $FieldText.mentor_field_text;
     $.get('api/mentor/' + $scope.username).success(function(data) {
       $scope.data = JSON.parse(data)[0];
       $scope.form = $UserInfoService.data_expand($scope.data);
@@ -148,13 +132,14 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
     });
   }
   if(data["Mentee"]) {
-    $scope.viewMenteeForm = 1;
-    $scope.viewMentorForm = 0;
-
+    // $scope.viewMenteeForm = 1;
+    // $scope.viewMentorForm = 0;
+    $scope.field_text = $FieldText.mentee_field_text;
     $.get('api/mentee/' + $scope.username).success(function(data) {
       $scope.data = JSON.parse(data)[0];
-      $scope.form = $scope.data;
-      // console.log($scope.data);
+      $scope.form = $UserInfoService.data_expand($scope.data);
+      $scope.userInfo = $UserInfoService.update_description($scope.form.breadth_track,$scope.userInfo);
+      console.log($scope.data);
       $scope.form.load = true;
       $scope.$apply();
     });
@@ -208,7 +193,8 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
   $scope.submitEdit = function() {
     $scope.submitData = $UserInfoService.editprofiledata($scope.form);
     console.log($scope.submitData);
-    $.ajax({
+    if(data["Mentor"]) {
+      $.ajax({
         url: "api/mentorUpdate",
         dataType: "json",
         async: false,
@@ -216,7 +202,19 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
         type: 'POST',
         success: $scope.success()
         // error: ajaxError
+      }); 
+    } else {
+      $.ajax({
+        url: "api/menteeUpdate",
+        dataType: "json",
+        async: false,
+        data: $scope.submitData,
+        type: 'POST',
+        success: $scope.success()
+        // error: ajaxError
       });
+    }
+    
   }
   
   $scope.success = function() {
@@ -916,20 +914,26 @@ appControllers.controller('RegisterMenteeController', ['$scope', '$http', '$filt
       $scope.form.other_major = null;
     } 
     if (value && attr == "transfer_from_within") {
-      $scope.form.transfer_from_outside = 0;
-      $scope.form.institution_name = "";
+      $scope.form.transfer_from_outside = null;
+      $scope.form.institution_name = null;
     } else if (value && attr == "transfer_from_outside") {
       $scope.form.transfer_from_within = 0;
-      $scope.form.prev_major = "";
+      $scope.form.prev_major = null;
+    } else if (!value && attr == "transfer_from_outside") {
+      $scope.form.transfer_from_outside = 0;
+      $scope.form.transfer_from_within = 0;
+      $scope.form.institution_name = null;
+      $scope.form.prev_major = null;
     }
   }
 
  
   $scope.addMentee = function() {
+    // console.log($UserInfoService.wrapMenteeData($scope.form))
     $.ajax({
       url: "api/mentee",
       dataType: "json",
-          async: false,
+      async: false,
       data: $UserInfoService.wrapMenteeData($scope.form),
       type: 'POST',
       success: $scope.success()

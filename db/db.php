@@ -136,7 +136,7 @@
 		$lname = mysql_real_escape_string($_POST['lname']);
 		$phone = mysql_real_escape_string($_POST['phone']);
 		$email = mysql_real_escape_string($_POST['email']);
-		$pref_comm = mysql_real_escape_string($_POST['pref_comm']);
+		$pref_communication = mysql_real_escape_string($_POST['pref_comm']);
 		$depth_focus = mysql_real_escape_string($_POST['dfocus']);
 		$depth_focus_other = mysql_real_escape_string($_POST['dfocusother']); //don't need escape string for pre-defined vals
 		$first_gen_college_student = $_POST['first_gen_college_student'];
@@ -355,7 +355,8 @@
 	 function getMentee($mentee) {
 	 	$user = $mentee;
 
-	 	$dbQuery = sprintf("SELECT *
+	 	$dbQuery = sprintf("SELECT *,GROUP_CONCAT(Mentee_Breadth_Track.breadth_track) as `breadth_tracks`
+									,GROUP_CONCAT(Mentee_Breadth_Track.breadth_track_desc) as `breadth_track_descs`
 							FROM USER 
 							LEFT JOIN Mentee_Breadth_Track ON USER.username = Mentee_Breadth_Track.username
 							LEFT JOIN Mentee_BME_Organization ON USER.username = Mentee_BME_Organization.username
@@ -1312,6 +1313,256 @@
 		// echo json_encode($uresult+$mresult);
 		
 	}
+
+//begin edit mentee profile
+	function updateMenteeProfile() {
+		
+		echo "Update Mentee Profile in PHP \n";
+		global $_USER;	
+		$user = $_USER['uid'];
+		echo $user;
+		$fname = mysql_real_escape_string($_POST['fname']);//$data->fname);
+		echo $fname;
+		$lname = mysql_real_escape_string($_POST['lname']);
+		$phone = mysql_real_escape_string($_POST['phone']);
+		$email = mysql_real_escape_string($_POST['email']);
+		$pref_communication = mysql_real_escape_string($_POST['pref_communication']);
+		$gender = mysql_real_escape_string($_POST['gender']);
+		$depth_focus = mysql_real_escape_string($_POST['dfocus']);
+		$depth_focus_other = mysql_real_escape_string($_POST['dfocusother']); 
+		$live_before_tech = mysql_real_escape_string($_POST['live_before_tech']);
+		$live_on_campus = $_POST['live_on_campus']; //is number 0 or 1 posting?
+		$first_gen_college_student = $_POST['first_gen_college_student'];
+		$transfer_from_outside = $_POST['transfer_from_outside'];
+		$institution_name = mysql_real_escape_string($_POST['institution_name']);
+		$transfer_from_within = $_POST['transfer_from_within'];
+		$prev_major = mysql_real_escape_string($_POST['prev_major']);
+		$international_student = $_POST['international_student'];
+		$home_country =  mysql_real_escape_string($_POST['home_country']);
+		$expec_graduation = mysql_real_escape_string($_POST['expec_graduation']);
+		$other_major =  mysql_real_escape_string($_POST['other_major']);
+	
+
+	
+
+		$undergrad_research = $_POST['undergrad_research'];
+		if ($_POST['undergrad_research']) {
+			$undergrad_research = 1;
+			$undergrad_research_desc = $_POST['undergrad_research_desc'];
+		} else {
+			$undergrad_research = 0;
+			$undergrad_research_desc = null;
+		}
+
+
+		$bme_org1 = null;
+		$bme_org2 = null;
+		$bme_org3 = null;
+		$bme_org4 = null;
+		$bme_org5 = null;
+		$bme_org6 = null;
+		$bme_org7 = null;
+		$bmeOrgs = $_POST['bme_organization'];
+		for ($i=1; $i <= count($bmeOrgs); $i++) {
+			${"bme_org" . $i}  = $bmeOrgs[$i-1]; //Json of all the organizations $_POST['bme_organization']
+		}
+		if ($_POST['bme_org_other']) {
+			$bme_org_other = mysql_real_escape_string($_POST['bme_org_other']);
+		} else {
+			$bme_org_other = null;
+		}
+
+
+		$tutor_teacher_program1 = null;
+		$tutor_teacher_program2 = null;
+		$tutor_teacher_program3 = null;
+		$tutor_teacher_program4 = null;
+		$tutor_teacher_program5 = null;
+		$tutor_teacher_program6 = null;
+		$ttProg = $_POST['tutor_teacher_program'];
+		for ($i=1; $i <= count($ttProg); $i++) {
+			${"tutor_teacher_program" . $i}  = $ttProg[$i-1]; 
+		}
+		if ($_POST['tutor_teacher_program_other']) {
+			$tutor_teacher_program_other = mysql_real_escape_string($_POST['tutor_teacher_program_other']);
+		} else {
+			$tutor_teacher_program_other = null;
+		}
+
+		$bme_academ_exp1 = null;
+		$bme_academ_exp2 = null;
+		$bme_academ_exp3 = null;
+		$bme_academ_exp4 = null;
+		$bmeExp = $_POST['bme_academ_exp'];
+		for ($i=1; $i <= count($bmeExp); $i++) {
+			${"bme_academ_exp" . $i}  = $bmeExp[$i-1]; 
+		}
+		if ($_POST['bme_academ_exp_other']) {
+			$bme_academ_exp_other = mysql_real_escape_string($_POST['bme_academ_exp_other']);
+		} else {
+			$bme_academ_exp_other = null;
+		}
+
+		$international_experience1 = null;
+		$international_experience2 = null;
+		$international_experience3 = null;
+		$international_experience4 = null;
+		$international_experience5 = null;
+		$internatExp = $_POST['international_experience'];
+		for ($i=1; $i <= count($internatExp); $i++) {
+			${"international_experience" . $i}  = $internatExp[$i-1]; 
+		}
+		if ($_POST['international_experience_other']) {
+			$international_experience_other = mysql_real_escape_string($_POST['international_experience_other']);
+		} else {
+			$international_experience_other = null;
+		}
+
+		$career_dev_program1 = null;
+		$career_dev_program2 = null;
+		$career_dev_program3 = null;
+		$carDevProg = $_POST['career_dev_program']; 
+		for ($i=1; $i <= count($carDevProg); $i++) {
+			${"career_dev_program" . $i}  = $carDevProg[$i-1]; 
+		}
+		if ($_POST['career_dev_program_other']) {
+			$career_dev_program_other = mysql_real_escape_string($_POST['career_dev_program_other']);
+		} else {
+			$career_dev_program_other = null;
+		}
+
+		$post_grad_plan = mysql_real_escape_string($_POST['post_grad_plan']);
+		if ($_POST['post_grad_plan_desc']) {
+			$post_grad_plan_desc = mysql_real_escape_string($_POST['post_grad_plan_desc']);
+		} else {
+			$post_grad_plan_desc = null;
+		}
+
+		$personal_hobby = mysql_real_escape_string($_POST['personal_hobby']);
+
+		$userQuery = sprintf("UPDATE USER SET last_name='%s', first_name='%s', phone_num='%s', email='%s', pref_communication='%s'
+							  WHERE username='%s'", $lname, $fname, $phone, $email, $pref_communication, $user);
+		$uResult = getDBRegInserted($userQuery);
+
+
+		$menteeQuery = sprintf("UPDATE Mentee SET  depth_focus='%s', depth_focus_other='%s',
+			first_gen_college_student='%u', transfer_from_outside='%u', institution_name='%s',
+			transfer_from_within='%u', prev_major='%s', international_student='%u', expec_graduation='%s', other_major='%s', 
+			undergrad_research='%u', undergrad_research_desc='%s', post_grad_plan='%s', post_grad_plan_desc='%s', personal_hobby='%s'
+			WHERE username='%s'", 
+			$depth_focus, $depth_focus_other,
+			$first_gen_college_student, $transfer_from_outside, $institution_name, 
+			$transfer_from_within, $prev_major, $international_student, $expec_graduation, $other_major,
+			$undergrad_research, $undergrad_research_desc, $post_grad_plan, $post_grad_plan_desc, $personal_hobby, $user);
+		$mResult = getDBRegInserted($menteeQuery);
+
+		$bTrack = $_POST['breadth_track'];
+		//delete first
+		$bTrackDelQuery = sprintf("DELETE FROM Mentee_Breadth_Track WHERE username='%s'",$user);
+		$bTrackDelResult = getDBRegInserted($bTrackDelQuery);
+		foreach ($bTrack as $key => $value) {
+			$breadth_track = $value['name'];
+			$breadth_track_desc = $value['desc'];
+			$bTrackQuery = sprintf("INSERT INTO Mentee_Breadth_Track(username, breadth_track, breadth_track_desc) VALUES ('%s', '%s', '%s')",
+			$user, $breadth_track, $breadth_track_desc);
+			$bTrackResult = getDBRegInserted($bTrackQuery);
+		}
+
+		if ($_POST['bme_organization']) {
+			$bmeOrgCheckQuery = sprintf("SELECT count(*) FROM Mentee_BME_Organization WHERE username='%s'",$user);
+			$bmeOrgCheckResult = getDBResultRecord($bmeOrgCheckQuery);
+			$bmeOrgQuery = sprintf("");
+			if($bmeOrgCheckResult['count(*)'] >= 1) {
+				$bmeOrgQuery = sprintf("UPDATE Mentee_BME_Organization SET bme_org1='%s', bme_org2='%s', bme_org3='%s',
+					bme_org4='%s', bme_org5='%s', bme_org6='%s', bme_org7='%s', bme_org_other='%s'  WHERE username='%s'",
+					$bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other, $user);
+			} else {
+				$bmeOrgQuery = sprintf("INSERT INTO Mentee_BME_Organization(username, bme_org1, bme_org2, bme_org3,
+					bme_org4, bme_org5, bme_org6, bme_org7, bme_org_other) VALUES ('%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other);
+			}			
+			$bmeOrgResult = getDBRegInserted($bmeOrgQuery);
+		}
+
+
+		if ($_POST['tutor_teacher_program']) {
+			$ttProgCheckQuery = sprintf("SELECT count(*) FROM Mentee_Tutor_Teacher_Program WHERE username='%s'",$user);
+			$ttProgCheckResult = getDBResultRecord($ttProgCheckQuery);
+			$ttProgQuery = sprintf("");
+			if($ttProgCheckResult['count(*)'] >= 1) {
+				$ttProgQuery = sprintf("UPDATE Mentee_Tutor_Teacher_Program SET tutor_teacher_program1='%s', tutor_teacher_program2='%s', 
+					tutor_teacher_program3='%s', tutor_teacher_program4='%s', tutor_teacher_program5='%s', tutor_teacher_program6='%s', tutor_teacher_program_other='%s' WHERE username='%s'", 
+					$tutor_teacher_program1, $tutor_teacher_program2, $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other, $user);
+			} else {
+				$ttProgQuery = sprintf("INSERT INTO Mentee_Tutor_Teacher_Program(username, tutor_teacher_program1, tutor_teacher_program2, 
+						tutor_teacher_program3, tutor_teacher_program4, tutor_teacher_program5, tutor_teacher_program6, tutor_teacher_program_other)
+					 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $tutor_teacher_program1, $tutor_teacher_program2, 
+					 $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other);
+			}	
+			$ttProgResult = getDBRegInserted($ttProgQuery);
+		}
+
+		if ($_POST['bme_academ_exp']) {
+			$bmeCheckQuery = sprintf("SELECT count(*) FROM Mentee_BME_Academic_Experience WHERE username='%s'",$user);
+			$bmeCheckResult = getDBResultRecord($bmeCheckQuery);
+			$bmeQuery = sprintf("");
+			if($bmeCheckResult['count(*)'] >= 1) {
+				$bmeQuery = sprintf("UPDATE Mentee_BME_Academic_Experience SET bme_academ_exp1='%s', bme_academ_exp2='%s',
+					bme_academ_exp3='%s', bme_academ_exp4='%s', bme_academ_exp_other='%s' WHERE username='%s'",
+					$bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other, $user);
+			} else {
+				$bmeQuery = sprintf("INSERT INTO Mentee_BME_Academic_Experience(username, bme_academ_exp1, bme_academ_exp2,
+					bme_academ_exp3, bme_academ_exp4, bme_academ_exp_other) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other);
+			}
+			$bmeResult = getDBRegInserted($bmeQuery);
+		}
+
+		if ($_POST['international_experience']) {
+			$interCheckQuery = sprintf("SELECT count(*) FROM Mentee_International_Experience WHERE username='%s'",$user);
+			$interCheckResult = getDBResultRecord($interCheckQuery);
+			$interQuery = sprintf("");
+			if($interCheckResult['count(*)'] >= 1) {
+				$interQuery = sprintf("UPDATE Mentee_International_Experience SET international_experience1='%s', international_experience2='%s', 
+					international_experience3='%s', international_experience4='%s', international_experience5='%s', international_experience_other='%s' WHERE username='%s'", 
+					$international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other, $user);
+			} else {
+				$interQuery = sprintf("INSERT INTO Mentee_International_Experience(username, international_experience1, international_experience2, 
+						international_experience3, international_experience4, international_experience5, international_experience_other)
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other);
+			}
+			$interResults = getDBRegInserted($interQuery);
+		}
+
+		if ($_POST['career_dev_program']) {
+			$careerCheckQuery = sprintf("SELECT count(*) FROM Mentee_Career_Dev_Program WHERE username='%s'",$user);
+			$careerCheckResult = getDBResultRecord($careerCheckQuery);
+			$careerQuery = sprintf("");
+			if($careerCheckResult['count(*)'] >= 1) {
+				$careerQuery = sprintf("UPDATE Mentee_Career_Dev_Program SET career_dev_program1='%s',
+					career_dev_program2='%s', career_dev_program3='%s', career_dev_program_other='%s' WHERE username='%s'",
+					 $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other, $user);
+			} else {
+				$careerQuery = sprintf("INSERT INTO Mentee_Career_Dev_Program(username, career_dev_program1,
+					career_dev_program2, career_dev_program3, career_dev_program_other) VALUES ('%s', '%s', '%s','%s', '%s')",
+					$user, $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other);
+			}
+			$careerResults = getDBRegInserted($careerQuery);
+		}
+
+
+		
+
+		// //header("Content-type: application/json");
+		// // print_r($json);
+		// echo json_encode($uresult+$mresult);
+		
+	}
+
+
+
 
 	function listAliasNames($alias) {
 		$countHasName = sprintf("SELECT username FROM Mentor WHERE Mentor.alias = '%s'", $alias);

@@ -616,18 +616,20 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     if(data.transfer_from_outside == 0 && data.transfer_from_within == 0) data.non_transfer = -1;
 
     data.bts = userObj.breadthTracks;
-    var bt = data.breadth_tracks.split(',');
-    var btd = data.breadth_track_descs.split(',');
-    for (i = 0;i < bt.length;i++) {
-      for(var j = 0;j < data.bts.length;j++) {
-        if(data.bts[j].name == bt[i]) {
-          data.bts[j].desc = btd[i];
-          data.bts[j].display = 1;
-          data.breadth_track.push(data.bts[j]);
+    if(data.breadth_tracks) {
+      var bt = data.breadth_tracks.split(',');
+      var btd = data.breadth_track_descs.split(',');
+      for (i = 0;i < bt.length;i++) {
+        for(var j = 0;j < data.bts.length;j++) {
+          if(data.bts[j].name == bt[i]) {
+            data.bts[j].desc = btd[i];
+            data.bts[j].display = 1;
+            data.breadth_track.push(data.bts[j]);
+          }
         }
-      }
+      }  
     }
-
+    
     data.majorHelper = data.other_major == '' ? 'No' : 'Yes';
     return data;
   }
@@ -655,3 +657,46 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     "editprofiledata":editProfileData
   };
 }]);
+
+
+myApp.factory('FieldText', ['$q','$http','$location',function($q,$http,$location) {
+  var mentor_field_text = {
+    career_dev_program: 'Have you participated in any of the following career development programs? Check all that apply.',
+    international_experience: 'Have you had, or do you plan to have, any academic international experiences? For example, international plan, work abroad, research abroad, medical mission trips, or GT-Lorraine. Check all that apply.',
+    bme_academ_exp: 'Have you taken part in any of the following significant BME academic expereinces? Check all that apply.',
+    tutor_teacher_program: 'Have you served as a tutor/facilitator/teaching assistant in any of the following programs? Check all that apply.',
+    bme_organization: 'Have you participated in a significant way in any of the following BME student organizations? Check all that apply.',
+    experience_heading: 'Prior Involvement and Experiences',
+    breadth_track: 'Which breadth track(s) do you expect to complete? For each track you select, elaborate if you want. For example, for Research Option, which lab(s) have you worked in, for Minor/Certificate, what is the name of your minor/certificate, etc.',
+    depth_focus: 'What depth focus do you plan to choose, or have you chosen already?',
+    undergrad_research: 'Have you worked as an undergraduate researcher (other than for the research option, which was asked about earlier)?',
+    undergrad_research_desc: 'What lab(s) and for how many semesters have you worked?'
+  };
+
+  var mentee_field_text = {
+    career_dev_program: 'Are you interested in pursuing any of the following career development programs? Check all that apply.',
+    international_experience: 'Are you interested in any of the following academic international experiences? Check all that apply.',
+    bme_academ_exp: 'Are you interested in any of the following BME academic expereinces? Check all that apply.',
+    tutor_teacher_program: 'Are you interested in any of the following tutor/facilitator/teaching programs? Check all that apply.',
+    bme_organization: 'Are you interested in participating in any of the following BME student organizations? Check all that apply.',
+    experience_heading: 'Organizations or Experiences That May Interest You',
+    breadth_track: 'Which breadth track(s) do you expect to complete? For each track you select, please elaborate. For example, for Research Option, which lab(s) have you worked in, for Minor/Certificate, what is the name of your minor/certificate, etc.',
+    depth_focus: 'Depth Focus',
+    undergrad_research: 'Do you plan on working as an undergraduate researcher?',
+    undergrad_research_desc: 'What lab(s) are you interested in?'
+
+  }
+
+
+  return {
+    'mentor_field_text': mentor_field_text,
+    'mentee_field_text': mentee_field_text
+  }
+
+
+
+
+}]);
+
+
+
