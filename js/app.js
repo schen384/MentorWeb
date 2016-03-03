@@ -355,7 +355,7 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     name:'Volunteer Abroad'
   }];
 
-  userObj.carrerDevPrograms = [{
+  userObj.careerDevPrograms = [{
     id:1,
     name:'Co-op'
   }, {
@@ -385,6 +385,57 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     id:6,
     name:'Other'
   }];
+
+  var ui_rules = {
+      fname: {
+        identifier  : 'fname',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter your first name'
+          }
+        ]
+      },
+      lname: {
+        identifier  : 'lname',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter your last name'
+          }
+        ]
+      },
+      email: {
+        identifier  : 'email',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter your email'
+          },{
+            type: 'email',
+            prompt: 'Please enter a valid email'
+          }
+        ]
+      },
+      prefComm: {
+        identifier  : 'prefComm',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter your preferred communication method'
+          }
+        ]
+      }
+      // other_major: {
+      //   identifier: 'other_major',
+      //   rules: [
+      //     {
+      //       type: 'empty',
+      //       prompt: 'Please specify your other major'
+      //     }
+      //   ]
+      // }
+  };
 
   var formUI = function() {
     $('.ui.form')
@@ -654,7 +705,8 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     "wrapMentorData":wrapMentorData,
     "data_expand":data_expand,
     "update_description": Update_Description,
-    "editprofiledata":editProfileData
+    "editprofiledata":editProfileData,
+    "ui_rules":ui_rules
   };
 }]);
 

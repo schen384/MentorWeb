@@ -92,15 +92,27 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
   $scope.field_text = {};
   $scope.mentor_specific = false;
   $scope.userInfo = $UserInfoService.userInfo;
-
+  $scope.validation = false;
   $('.ui.checkbox').checkbox();
   $('select.dropdown').dropdown();
-  $UserInfoService.formui();
+  
+  $('.ui.form')
+    .form($UserInfoService.ui_rules,{
+      inline: true,
+      on: 'blur',
+      transition: 'fade down', 
+      onSuccess: function() {
+        $scope.validation = true;
+      },
+      onFailure: function() {
+        $scope.validation = false;
+      }
+    });
 
   $('form').submit(function(e){
     e.preventDefault();
-    $('.ui.form').form('validate form');
-    $scope.submitEdit();
+    $('.ui.form').form('validate form'); 
+    // $scope.submitEdit();
   });
 
 
@@ -192,33 +204,34 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
 
   $scope.submitEdit = function() {
     $scope.submitData = $UserInfoService.editprofiledata($scope.form);
-    console.log($scope.submitData);
-    if(data["Mentor"]) {
-      $.ajax({
-        url: "api/mentorUpdate",
-        dataType: "json",
-        async: false,
-        data: $scope.submitData,
-        type: 'POST',
-        success: $scope.success()
-        // error: ajaxError
-      }); 
-    } else {
-      $.ajax({
-        url: "api/menteeUpdate",
-        dataType: "json",
-        async: false,
-        data: $scope.submitData,
-        type: 'POST',
-        success: $scope.success()
-        // error: ajaxError
-      });
+    if($scope.validation) {
+      if(data["Mentor"]) {
+        $.ajax({
+          url: "api/mentorUpdate",
+          dataType: "json",
+          async: false,
+          data: $scope.submitData,
+          type: 'POST',
+          success: $scope.success()
+          // error: ajaxError
+        }); 
+      }else {
+        $.ajax({
+          url: "api/menteeUpdate",
+          dataType: "json",
+          async: false,
+          data: $scope.submitData,
+          type: 'POST',
+          success: $scope.success()
+          // error: ajaxError
+        });
+      }
     }
-    
   }
   
   $scope.success = function() {
     console.log("Update successful");
+    $location.path('/homescreen');
   }
 
 }]);

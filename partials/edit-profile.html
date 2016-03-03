@@ -6,8 +6,8 @@
 
 <!-- mentor/mentee profile form -->
  <!-- <div ng-show="viewMentorForm" > -->
- <div>
- 	<div class="ui error form segment">
+  <form class="ui form segment" name="editForm">
+ 	<!-- <div class="ui form error segment"> -->
 	<h2 class="ui inverted black block header">Basic Information</h2><br/>
 	  <div class="two fields">
 	    <div class="field">
@@ -18,7 +18,7 @@
 	    <div class="field">
 	      <div class="ui tiny header"><i class="asterisk teal icon"></i>Last Name</div>
 	      <br/>
-	      <input type="text" id="last_name" ng-model="form.last_name" placeholder="Last Name">
+	      <input type="text" id="lname" ng-model="form.last_name" placeholder="Last Name">
 	    </div>
 	  </div>
 	  <div class="field">
@@ -122,9 +122,9 @@
 	    <br/>
 	  		<input type="text" id="home_country" ng-model="form.home_country" placeholder="Please Specify">
 	  </div>
-	</div>
+	<!-- </div> -->
 
-	<div class="ui error form segment" ng-show="mentor_specific">
+	<div ng-show="mentor_specific">
 	  <h2 class="ui inverted black block header">Demographic Information</h2><br/>
 	  <p>Your ethnicity will NOT be used for the mentor-mentee matching process. It is only intended to provide the program managers information about the demographics of the program's participants.</p>
 	  <p>Your gender, if you specify here, will be provided during the mentor-mentee matching process because sometimes mentees specifically look for a mentor of a certain gender.</p>
@@ -154,7 +154,7 @@
 	 </div>
 	</div>
 
-	<div class="ui error form segment">
+	<!-- <div class="ui error form segment"> -->
 	<h2 class="ui inverted black block header">Academics</h2><br/>
 
  	<div class="field">
@@ -256,9 +256,9 @@
       	<input type="text" id="post_grad_plan_desc" ng-model="form.post_grad_plan_desc" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
-	 </div>
+	 <!-- </div> -->
 	
-	<div class="ui error form segment">
+	<!-- <div class="ui error form segment"> -->
 	<h2 class="ui inverted black block header">{{field_text.experience_heading}}</h2><br/>
 
 	<div class="field" ng-show="mentor_specific">
@@ -347,7 +347,7 @@
 	 <div class="field">
 	 	<div class="ui tiny header">{{field_text.career_dev_program}}</div>
 	 	<br/>
-	 	<div class="field" ng-repeat="opt in userInfo.carrerDevPrograms">
+	 	<div class="field" ng-repeat="opt in userInfo.careerDevPrograms">
 	  			<div class="ui checkbox">
 	  				<input type="checkbox" name="selectedCareerDevPrograms[]" value="{{opt.name}}" ng-checked="form.career_dev_program.indexOf('{{opt.name}}') > -1">
 	  				<label ng-click="toggleSelection(opt.name, 'career_dev_program')">{{opt.name}}</label>
@@ -363,12 +363,12 @@
       	<input type="text" id="personal_hobby" ng-model="form.personal_hobby" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 	
-	</div>
+	<!-- </div> -->
 
 
-	<div id="reg_submit_button" class="ui blue submit button" ng-click="submitEdit()">Next</div> <!-- add updateMentor function to ng-click -->
+	<div id="reg_submit_button" class="right floated ui blue submit button" ng-click="submitEdit()">Done</div> <!-- add updateMentor function to ng-click -->
 
-</div>
+</form>
 
 
 </div>
