@@ -89,16 +89,18 @@
 			$userInfo["Admin"] = 1;
 			$userInfo["Name"] = $isAdmin[0]["first_name"];
 		}
-		$checkMentor = sprintf("SELECT first_name FROM USER, Mentor WHERE USER.username = '%s' AND Mentor.username = '%s'", $user, $user);
+		$checkMentor = sprintf("SELECT USER.username, first_name FROM USER, Mentor WHERE USER.username = '%s' AND Mentor.username = '%s'", $user, $user);
 		$isMentor = getDBResultsArray($checkMentor);
 		if (!empty($isMentor)) {
 			$userInfo["Mentor"] = 1;
+			$userInfo["Username"] = $isMentor[0]["username"];
 			$userInfo["Name"] = $isMentor[0]["first_name"];
 		}
-		$checkMentee = sprintf("SELECT first_name, mentor_user FROM USER, Mentee WHERE USER.username = '%s' AND Mentee.username = '%s'", $user, $user);
+		$checkMentee = sprintf("SELECT USER.username, first_name, mentor_user FROM USER, Mentee WHERE USER.username = '%s' AND Mentee.username = '%s'", $user, $user);
 		$isMentee = getDBResultsArray($checkMentee);
 		if (!empty($isMentee)) {
 			$userInfo["Mentee"] = 1;
+			$userInfo["Username"] = $isMentee[0]["username"];
 			$userInfo["Name"] = $isMentee[0]["first_name"];
 			$userInfo["Mentor"] = $isMentee[0]["mentor_user"];
 		}
@@ -121,7 +123,10 @@
 
 	function listMentor(){
 		echo "list Mentor";
+	}
 
+	function listMentee(){
+		echo "list Mentee";
 	}
 
 	function addMentee() {
@@ -131,7 +136,7 @@
 		$lname = mysql_real_escape_string($_POST['lname']);
 		$phone = mysql_real_escape_string($_POST['phone']);
 		$email = mysql_real_escape_string($_POST['email']);
-		$pref_comm = mysql_real_escape_string($_POST['pref_comm']);
+		$pref_communication = mysql_real_escape_string($_POST['pref_comm']);
 		$depth_focus = mysql_real_escape_string($_POST['dfocus']);
 		$depth_focus_other = mysql_real_escape_string($_POST['dfocusother']); //don't need escape string for pre-defined vals
 		$first_gen_college_student = $_POST['first_gen_college_student'];
@@ -262,7 +267,7 @@
 		updateMaxMenteesPerMentor();
 
 		header("Content-type: application/json");
-		// echo json_encode($uresult);
+		echo json_encode($uresult);
 		// echo json_encode($mresult);
 	}
 
@@ -287,7 +292,7 @@
 	function getMentorMatches() {
 		global $_USER;
 		$dbQuery = sprintf("SELECT *
-							FROM USER LEFT JOIN Mentee ON USER.username = Mentee.username 
+							FROM USER 
 							LEFT JOIN Mentee_Breadth_Track ON USER.username = Mentee_Breadth_Track.username
 							LEFT JOIN Mentee_BME_Organization ON USER.username = Mentee_BME_Organization.username
 							LEFT JOIN Mentee_Tutor_Teacher_Program ON USER.username = Mentee_Tutor_Teacher_Program.username
@@ -297,6 +302,7 @@
 							LEFT JOIN Ethnicity ON USER.username = Ethnicity.username
 							LEFT JOIN Matches ON USER.username = Matches.mentee_user
 							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
+							LEFT JOIN Mentee ON USER.username = Mentee.username 
 							WHERE Matches.mentor_user = '%s'", $_USER['uid']);
 		$result = getDBResultsArray($dbQuery);
 
@@ -304,7 +310,7 @@
 	}
 
 	function chooseMentor() {
-		echo var_dump($_POST);
+		
 		global $_USER;
 		// $dbQuery = sprintf("INSERT INTO Matches FROM Mentee WHERE username = '%s'",
 		// 										$_USER['uid']);
@@ -320,8 +326,9 @@
 	 function getMentor($mentor) {
 		$user = $mentor;
 
-		$dbQuery = sprintf("SELECT *
-							FROM USER LEFT JOIN Mentor ON USER.username = Mentor.username 
+		$dbQuery = sprintf("SELECT *,GROUP_CONCAT(Mentor_Breadth_Track.breadth_track) as `breadth_tracks`
+									,GROUP_CONCAT(Mentor_Breadth_Track.breadth_track_desc) as `breadth_track_descs`
+							FROM USER 
 							LEFT JOIN Mentor_Breadth_Track ON USER.username = Mentor_Breadth_Track.username
 							LEFT JOIN Mentor_BME_Organization ON USER.username = Mentor_BME_Organization.username
 							LEFT JOIN Mentor_Tutor_Teacher_Program ON USER.username = Mentor_Tutor_Teacher_Program.username
@@ -333,23 +340,50 @@
 							LEFT JOIN Mentee_Mentor_Organization ON USER.username = Mentee_Mentor_Organization.username
 							LEFT JOIN Matches ON USER.username = Matches.mentor_user
 							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
+							LEFT JOIN Mentor ON USER.username = Mentor.username 
 							WHERE USER.username = '%s'", $user); // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		
+	
+
+
 		$result = getDBResultsArray($dbQuery);
 		// $checkMentee = sprintf("SELECT first_name, id, mentor_user FROM User, Mentee WHERE User.username = '%s' AND Mentee.username = '%s'", $user, $user);
 		// $isMentee = getDBResultsArray($checkMentee);
 		echo json_encode($result);
 	 }
 
+	 function getMentee($mentee) {
+	 	$user = $mentee;
+
+	 	$dbQuery = sprintf("SELECT *,GROUP_CONCAT(Mentee_Breadth_Track.breadth_track) as `breadth_tracks`
+									,GROUP_CONCAT(Mentee_Breadth_Track.breadth_track_desc) as `breadth_track_descs`
+							FROM USER 
+							LEFT JOIN Mentee_Breadth_Track ON USER.username = Mentee_Breadth_Track.username
+							LEFT JOIN Mentee_BME_Organization ON USER.username = Mentee_BME_Organization.username
+							LEFT JOIN Mentee_Tutor_Teacher_Program ON USER.username = Mentee_Tutor_Teacher_Program.username
+							LEFT JOIN Mentee_BME_Academic_Experience ON USER.username = Mentee_BME_Academic_Experience.username
+							LEFT JOIN Mentee_International_Experience ON USER.username = Mentee_International_Experience.username
+							LEFT JOIN Mentee_Career_Dev_Program ON USER.username = Mentee_Career_Dev_Program.username
+							LEFT JOIN Ethnicity ON USER.username = Ethnicity.username
+							LEFT JOIN Mentee_Mentor_Organization ON USER.username = Mentee_Mentor_Organization.username
+							LEFT JOIN Matches ON USER.username = Matches.mentee_user
+							LEFT JOIN Other_Organization ON USER.username = Other_Organization.username
+							LEFT JOIN Mentee ON USER.username = Mentee.username 
+							WHERE USER.username = '%s'", $user); // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
+		
+		$result = getDBResultsArray($dbQuery);
+		echo json_encode($result);
+	 }
+
 	 function listMentors() {
 		$dbQuery = "SELECT * FROM USER
-				LEFT JOIN Mentor ON USER.username = Mentor.username
-				LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username
-				LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username
-				LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username
-				LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
-				LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
-				LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
+				LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = USER.username
+				LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = USER.username
+				LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = USER.username
+				LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = USER.username
+				LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = USER.username
+				LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = USER.username
+				LEFT JOIN Mentor ON USER.username = USER.username
 				WHERE Mentor.username = USER.username
 					AND (SELECT COUNT(*) FROM Matches
 					WHERE Mentor.username = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
@@ -359,20 +393,22 @@
 
 	 function listUnapprovedMentors() {
 		$dbQuery = "SELECT * FROM USER
+													
+													LEFT JOIN Mentor_Breadth_Track
+														ON  USER.username = Mentor_Breadth_Track.username 
+													LEFT JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = USER.username
+													LEFT JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = USER.username
+													LEFT JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = USER.username
+													LEFT JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = USER.username
+													LEFT JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = USER.username
+
 													LEFT JOIN Mentor
 														ON  USER.username = Mentor.username
-													LEFT JOIN Mentor_Breadth_Track
-														ON Mentor_Breadth_Track.username = Mentor.username
-													LEFT JOIN Mentor_BME_Organization
-														ON Mentor_BME_Organization.username = Mentor.username
-													LEFT JOIN Mentor_Tutor_Teacher_Program
-														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
-													LEFT JOIN Mentor_BME_Academic_Experience
-														ON Mentor_BME_Academic_Experience.username = Mentor.username
-													LEFT JOIN Mentor_International_Experience
-														ON Mentor_International_Experience.username = Mentor.username
-													LEFT JOIN Mentor_Career_Dev_Program
-														ON Mentor_Career_Dev_Program.username = Mentor.username
 
 													WHERE Mentor.approved = 0"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
@@ -381,20 +417,21 @@
 
 	 function listApprovedMentors() {
 		$dbQuery = "SELECT * FROM USER
+													
+													LEFT JOIN Mentor_Breadth_Track
+														ON Mentor_Breadth_Track.username = USER.username
+													LEFT JOIN Mentor_BME_Organization
+														ON Mentor_BME_Organization.username = USER.username
+													LEFT JOIN Mentor_Tutor_Teacher_Program
+														ON Mentor_Tutor_Teacher_Program.username = USER.username
+													LEFT JOIN Mentor_BME_Academic_Experience
+														ON Mentor_BME_Academic_Experience.username = USER.username
+													LEFT JOIN Mentor_International_Experience
+														ON Mentor_International_Experience.username = USER.username
+													LEFT JOIN Mentor_Career_Dev_Program
+														ON Mentor_Career_Dev_Program.username = USER.username
 													LEFT JOIN Mentor
 														ON  USER.username = Mentor.username
-													LEFT JOIN Mentor_Breadth_Track
-														ON Mentor_Breadth_Track.username = Mentor.username
-													LEFT JOIN Mentor_BME_Organization
-														ON Mentor_BME_Organization.username = Mentor.username
-													LEFT JOIN Mentor_Tutor_Teacher_Program
-														ON Mentor_Tutor_Teacher_Program.username = Mentor.username
-													LEFT JOIN Mentor_BME_Academic_Experience
-														ON Mentor_BME_Academic_Experience.username = Mentor.username
-													LEFT JOIN Mentor_International_Experience
-														ON Mentor_International_Experience.username = Mentor.username
-													LEFT JOIN Mentor_Career_Dev_Program
-														ON Mentor_Career_Dev_Program.username = Mentor.username
 													WHERE Mentor.approved = 1"; // breadth_track, student_year, career_dev_program, future_plans, Mentor_BME_Academic_Experience,
 		$result = getDBResultsArray($dbQuery);
 		echo json_encode($result);
@@ -699,7 +736,7 @@
 		$ethnicity2 = null; 
 		$ethnicity3 = null;
 		$ethnicity4 = null;
-		$ethnicity5 - null;
+		$ethnicity5 = null;
 		$ethnicity = $_POST['ethnicity'];
 		for ($i=1; $i <= count($ethnicity) ; $i++) {
 			${"ethnicity" . $i}  = $ethnicity[$i-1]['name'];
@@ -844,7 +881,7 @@
 			live_before_tech, live_on_campus, first_gen_college_student, transfer_from_outside, institution_name,
 			transfer_from_within, prev_major, international_student, home_country, expec_graduation, other_major, 
 			undergrad_research, undergrad_research_desc, post_grad_plan, post_grad_plan_desc, personal_hobby) 
-			VALUES ('%s', '%s', '%s', '%s', '%u', '%u', '%u', '%u', '%s', '%u', '%s', '%u', '%s', '%s', '%s', 
+			VALUES ('%s', '%s', '%s', '%s', '%s', '%u', '%u', '%u', '%s', '%u', '%s', '%u', '%s', '%s', '%s', 
 				'%u', '%s', '%s', '%s', '%s')", 
 			$user, $gender, $depth_focus, $depth_focus_other,
 			$live_before_tech, $live_on_campus, $first_gen_college_student, $transfer_from_outside, $institution_name, 
@@ -927,6 +964,605 @@
 		// echo json_encode($uresult+$mresult);
 		
 	}//end addMentor
+
+	//begin edit mentor profile
+	function updateMentorProfile() {
+		
+		echo "Update Mentor Profile in PHP \n";
+		global $_USER;	
+		$user = $_USER['uid'];
+		echo $user;
+		$fname = mysql_real_escape_string($_POST['fname']);//$data->fname);
+		echo $fname;
+		$lname = mysql_real_escape_string($_POST['lname']);
+		$phone = mysql_real_escape_string($_POST['phone']);
+		$email = mysql_real_escape_string($_POST['email']);
+		$pref_communication = mysql_real_escape_string($_POST['pref_communication']);
+		$gender = mysql_real_escape_string($_POST['gender']);
+		$depth_focus = mysql_real_escape_string($_POST['dfocus']);
+		$depth_focus_other = mysql_real_escape_string($_POST['dfocusother']); 
+		$live_before_tech = mysql_real_escape_string($_POST['live_before_tech']);
+		$live_on_campus = $_POST['live_on_campus']; //is number 0 or 1 posting?
+		$first_gen_college_student = $_POST['first_gen_college_student'];
+		$transfer_from_outside = $_POST['transfer_from_outside'];
+		$institution_name = mysql_real_escape_string($_POST['institution_name']);
+		$transfer_from_within = $_POST['transfer_from_within'];
+		$prev_major = mysql_real_escape_string($_POST['prev_major']);
+		$international_student = $_POST['international_student'];
+		$home_country =  mysql_real_escape_string($_POST['home_country']);
+		$expec_graduation = mysql_real_escape_string($_POST['expec_graduation']);
+		$other_major =  mysql_real_escape_string($_POST['other_major']);
+	
+		$ethnicity1 = null;
+		$ethnicity2 = null; 
+		$ethnicity3 = null;
+		$ethnicity4 = null;
+		$ethnicity5 = null;
+		$ethnicity = $_POST['ethnicity'];
+		for ($i=1; $i <= count($ethnicity) ; $i++) {
+			${"ethnicity" . $i}  = $ethnicity[$i-1];
+		}
+
+		$honor_program1 = null;
+		$honor_program2 = null;
+		$honor_program3 = null;
+		$hProgs = $_POST['honor_program'];
+		for ($i=1; $i <= count($hProgs); $i++) {
+			${"honor_program" . $i}  = $hProgs[$i-1]; 
+		}		
+
+		$undergrad_research = $_POST['undergrad_research'];
+		if ($_POST['undergrad_research']) {
+			$undergrad_research_desc = $_POST['undergrad_research_desc'];
+		} else {
+			$undergrad_research_desc = null;
+		}
+
+		if ($_POST['other_organization1']) {
+			$other_organization1 = $_POST['other_organization1'];
+		} else {
+			$other_organization1 = null;
+		}
+		if ($_POST['other_organization2']) {
+			$other_organization2 = $_POST['other_organization2'];
+		} else {
+			$other_organization2 = null;
+		}
+		if ($_POST['other_organization3']) {
+			$other_organization3 = $_POST['other_organization3'];
+		} else {
+			$other_organization3 = null;
+		}
+
+		$bme_org1 = null;
+		$bme_org2 = null;
+		$bme_org3 = null;
+		$bme_org4 = null;
+		$bme_org5 = null;
+		$bme_org6 = null;
+		$bme_org7 = null;
+		$bmeOrgs = $_POST['bme_organization'];
+		for ($i=1; $i <= count($bmeOrgs); $i++) {
+			${"bme_org" . $i}  = $bmeOrgs[$i-1]; //Json of all the organizations $_POST['bme_organization']
+		}
+		if ($_POST['bme_org_other']) {
+			$bme_org_other = mysql_real_escape_string($_POST['bme_org_other']);
+		} else {
+			$bme_org_other = null;
+		}
+
+		$mm_org1 = null;
+		$mm_org2 = null;
+		$mm_org3 = null;
+		$mm_org4 = null;
+		$mm_org5 = null;
+		$mmOrgs = $_POST['mm_org'];
+		for ($i=1; $i <= count($mmOrgs); $i++) {
+			${"mm_org" . $i}  = $mmOrgs[$i-1]; //Json of all the organizations $_POST['bme_organization']
+		} 
+		if ($_POST['mm_org_other']) {
+			$mm_org_other = mysql_real_escape_string($_POST['mm_org_other']);
+		} else {
+			$mm_org_other = null;
+		}
+
+		$tutor_teacher_program1 = null;
+		$tutor_teacher_program2 = null;
+		$tutor_teacher_program3 = null;
+		$tutor_teacher_program4 = null;
+		$tutor_teacher_program5 = null;
+		$tutor_teacher_program6 = null;
+		$ttProg = $_POST['tutor_teacher_program'];
+		for ($i=1; $i <= count($ttProg); $i++) {
+			${"tutor_teacher_program" . $i}  = $ttProg[$i-1]; 
+		}
+		if ($_POST['tutor_teacher_program_other']) {
+			$tutor_teacher_program_other = mysql_real_escape_string($_POST['tutor_teacher_program_other']);
+		} else {
+			$tutor_teacher_program_other = null;
+		}
+
+		$bme_academ_exp1 = null;
+		$bme_academ_exp2 = null;
+		$bme_academ_exp3 = null;
+		$bme_academ_exp4 = null;
+		$bmeExp = $_POST['bme_academ_exp'];
+		for ($i=1; $i <= count($bmeExp); $i++) {
+			${"bme_academ_exp" . $i}  = $bmeExp[$i-1]; 
+		}
+		if ($_POST['bme_academ_exp_other']) {
+			$bme_academ_exp_other = mysql_real_escape_string($_POST['bme_academ_exp_other']);
+		} else {
+			$bme_academ_exp_other = null;
+		}
+
+		$international_experience1 = null;
+		$international_experience2 = null;
+		$international_experience3 = null;
+		$international_experience4 = null;
+		$international_experience5 = null;
+		$internatExp = $_POST['international_experience'];
+		for ($i=1; $i <= count($internatExp); $i++) {
+			${"international_experience" . $i}  = $internatExp[$i-1]; 
+		}
+		if ($_POST['international_experience_other']) {
+			$international_experience_other = mysql_real_escape_string($_POST['international_experience_other']);
+		} else {
+			$international_experience_other = null;
+		}
+
+		$career_dev_program1 = null;
+		$career_dev_program2 = null;
+		$career_dev_program3 = null;
+		$carDevProg = $_POST['career_dev_program']; 
+		for ($i=1; $i <= count($carDevProg); $i++) {
+			${"career_dev_program" . $i}  = $carDevProg[$i-1]; 
+		}
+		if ($_POST['career_dev_program_other']) {
+			$career_dev_program_other = mysql_real_escape_string($_POST['career_dev_program_other']);
+		} else {
+			$career_dev_program_other = null;
+		}
+
+		$post_grad_plan = mysql_real_escape_string($_POST['post_grad_plan']);
+		if ($_POST['post_grad_plan_desc']) {
+			$post_grad_plan_desc = mysql_real_escape_string($_POST['post_grad_plan_desc']);
+		} else {
+			$post_grad_plan_desc = null;
+		}
+
+		$personal_hobby = mysql_real_escape_string($_POST['personal_hobby']);
+
+		$userQuery = sprintf("UPDATE USER SET last_name='%s', first_name='%s', phone_num='%s', email='%s', pref_communication='%s'
+							  WHERE username='%s'", $lname, $fname, $phone, $email, $pref_communication, $user);
+		$uResult = getDBRegInserted($userQuery);
+
+
+		$mentorQuery = sprintf("UPDATE Mentor SET gender='%s', depth_focus='%s', depth_focus_other='%s',
+			live_before_tech='%s', live_on_campus='%u', first_gen_college_student='%u', transfer_from_outside='%u', institution_name='%s',
+			transfer_from_within='%u', prev_major='%s', international_student='%u', home_country='%s', expec_graduation='%s', other_major='%s', 
+			undergrad_research='%u', undergrad_research_desc='%s', post_grad_plan='%s', post_grad_plan_desc='%s', personal_hobby='%s'
+			WHERE username='%s'", 
+			$gender, $depth_focus, $depth_focus_other,
+			$live_before_tech, $live_on_campus, $first_gen_college_student, $transfer_from_outside, $institution_name, 
+			$transfer_from_within, $prev_major, $international_student, $home_country, $expec_graduation, $other_major,
+			$undergrad_research, $undergrad_research_desc, $post_grad_plan, $post_grad_plan_desc, $personal_hobby, $user);
+		$mResult = getDBRegInserted($mentorQuery);
+
+		$bTrack = $_POST['breadth_track'];
+		//delete first
+		$bTrackDelQuery = sprintf("DELETE FROM Mentor_Breadth_Track WHERE username='%s'",$user);
+		$bTrackDelResult = getDBRegInserted($bTrackDelQuery);
+		foreach ($bTrack as $key => $value) {
+			$breadth_track = $value['name'];
+			$breadth_track_desc = $value['desc'];
+			$bTrackQuery = sprintf("INSERT INTO Mentor_Breadth_Track(username, breadth_track, breadth_track_desc) VALUES ('%s', '%s', '%s')",
+			$user, $breadth_track, $breadth_track_desc);
+			$bTrackResult = getDBRegInserted($bTrackQuery);
+		}
+
+
+
+		if ($_POST['ethnicity']) {
+			$ethCheckQuery = sprintf("SELECT count(*) FROM Ethnicity WHERE username='%s'",$user);
+			$ethCheckResult = getDBResultRecord($ethCheckQuery);
+			$ethQuery = sprintf("");
+			if($ethCheckResult['count(*)'] >= 1) {
+				$ethQuery = sprintf("UPDATE Ethnicity SET ethnicity1='%s', ethnicity2='%s', ethnicity3='%s', ethnicity4='%s', ethnicity5='%s' WHERE username='%s'", 
+					$ethnicity1, $ethnicity2, $ethnicity3, $ethnicity4, $ethnicity5, $user);
+				
+			} else {
+				$ethQuery = sprintf("INSERT INTO Ethnicity(username, ethnicity1, ethnicity2, ethnicity3, ethnicity4, ethnicity5) 
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", $user, $ethnicity1, $ethnicity2, $ethnicity3, $ethnicity4, $ethnicity5);
+			}
+			$eResult = getDBRegInserted($ethQuery);	
+			
+		}
+
+
+		if ($_POST['honor_program']) {
+			$hpCheckQuery = sprintf("SELECT count(*) FROM Mentor_Honors_Program WHERE username='%s'",$user);
+			$hpCheckResult = getDBResultRecord($hpCheckQuery);
+			$honorProgQuery = sprintf("");
+			if($hpCheckResult['count(*)'] >= 1) {
+				$honorProgQuery = sprintf("UPDATE Mentor_Honors_Program SET program1='%s', program2='%s', program3='%s' WHERE username='%s'",
+					$honor_program1, $honor_program2, $honor_program3, $user);	
+			} else {
+				$honorProgQuery = sprintf("INSERT INTO Mentor_Honors_Program(username, program1, program2, program3) 
+					VALUES ('%s', '%s', '%s', '%s')", $user, $honor_program1, $honor_program2, $honor_program3);
+			}
+			$hpResult = getDBRegInserted($honorProgQuery);
+		}
+
+		if ($_POST['other_organization1']) {
+			$otherOrgCheckQuery = sprintf("SELECT count(*) FROM Other_Organization WHERE username='%s'",$user);
+			$otherOrgCheckResult = getDBResultRecord($otherOrgCheckQuery);
+			$otherOrgQuery = sprintf("");
+			if($otherOrgCheckResult['count(*)'] >= 1) {
+				$otherOrgQuery = sprintf("UPDATE Other_Organization SET organization1='%s', organization2='%s', organization3='%s' WHERE username='%s'", 
+					$other_organization1, $other_organization2, $other_organization3, $user);
+			} else {
+				$otherOrgQuery = sprintf("INSERT INTO Other_Organization(username, organization1, organization2, organization3) 
+					VALUES ('%s', '%s', '%s', '%s')", $user, $other_organization1, $other_organization2, $other_organization3);
+			}
+			$otherOrgResult = getDBRegInserted($otherOrgQuery);
+		}
+
+		if ($_POST['bme_organization']) {
+			$bmeOrgCheckQuery = sprintf("SELECT count(*) FROM Mentor_BME_Organization WHERE username='%s'",$user);
+			$bmeOrgCheckResult = getDBResultRecord($bmeOrgCheckQuery);
+			$bmeOrgQuery = sprintf("");
+			if($bmeOrgCheckResult['count(*)'] >= 1) {
+				$bmeOrgQuery = sprintf("UPDATE Mentor_BME_Organization SET bme_org1='%s', bme_org2='%s', bme_org3='%s',
+					bme_org4='%s', bme_org5='%s', bme_org6='%s', bme_org7='%s', bme_org_other='%s'  WHERE username='%s'",
+					$bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other, $user);
+			} else {
+				$bmeOrgQuery = sprintf("INSERT INTO Mentor_BME_Organization(username, bme_org1, bme_org2, bme_org3,
+					bme_org4, bme_org5, bme_org6, bme_org7, bme_org_other) VALUES ('%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other);
+			}			
+			$bmeOrgResult = getDBRegInserted($bmeOrgQuery);
+		}
+
+		if ($_POST['mm_org']) {
+			$mmOrgCheckQuery = sprintf("SELECT count(*) FROM Mentee_Mentor_Organization WHERE username='%s'",$user);
+			$mmOrgCheckResult = getDBResultRecord($mmOrgCheckQuery);
+			$mmOrgQuery = sprintf("");
+			if($mmOrgCheckResult['count(*)'] >= 1) {
+				$mmOrgQuery = sprintf("UPDATE Mentee_Mentor_Organization SET mm_org1='%s', mm_org2='%s', mm_org3='%s', mm_org4='%s', mm_org5='%s', mm_org_other='%s' WHERE username='%s'",
+				 	$mm_org1, $mm_org2, $mm_org3, $mm_org4, $mm_org5, $mm_org_other, $user);
+			} else {
+				$mmOrgQuery = sprintf("INSERT INTO Mentee_Mentor_Organization(username, mm_org1, mm_org2, mm_org3, mm_org4, mm_org5, mm_org_other) 
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $mm_org1, $mm_org2, $mm_org3, $mm_org4, $mm_org5, $mm_org_other);
+			}
+			$mmResult = getDBRegInserted($mmOrgQuery);
+		}
+
+		if ($_POST['tutor_teacher_program']) {
+			$ttProgCheckQuery = sprintf("SELECT count(*) FROM Mentor_Tutor_Teacher_Program WHERE username='%s'",$user);
+			$ttProgCheckResult = getDBResultRecord($ttProgCheckQuery);
+			$ttProgQuery = sprintf("");
+			if($ttProgCheckResult['count(*)'] >= 1) {
+				$ttProgQuery = sprintf("UPDATE Mentor_Tutor_Teacher_Program SET tutor_teacher_program1='%s', tutor_teacher_program2='%s', 
+					tutor_teacher_program3='%s', tutor_teacher_program4='%s', tutor_teacher_program5='%s', tutor_teacher_program6='%s', tutor_teacher_program_other='%s' WHERE username='%s'", 
+					$tutor_teacher_program1, $tutor_teacher_program2, $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other, $user);
+			} else {
+				$ttProgQuery = sprintf("INSERT INTO Mentor_Tutor_Teacher_Program(username, tutor_teacher_program1, tutor_teacher_program2, 
+						tutor_teacher_program3, tutor_teacher_program4, tutor_teacher_program5, tutor_teacher_program6, tutor_teacher_program_other)
+					 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $tutor_teacher_program1, $tutor_teacher_program2, 
+					 $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other);
+			}	
+			$ttProgResult = getDBRegInserted($ttProgQuery);
+		}
+
+		if ($_POST['bme_academ_exp']) {
+			$bmeCheckQuery = sprintf("SELECT count(*) FROM Mentor_BME_Academic_Experience WHERE username='%s'",$user);
+			$bmeCheckResult = getDBResultRecord($bmeCheckQuery);
+			$bmeQuery = sprintf("");
+			if($bmeCheckResult['count(*)'] >= 1) {
+				$bmeQuery = sprintf("UPDATE Mentor_BME_Academic_Experience SET bme_academ_exp1='%s', bme_academ_exp2='%s',
+					bme_academ_exp3='%s', bme_academ_exp4='%s', bme_academ_exp_other='%s' WHERE username='%s'",
+					$bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other, $user);
+			} else {
+				$bmeQuery = sprintf("INSERT INTO Mentor_BME_Academic_Experience(username, bme_academ_exp1, bme_academ_exp2,
+					bme_academ_exp3, bme_academ_exp4, bme_academ_exp_other) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other);
+			}
+			$bmeResult = getDBRegInserted($bmeQuery);
+		}
+
+		if ($_POST['international_experience']) {
+			$interCheckQuery = sprintf("SELECT count(*) FROM Mentor_International_Experience WHERE username='%s'",$user);
+			$interCheckResult = getDBResultRecord($interCheckQuery);
+			$interQuery = sprintf("");
+			if($interCheckResult['count(*)'] >= 1) {
+				$interQuery = sprintf("UPDATE Mentor_International_Experience SET international_experience1='%s', international_experience2='%s', 
+					international_experience3='%s', international_experience4='%s', international_experience5='%s', international_experience_other='%s' WHERE username='%s'", 
+					$international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other, $user);
+			} else {
+				$interQuery = sprintf("INSERT INTO Mentor_International_Experience(username, international_experience1, international_experience2, 
+						international_experience3, international_experience4, international_experience5, international_experience_other)
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other);
+			}
+			$interResults = getDBRegInserted($interQuery);
+		}
+
+		if ($_POST['career_dev_program']) {
+			$careerCheckQuery = sprintf("SELECT count(*) FROM Mentor_Career_Dev_Program WHERE username='%s'",$user);
+			$careerCheckResult = getDBResultRecord($careerCheckQuery);
+			$careerQuery = sprintf("");
+			if($careerCheckResult['count(*)'] >= 1) {
+				$careerQuery = sprintf("UPDATE Mentor_Career_Dev_Program SET career_dev_program1='%s',
+					career_dev_program2='%s', career_dev_program3='%s', career_dev_program_other='%s' WHERE username='%s'",
+					 $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other, $user);
+			} else {
+				$careerQuery = sprintf("INSERT INTO Mentor_Career_Dev_Program(username, career_dev_program1,
+					career_dev_program2, career_dev_program3, career_dev_program_other) VALUES ('%s', '%s', '%s','%s', '%s')",
+					$user, $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other);
+			}
+			$careerResults = getDBRegInserted($careerQuery);
+		}
+
+
+		
+
+		// //header("Content-type: application/json");
+		// // print_r($json);
+		// echo json_encode($uresult+$mresult);
+		
+	}
+
+//begin edit mentee profile
+	function updateMenteeProfile() {
+		
+		echo "Update Mentee Profile in PHP \n";
+		global $_USER;	
+		$user = $_USER['uid'];
+		echo $user;
+		$fname = mysql_real_escape_string($_POST['fname']);//$data->fname);
+		echo $fname;
+		$lname = mysql_real_escape_string($_POST['lname']);
+		$phone = mysql_real_escape_string($_POST['phone']);
+		$email = mysql_real_escape_string($_POST['email']);
+		$pref_communication = mysql_real_escape_string($_POST['pref_communication']);
+		$gender = mysql_real_escape_string($_POST['gender']);
+		$depth_focus = mysql_real_escape_string($_POST['dfocus']);
+		$depth_focus_other = mysql_real_escape_string($_POST['dfocusother']); 
+		$live_before_tech = mysql_real_escape_string($_POST['live_before_tech']);
+		$live_on_campus = $_POST['live_on_campus']; //is number 0 or 1 posting?
+		$first_gen_college_student = $_POST['first_gen_college_student'];
+		$transfer_from_outside = $_POST['transfer_from_outside'];
+		$institution_name = mysql_real_escape_string($_POST['institution_name']);
+		$transfer_from_within = $_POST['transfer_from_within'];
+		$prev_major = mysql_real_escape_string($_POST['prev_major']);
+		$international_student = $_POST['international_student'];
+		$home_country =  mysql_real_escape_string($_POST['home_country']);
+		$expec_graduation = mysql_real_escape_string($_POST['expec_graduation']);
+		$other_major =  mysql_real_escape_string($_POST['other_major']);
+	
+
+	
+
+		$undergrad_research = $_POST['undergrad_research'];
+		if ($_POST['undergrad_research']) {
+			$undergrad_research = 1;
+			$undergrad_research_desc = $_POST['undergrad_research_desc'];
+		} else {
+			$undergrad_research = 0;
+			$undergrad_research_desc = null;
+		}
+
+
+		$bme_org1 = null;
+		$bme_org2 = null;
+		$bme_org3 = null;
+		$bme_org4 = null;
+		$bme_org5 = null;
+		$bme_org6 = null;
+		$bme_org7 = null;
+		$bmeOrgs = $_POST['bme_organization'];
+		for ($i=1; $i <= count($bmeOrgs); $i++) {
+			${"bme_org" . $i}  = $bmeOrgs[$i-1]; //Json of all the organizations $_POST['bme_organization']
+		}
+		if ($_POST['bme_org_other']) {
+			$bme_org_other = mysql_real_escape_string($_POST['bme_org_other']);
+		} else {
+			$bme_org_other = null;
+		}
+
+
+		$tutor_teacher_program1 = null;
+		$tutor_teacher_program2 = null;
+		$tutor_teacher_program3 = null;
+		$tutor_teacher_program4 = null;
+		$tutor_teacher_program5 = null;
+		$tutor_teacher_program6 = null;
+		$ttProg = $_POST['tutor_teacher_program'];
+		for ($i=1; $i <= count($ttProg); $i++) {
+			${"tutor_teacher_program" . $i}  = $ttProg[$i-1]; 
+		}
+		if ($_POST['tutor_teacher_program_other']) {
+			$tutor_teacher_program_other = mysql_real_escape_string($_POST['tutor_teacher_program_other']);
+		} else {
+			$tutor_teacher_program_other = null;
+		}
+
+		$bme_academ_exp1 = null;
+		$bme_academ_exp2 = null;
+		$bme_academ_exp3 = null;
+		$bme_academ_exp4 = null;
+		$bmeExp = $_POST['bme_academ_exp'];
+		for ($i=1; $i <= count($bmeExp); $i++) {
+			${"bme_academ_exp" . $i}  = $bmeExp[$i-1]; 
+		}
+		if ($_POST['bme_academ_exp_other']) {
+			$bme_academ_exp_other = mysql_real_escape_string($_POST['bme_academ_exp_other']);
+		} else {
+			$bme_academ_exp_other = null;
+		}
+
+		$international_experience1 = null;
+		$international_experience2 = null;
+		$international_experience3 = null;
+		$international_experience4 = null;
+		$international_experience5 = null;
+		$internatExp = $_POST['international_experience'];
+		for ($i=1; $i <= count($internatExp); $i++) {
+			${"international_experience" . $i}  = $internatExp[$i-1]; 
+		}
+		if ($_POST['international_experience_other']) {
+			$international_experience_other = mysql_real_escape_string($_POST['international_experience_other']);
+		} else {
+			$international_experience_other = null;
+		}
+
+		$career_dev_program1 = null;
+		$career_dev_program2 = null;
+		$career_dev_program3 = null;
+		$carDevProg = $_POST['career_dev_program']; 
+		for ($i=1; $i <= count($carDevProg); $i++) {
+			${"career_dev_program" . $i}  = $carDevProg[$i-1]; 
+		}
+		if ($_POST['career_dev_program_other']) {
+			$career_dev_program_other = mysql_real_escape_string($_POST['career_dev_program_other']);
+		} else {
+			$career_dev_program_other = null;
+		}
+
+		$post_grad_plan = mysql_real_escape_string($_POST['post_grad_plan']);
+		if ($_POST['post_grad_plan_desc']) {
+			$post_grad_plan_desc = mysql_real_escape_string($_POST['post_grad_plan_desc']);
+		} else {
+			$post_grad_plan_desc = null;
+		}
+
+		$personal_hobby = mysql_real_escape_string($_POST['personal_hobby']);
+
+		$userQuery = sprintf("UPDATE USER SET last_name='%s', first_name='%s', phone_num='%s', email='%s', pref_communication='%s'
+							  WHERE username='%s'", $lname, $fname, $phone, $email, $pref_communication, $user);
+		$uResult = getDBRegInserted($userQuery);
+
+
+		$menteeQuery = sprintf("UPDATE Mentee SET  depth_focus='%s', depth_focus_other='%s',
+			first_gen_college_student='%u', transfer_from_outside='%u', institution_name='%s',
+			transfer_from_within='%u', prev_major='%s', international_student='%u', expec_graduation='%s', other_major='%s', 
+			undergrad_research='%u', undergrad_research_desc='%s', post_grad_plan='%s', post_grad_plan_desc='%s', personal_hobby='%s'
+			WHERE username='%s'", 
+			$depth_focus, $depth_focus_other,
+			$first_gen_college_student, $transfer_from_outside, $institution_name, 
+			$transfer_from_within, $prev_major, $international_student, $expec_graduation, $other_major,
+			$undergrad_research, $undergrad_research_desc, $post_grad_plan, $post_grad_plan_desc, $personal_hobby, $user);
+		$mResult = getDBRegInserted($menteeQuery);
+
+		$bTrack = $_POST['breadth_track'];
+		//delete first
+		$bTrackDelQuery = sprintf("DELETE FROM Mentee_Breadth_Track WHERE username='%s'",$user);
+		$bTrackDelResult = getDBRegInserted($bTrackDelQuery);
+		foreach ($bTrack as $key => $value) {
+			$breadth_track = $value['name'];
+			$breadth_track_desc = $value['desc'];
+			$bTrackQuery = sprintf("INSERT INTO Mentee_Breadth_Track(username, breadth_track, breadth_track_desc) VALUES ('%s', '%s', '%s')",
+			$user, $breadth_track, $breadth_track_desc);
+			$bTrackResult = getDBRegInserted($bTrackQuery);
+		}
+
+		if ($_POST['bme_organization']) {
+			$bmeOrgCheckQuery = sprintf("SELECT count(*) FROM Mentee_BME_Organization WHERE username='%s'",$user);
+			$bmeOrgCheckResult = getDBResultRecord($bmeOrgCheckQuery);
+			$bmeOrgQuery = sprintf("");
+			if($bmeOrgCheckResult['count(*)'] >= 1) {
+				$bmeOrgQuery = sprintf("UPDATE Mentee_BME_Organization SET bme_org1='%s', bme_org2='%s', bme_org3='%s',
+					bme_org4='%s', bme_org5='%s', bme_org6='%s', bme_org7='%s', bme_org_other='%s'  WHERE username='%s'",
+					$bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other, $user);
+			} else {
+				$bmeOrgQuery = sprintf("INSERT INTO Mentee_BME_Organization(username, bme_org1, bme_org2, bme_org3,
+					bme_org4, bme_org5, bme_org6, bme_org7, bme_org_other) VALUES ('%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_org1, $bme_org2, $bme_org3, $bme_org4, $bme_org5, $bme_org6, $bme_org7, $bme_org_other);
+			}			
+			$bmeOrgResult = getDBRegInserted($bmeOrgQuery);
+		}
+
+
+		if ($_POST['tutor_teacher_program']) {
+			$ttProgCheckQuery = sprintf("SELECT count(*) FROM Mentee_Tutor_Teacher_Program WHERE username='%s'",$user);
+			$ttProgCheckResult = getDBResultRecord($ttProgCheckQuery);
+			$ttProgQuery = sprintf("");
+			if($ttProgCheckResult['count(*)'] >= 1) {
+				$ttProgQuery = sprintf("UPDATE Mentee_Tutor_Teacher_Program SET tutor_teacher_program1='%s', tutor_teacher_program2='%s', 
+					tutor_teacher_program3='%s', tutor_teacher_program4='%s', tutor_teacher_program5='%s', tutor_teacher_program6='%s', tutor_teacher_program_other='%s' WHERE username='%s'", 
+					$tutor_teacher_program1, $tutor_teacher_program2, $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other, $user);
+			} else {
+				$ttProgQuery = sprintf("INSERT INTO Mentee_Tutor_Teacher_Program(username, tutor_teacher_program1, tutor_teacher_program2, 
+						tutor_teacher_program3, tutor_teacher_program4, tutor_teacher_program5, tutor_teacher_program6, tutor_teacher_program_other)
+					 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $tutor_teacher_program1, $tutor_teacher_program2, 
+					 $tutor_teacher_program3, $tutor_teacher_program4, $tutor_teacher_program5, $tutor_teacher_program6, $tutor_teacher_program_other);
+			}	
+			$ttProgResult = getDBRegInserted($ttProgQuery);
+		}
+
+		if ($_POST['bme_academ_exp']) {
+			$bmeCheckQuery = sprintf("SELECT count(*) FROM Mentee_BME_Academic_Experience WHERE username='%s'",$user);
+			$bmeCheckResult = getDBResultRecord($bmeCheckQuery);
+			$bmeQuery = sprintf("");
+			if($bmeCheckResult['count(*)'] >= 1) {
+				$bmeQuery = sprintf("UPDATE Mentee_BME_Academic_Experience SET bme_academ_exp1='%s', bme_academ_exp2='%s',
+					bme_academ_exp3='%s', bme_academ_exp4='%s', bme_academ_exp_other='%s' WHERE username='%s'",
+					$bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other, $user);
+			} else {
+				$bmeQuery = sprintf("INSERT INTO Mentee_BME_Academic_Experience(username, bme_academ_exp1, bme_academ_exp2,
+					bme_academ_exp3, bme_academ_exp4, bme_academ_exp_other) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+					$user, $bme_academ_exp1, $bme_academ_exp2, $bme_academ_exp3, $bme_academ_exp4, $bme_academ_exp_other);
+			}
+			$bmeResult = getDBRegInserted($bmeQuery);
+		}
+
+		if ($_POST['international_experience']) {
+			$interCheckQuery = sprintf("SELECT count(*) FROM Mentee_International_Experience WHERE username='%s'",$user);
+			$interCheckResult = getDBResultRecord($interCheckQuery);
+			$interQuery = sprintf("");
+			if($interCheckResult['count(*)'] >= 1) {
+				$interQuery = sprintf("UPDATE Mentee_International_Experience SET international_experience1='%s', international_experience2='%s', 
+					international_experience3='%s', international_experience4='%s', international_experience5='%s', international_experience_other='%s' WHERE username='%s'", 
+					$international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other, $user);
+			} else {
+				$interQuery = sprintf("INSERT INTO Mentee_International_Experience(username, international_experience1, international_experience2, 
+						international_experience3, international_experience4, international_experience5, international_experience_other)
+					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", $user, $international_experience1, $international_experience2,
+					$international_experience3, $international_experience4, $international_experience5, $international_experience_other);
+			}
+			$interResults = getDBRegInserted($interQuery);
+		}
+
+		if ($_POST['career_dev_program']) {
+			$careerCheckQuery = sprintf("SELECT count(*) FROM Mentee_Career_Dev_Program WHERE username='%s'",$user);
+			$careerCheckResult = getDBResultRecord($careerCheckQuery);
+			$careerQuery = sprintf("");
+			if($careerCheckResult['count(*)'] >= 1) {
+				$careerQuery = sprintf("UPDATE Mentee_Career_Dev_Program SET career_dev_program1='%s',
+					career_dev_program2='%s', career_dev_program3='%s', career_dev_program_other='%s' WHERE username='%s'",
+					 $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other, $user);
+			} else {
+				$careerQuery = sprintf("INSERT INTO Mentee_Career_Dev_Program(username, career_dev_program1,
+					career_dev_program2, career_dev_program3, career_dev_program_other) VALUES ('%s', '%s', '%s','%s', '%s')",
+					$user, $career_dev_program1, $career_dev_program2, $career_dev_program3, $career_dev_program_other);
+			}
+			$careerResults = getDBRegInserted($careerQuery);
+		}
+
+
+		
+
+		// //header("Content-type: application/json");
+		// // print_r($json);
+		// echo json_encode($uresult+$mresult);
+		
+	}
+
+
+
 
 	function listAliasNames($alias) {
 		$countHasName = sprintf("SELECT username FROM Mentor WHERE Mentor.alias = '%s'", $alias);
@@ -1096,15 +1732,15 @@
 
 	function getWishlistContents() {
 		global $_USER;
-		$dbQueryWishlist = sprintf("SELECT * FROM Wishlist
-		JOIN Mentor ON  Wishlist.mentor = Mentor.username
-		JOIN USER ON Mentor.username = USER.username
-		JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = Mentor.username
-		JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = Mentor.username
-		JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = Mentor.username
-		JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = Mentor.username
-		JOIN Mentor_International_Experience ON Mentor_International_Experience.username = Mentor.username
-		JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = Mentor.username
+		$dbQueryWishlist = sprintf("SELECT * FROM USER
+		LEFT JOIN Mentor_Breadth_Track ON Mentor_Breadth_Track.username = USER.username
+		LEFT JOIN Mentor_BME_Organization ON Mentor_BME_Organization.username = USER.username
+		LEFT JOIN Mentor_Tutor_Teacher_Program ON Mentor_Tutor_Teacher_Program.username = USER.username
+		LEFT JOIN Mentor_BME_Academic_Experience ON Mentor_BME_Academic_Experience.username = USER.username
+		LEFT JOIN Mentor_International_Experience ON Mentor_International_Experience.username = USER.username
+		LEFT JOIN Mentor_Career_Dev_Program ON Mentor_Career_Dev_Program.username = USER.username
+		LEFT JOIN Wishlist ON Wishlist.mentor = USER.username
+		LEFT JOIN Mentor ON  USER.username = Mentor.username
 		WHERE Wishlist.mentee = '%s' AND (SELECT COUNT(*) FROM Matches WHERE Wishlist.mentor = mentor_user) < (SELECT settingValue FROM GlobalSettings where settingName = 'MaxMenteesPerMentor')", $_USER['uid']);
 		$result=getDBResultsArray($dbQueryWishlist);
 		header("Content-type: application/json");

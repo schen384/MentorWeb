@@ -145,4 +145,5 @@
 ]
 
 //Delete mentors not in Admin and Mentee tables.. doesn't work as of right now
+
 DELETE WHERE username not IN (SELECT username FROM Mentee)UNION(SELECT username FROM Admin);

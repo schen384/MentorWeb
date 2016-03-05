@@ -1,269 +1,35 @@
 <section class="edit-profile page">
-	<div class="edit-profile-message ui message">
+<div class="edit-profile-message ui message">
 	 <div class="ui huge header">
 	    Edit Profile
    	</div>
 
-<div ng-show="viewMenteeForm">
-   	<div  class="ui form segment">
+<!-- mentor/mentee profile form -->
+ <!-- <div ng-show="viewMentorForm" > -->
+  <form class="ui form segment" name="editForm">
+ 	<!-- <div class="ui form error segment"> -->
 	<h2 class="ui inverted black block header">Basic Information</h2><br/>
 	  <div class="two fields">
 	    <div class="field">
-	      <label>First Name</label>
-	      <input id="first_name" ng-model="form.fname" placeholder="First" type="text">
+	      <div class="ui tiny header"><i class="asterisk teal icon"></i>First Name</div>
+	      <br/>
+	      <input type="text" id="fname" ng-model="form.first_name" placeholder="First Name">
 	    </div>
 	    <div class="field">
-	      <label>Last Name</label>
-	      <input id="last_name" ng-model="form.lname" placeholder="Last Name" type="text">
+	      <div class="ui tiny header"><i class="asterisk teal icon"></i>Last Name</div>
+	      <br/>
+	      <input type="text" id="lname" ng-model="form.last_name" placeholder="Last Name">
 	    </div>
 	  </div>
 	  <div class="field">
-	    <label>Email</label>
-	    <input id="email" ng-model="form.email" placeholder="username@gatech.edu" type="text">
-	  </div>
-	  <div class="field">
-	    <label>Phone Number</label>
-	    <input id="phone_number" ng-model="form.phone" placeholder="xxx-xxx-xxxx" type="text">
-	  </div>
-	 <div class="field">
-	  	<div class="ui tiny header">Preferred Communication Method</div>
-	  	<div class="field" ng-repeat="comm in comms">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="prefComm" ng-model="form.prefComm" value="{{comm.name}}"/>
-			  	<label ng-click="newValue(comm.name, 'prefComm')">{{comm.name}}</label>
-			</div>
-		</div>
-	  </div>
-
-	  <div class="field">
-	    <div class="ui tiny header">Are you a first generation college student (that is, your parents have not completed a bachelor's degree at a 4-year college or university)?</div>
-	    <div class="field" ng-repeat="opt in yesno">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="first_gen_college_student" ng-model="form.first_gen_college_student" ng-value="{{opt.value}}"/>
-			  	<label ng-click="newValue(opt.value, 'first_gen_college_student')">{{opt.name}}</label>
-			</div>
-		</div>
-	  </div>
-
-	  <div class="field">
-	    <div class="ui tiny header">Did you transfer to the BME department from another major at Georgia Tech, or from another institution?</div>
-	    <div class="field">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_within" ng-value="1"/>
-			  	<label ng-click="newValue(1, 'transfer_from_within')">Yes, from another major at Tech</label>
-			</div>
-			<div class="field">
-		  	<div ng-show="form.transfer_from_within == 1">
-		  		<div class="ui tiny header">What was your previous major at Georgia Tech?</div>
-		      	<input type="text" id="prev_major" ng-model="form.prev_major" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
-		    </div>
-			</div>
-			<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_outside" ng-value="1"/>
-			  	<label ng-click="newValue(1, 'transfer_from_outside')">Yes, from another institution</label>
-			</div>
-			<div class="field">
-		  	<div ng-show="form.transfer_from_outside == 1">
-		  		<div class="ui tiny header">What is the name of the institution where you were enrolled prior to transferring to Georgia Tech?</div>
-		      	<input type="text" id="institution_name" ng-model="form.institution_name" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
-		    </div>
-			</div>
-
-			<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_outside" ng-value="0"/>
-			  	<label ng-click="newValue(0, 'transfer_from_outside')">No</label>
-			</div>
-		</div>
-	  </div>
-
-	  <div class="field">
-	    <div class="ui tiny header">Are you an international student?</div>
-	    <div class="field" ng-repeat="opt in yesno">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="international_student" ng-model="form.international_student" ng-value="{{opt.value}}"/>
-			  	<label ng-click="newValue(opt.value, 'international_student')">{{opt.name}}</label>
-			</div>
-		</div>
-	  </div>
-
-	  </div><!-- end basic info -->
-
-	  <div class="ui form segment">
-	  <h2 class="ui inverted black block header">Academics</h2><br/>
-
-	  <div class="field">
-		<div class="ui tiny header">Expected Graduation Semester</div>
-      	<input type="text" id="expec_graduation" ng-model="form.expec_graduation" placeholder="Spring 2014">
-  	 </div>
-
-  	 <div class="field">
-	  <div class="ui tiny header">Which breadth track(s) do you expect to complete? For each track you select, please elaborate. For example, for Research Option, which lab(s) have you worked in, for Minor/Certificate, what is the name of your minor/certificate, etc.</div>
-	  <div class="field" ng-repeat="opt in breadthTracks">
-	  <div class="ui checkbox">
-	  	<input type="checkbox" name="selectedBreadthTrack[]" value="{{opt}}" ng-checked="form.breadth_track.indexOf(opt) > -1">
-	  	<label ng-click="toggleSelection(opt, 'breadth_track')">{{opt.name}}</label>
-	  </div>
-	  <input type="text" ng-click="print()" ng-show="form.breadth_track.indexOf(opt) > -1" name="description" ng-model-options="{ updateOn: 'change' }" ng-model="opt.desc" placeholder="Please Elaborate">
-	  </div>
-	 </div>
-
-	 <div class="field">
-	  	<div class="ui tiny header">What depth focus do you plan to choose, or have you chosen already?</div>
-	  	<div class="field" ng-repeat="val in dfocusVals" ng-click="newValue(val.name, 'dfocus')">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="dfocus" ng-model="form.dfocus" value="{{val.name}}"/>
-			  	<label>{{val.name}}</label>
-			</div>
-		</div>
-		<div class="field">
-	  	<div ng-show="form.dfocus == 'Other'">
-	      	<input type="text" id="dfocusother" ng-model="form.dfocusother" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
-	    </div>
-		</div>
-	</div>
-
-	<div class="field">
-	    <div class="ui tiny header">Are you interested in participating in any undergraduate research labs?</div>
-	    <div class="grouped inline fields">
-	    	<div class="field">
-		  		<div class="ui radio checkbox">
-				  	<input type="radio" name="undergrad_research" ng-model="form.undergrad_research" value="1"/>
-				  	<label ng-click="newValue(1, 'undergrad_research')">Yes</label>
-				</div>
-			</div>
-			<div class="field">
-				<div class="ui radio checkbox">
-				  	<input type="radio" name="undergrad_research" ng-model="form.undergrad_research" value="0"/>
-				  	<label ng-click="newValue(0, 'undergrad_research')">No</label>
-				</div>
-			</div>
-			<div class="field">
-				<div class="ui radio checkbox">
-				  	<input type="radio" name="undergrad_research" ng-model="form.undergrad_research" value="-1"/>
-				  	<label ng-click="newValue(-1, 'undergrad_research')">Maybe</label>
-			  	</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="field">
-	 	<div class="ui tiny header">Are you planning on pursuing another major in addition to BME?</div>
-		<div class="ui radio checkbox">
-				<input type="radio" name="other_major" ng-model="form.majorHelper" value="Yes"/>
-				<label ng-click="newValue('Yes', 'majorHelper')">Yes</label>
-		</div>
-		<div class="field">
-	  	<div ng-show="form.majorHelper == 'Yes'">
-	      	<input type="text" id="other_major" ng-model="form.other_major" placeholder="Please Specify, if you know">
-	    </div>
-		</div>
-		<div class="ui radio checkbox">
-				<input type="radio" name="other_major" ng-model="form.majorHelper" value="No"/>
-				<label ng-click="newValue('No', 'majorHelper')">No</label>
-		</div>
-		</div>
-
-	<div class="field">
-	  	<div class="ui tiny header">After you graduate from Georgia Tech, what do you plan to do?</div>
-	  	<div class="field" ng-repeat="opt in postGradPlans" ng-click="newValue(opt.name, 'post_grad_plan')">
-	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="post_grad_plan" ng-model="form.post_grad_plan" value="{{opt.name}}"/>
-			  	<label>{{opt.name}}</label>
-			</div>
-		</div>
-  		<label>Please feel free to provide more specifics about your future career goals (such as, if you checked Industry above, what kind of industry job particularly interests you right now, etc.).</label>
-      	<input type="text" id="post_grad_plan_desc" ng-model="form.post_grad_plan_desc" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
-	 </div>
-
-	</div>
-
-	<div class="ui error form segment">
-	<h2 class="ui inverted black block header">Organizations or Experiences That May Interest You</h2><br/>
-	<div class="field">
-	  	<div class="ui tiny header">Are you interested in participating in any of the following BME student organizations? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in bmeOrganizations">
-	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedBmeOrganizations[]" value="{{opt}}" ng-checked="form.bme_organization.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'bme_organization')">{{opt.name}}</label>
-	  			</div>
-			</div>
-	 </div>
-
-	 <div class="field">
-	  	<div class="ui tiny header">Are you interested in any of the following tutor/facilitator/teaching programs? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in tutorTeachPrograms">
-	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedTutorTeacherPrograms[]" value="{{opt}}" ng-checked="form.tutor_teacher_program.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'tutor_teacher_program')">{{opt.name}}</label>
-	  			</div>
-			</div>
-	 </div>
-
-	  <div class="field">
-	 	<div class="ui tiny header">Are you interested in any of the following BME academic expereinces? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in bmeAcademicPrograms">
-	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedBmeAcademPrograms[]" value="{{opt}}" ng-checked="form.bme_academ_exp.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'bme_academ_exp')">{{opt.name}}</label>
-	  			</div>
-		</div>
-	 </div>
-
-	 <div class="field">
-	 	<div class="ui tiny header">Are you interested in any of the following academic international experiences? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in internationalPrograms">
-	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedInternationalPrograms[]" value="{{opt}}" ng-checked="form.international_experience.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'international_experience')">{{opt.name}}</label>
-	  			</div>
-		</div>
-	 </div>
-
-	 <div class="field">
-	 	<div class="ui tiny header">Are you interested in pursuing any of the following career development programs? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in carrerDevPrograms">
-	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedCareerDevPrograms[]" value="{{opt}}" ng-checked="form.career_dev_program.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'career_dev_program')">{{opt.name}}</label>
-	  			</div>
-		</div>
-	 </div>
-
-	 <div class="field">
-	  	<div class="ui tiny header">What personal interests or hobbies do you have?</div>
-      	<input type="text" id="personal_hobby" ng-model="form.personal_hobby" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
-	 </div>	
-
-	</div>
-
-      <div id="reg_submit_button" ng-click="go('/homescreen')" class="ui blue submit button">  <!-- add updateMentee function to ng-click -->
-		Submit
-		</div>
-
-</div>
- <!-- end mentee profile form -->
-
-
- <div ng-show="viewMentorForm" ng-controller="EditProfileController">
- 	<div class="ui error form segment">
-	<h2 class="ui inverted black block header">Basic Information</h2><br/>
-	  <div class="two fields">
-	    <div class="field">
-	      <div class="ui tiny header">First Name</div>
-	      <input type="text" id="first_name" ng-model="form.fname" placeholder="First Name">
-	    </div>
-	    <div class="field">
-	      <div class="ui tiny header">Last Name</div>
-	      <input type="text" id="last_name" ng-model="form.lname" placeholder="Last Name">
-	    </div>
-	  </div>
-	  <div class="field">
-	    <div class="ui tiny header">Email</div>
+	    <div class="ui tiny header"><i class="asterisk teal icon"></i>Email</div>
+	    <br/>
 	    <input type="text" id="email" ng-model="form.email" placeholder="username@gatech.edu">
 	  </div>
 	  <div class="field">
-	    <div class="ui tiny header">Phone Number</div>
-	    <input type="text" id="phone_number" ng-model="form.phone" placeholder="xxx-xxx-xxxx">
+	    <div class="ui tiny header"><i class="asterisk teal icon"></i>Phone Number</div>
+	    <br/>
+	    <input type="text" id="phone_number" ng-model="form.phone_num" placeholder="xxx-xxx-xxxx">
 	  </div>
 	  <!-- DROP DOWN EXAMPLE <div class="field">
 	  	<label>Preferred Communication Method</label>
@@ -272,21 +38,24 @@
 	  	</select>
 	  </div> -->
 	  <div class="field">
-	  	<div class="ui tiny header">Preferred Communication Method</div>
-	  	<div class="field" ng-repeat="comm in comms">
+	  	<div class="ui tiny header"><i class="asterisk teal icon"></i>Preferred Communication Method</div>
+	  	<br/>
+	  	<div class="field" ng-repeat="comm in userInfo.comms">
 	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="prefComm" ng-model="form.prefComm" value="{{comm.name}}"/>
-			  	<label ng-click="newValue(comm.name, 'prefComm')">{{comm.name}}</label>
+			  	<input type="radio" name="pref_communication" ng-model="form.pref_communication" value="{{comm.name}}"/>
+			  	<label ng-click="newValue(comm.name, 'pref_communication')">{{comm.name}}</label>
 			</div>
 		</div>
 	  </div>
-	  <div class="field">
+	  <div class="field" ng-show="mentor_specific">
 	    <div class="ui tiny header">Where did you live prior to enrolling at Georgia Tech?</div>
+	    <br/>
 	    <input type="text" id="live_before_tech" ng-model="form.live_before_tech" placeholder="Please Specify">
 	  </div>
-	  <div class="field">
+	  <div class="field" ng-show="mentor_specific">
 	    <div class="ui tiny header">Do you live on campus during the fall and spring semesters?</div>
-	    <div class="field" ng-repeat="opt in yesno">
+	    <br/>
+	    <div class="field" ng-repeat="opt in userInfo.yesno">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="live_on_campus" ng-model="form.live_on_campus" ng-value="{{opt.value}}"/>
 			  	<label ng-click="newValue(opt.value, 'live_on_campus')">{{opt.name}}</label>
@@ -295,7 +64,8 @@
 	  </div>
 	  <div class="field">
 	    <div class="ui tiny header">Are you a first generation college student (that is, your parents have not completed a bachelor's degree at a 4-year college or university)?</div>
-	    <div class="field" ng-repeat="opt in yesno">
+	    <br/>
+	    <div class="field" ng-repeat="opt in userInfo.yesno">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="first_gen_college_student" ng-model="form.first_gen_college_student" ng-value="{{opt.value}}"/>
 			  	<label ng-click="newValue(opt.value, 'first_gen_college_student')">{{opt.name}}</label>
@@ -305,9 +75,10 @@
 
 	  <div class="field">
 	    <div class="ui tiny header">Did you transfer to the BME department from another major at Georgia Tech, or from another institution?</div>
+	    <br/>
 	    <div class="field">
 	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_within" ng-value="1"/>
+			  	<input type="radio" name="transfer" ng-model="form.transfer_from_within" ng-value="1" ng-checked="form.transfer_from_within == 1"/>
 			  	<label ng-click="newValue(1, 'transfer_from_within')">Yes, from another major at Tech</label>
 			</div>
 			<div class="field">
@@ -318,7 +89,7 @@
 			</div>
 
 			<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_outside" ng-value="1"/>
+			  	<input type="radio" name="transfer" ng-model="form.transfer_from_outside" ng-value="1" ng-checked="form.transfer_from_outside == 1"/>
 			  	<label ng-click="newValue(1, 'transfer_from_outside')">Yes, from another institution</label>
 			</div>
 			<div class="field">
@@ -329,7 +100,7 @@
 			</div>
 
 			<div class="ui radio checkbox">
-			  	<input type="radio" name="transfer" ng-model="form.transfer_from_outside" ng-value="0"/>
+			  	<input type="radio" name="transfer" ng-model="form.non_transfer" value="-1"/>
 			  	<label ng-click="newValue(0, 'transfer_from_outside')">No</label>
 			</div>
 		</div>
@@ -337,7 +108,8 @@
 
 	  <div class="field">
 	    <div class="ui tiny header">Are you an international student?</div>
-	    <div class="field" ng-repeat="opt in yesno">
+	    <br/>
+	    <div class="field" ng-repeat="opt in userInfo.yesno">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="international_student" ng-model="form.international_student" ng-value="{{opt.value}}"/>
 			  	<label ng-click="newValue(opt.value, 'international_student')">{{opt.name}}</label>
@@ -345,13 +117,14 @@
 		</div>
 	  </div>
 
-	  <div class="field">
+	  <div class="field" ng-show="mentor_specific">
 	    <div class="ui tiny header">What is your home country?</div>
-	  		<input type="text" id="home_country" ng-model="form.phone" placeholder="Please Specify">
+	    <br/>
+	  		<input type="text" id="home_country" ng-model="form.home_country" placeholder="Please Specify">
 	  </div>
-	</div>
+	<!-- </div> -->
 
-	<div class="ui error form segment">
+	<div ng-show="mentor_specific">
 	  <h2 class="ui inverted black block header">Demographic Information</h2><br/>
 	  <p>Your ethnicity will NOT be used for the mentor-mentee matching process. It is only intended to provide the program managers information about the demographics of the program's participants.</p>
 	  <p>Your gender, if you specify here, will be provided during the mentor-mentee matching process because sometimes mentees specifically look for a mentor of a certain gender.</p>
@@ -359,7 +132,8 @@
 
 	  <div class="field">
 	  	<div class="ui tiny header">Gender</div>
-	  	<div class="field" ng-repeat="gen in genders">
+	  	<br/>
+	  	<div class="field" ng-repeat="gen in userInfo.genders">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="gender" ng-model="form.gender" value="{{gen.name}}"/>
 			  	<label ng-click="newValue(gen.name, 'gender')">{{gen.name}}</label>
@@ -370,78 +144,86 @@
 	 <!--http://stackoverflow.com/questions/14514461/how-can-angularjs-bind-to-list-of-checkbox-values -->
 	 <div class="field">
 	  <div class="ui tiny header">Ethnicity</div>
-	  <div class="field" ng-repeat="eth in ethnicities">
+	  <br/>
+	  <div class="field" ng-repeat="eth in userInfo.ethnicities">
 	  <div class="ui checkbox">
-	  	<input type="checkbox" name="selectedEthn[]" value="{{eth}}" ng-checked="form.ethnicity.indexOf(eth) > -1">
-	  	<label ng-click="toggleSelection(eth, 'ethnicity')">{{eth.name}}</label>
+	  	<input type="checkbox" name="selectedEthn[]" value="{{eth.name}}" ng-checked="form.ethnicity.indexOf('{{eth.name}}') > -1">
+	  	<label ng-click="toggleSelection(eth.name, 'ethnicity')">{{eth.name}}</label>
 	  </div>
 		</div>
 	 </div>
 	</div>
 
-	<div class="ui error form segment">
+	<!-- <div class="ui error form segment"> -->
 	<h2 class="ui inverted black block header">Academics</h2><br/>
 
  	<div class="field">
 		<div class="ui tiny header">Expected Graduation Semester</div>
+		<br/>
       <input type="text" id="expec_graduation" ng-model="form.expec_graduation" placeholder="Spring 2014">
   	</div>
 
-	<div class="field">
-  	<div class="ui tiny header">Were you, or are you, part of any of the following programs? Check all that apply.</div>
-  		<div class="field" ng-repeat="opt in honorPrograms">
+	<div class="field" ng-show="mentor_specific">
+  		<div class="ui tiny header">Were you, or are you, part of any of the following programs? Check all that apply.
+  		</div>
+  		<br/>
+  		<div class="field" ng-repeat="opt in userInfo.honorPrograms">
   			<div class="ui checkbox">
-  				<input type="checkbox" name="selectedHonorProgram[]" value="{{opt}}" ng-checked="form.honor_program.indexOf(opt) > -1">
-  				<label ng-click="toggleSelection(opt, 'honor_program')">{{opt.name}}</label>
-	  </div>
+  				<input type="checkbox" name="selectedHonorProgram[]" value="{{opt.name}}" ng-checked="form.honor_program.indexOf('{{opt.name}}') > -1">
+  				<label ng-click="toggleSelection(opt.name, 'honor_program')">{{opt.name}}</label>
+	  		</div>
 		</div>
-	 	</div>	  
+	</div>	  
 
-	 	<div class="field">
-	 	<div class="ui tiny header">Are you pursuing another major in addition to BME?</div>
+	 <div class="field">
+	 	<div class="ui tiny header">Are you (planning on) pursuing another major in addition to BME?</div>
+	 	<br/>
 		<div class="ui radio checkbox">
-				<input type="radio" name="other_major" ng-model="form.majorHelper" value="Yes"/>
+				<input type="radio" name="other_major" ng-model="form.majorHelper" value="Yes"/ ng-checked="form.majorHelper == 'Yes'">
 				<label ng-click="newValue('Yes', 'majorHelper')">Yes</label>
 		</div>
 		<div class="field">
 	  	<div ng-show="form.majorHelper == 'Yes'">
-	      	<input type="text" id="other_major" ng-model="form.other_major" placeholder="Please Specify">
+	      	<input type="text" id="other_major" ng-model="form.other_major" placeholder="Please Specify" ng-required="form.majorHelper == 'Yes'" required>
 	    </div>
 		</div>
 		<div class="ui radio checkbox">
-				<input type="radio" name="other_major" ng-model="form.majorHelper" value="No"/>
+				<input type="radio" name="other_major" ng-model="form.majorHelper" value="No"/ ng-checked="form.majorHelper == 'NO'" >
 				<label ng-click="newValue('No', 'majorHelper')">No</label>
 		</div>
 		</div>
 
 		<div class="field">
-		  <div class="ui tiny header">Which breadth track(s) do you expect to complete? For each track you select, please elaborate. For example, for Research Option, which lab(s) have you worked in, for Minor/Certificate, what is the name of your minor/certificate, etc.</div>
-		  <div class="field" ng-repeat="opt in breadthTracks">
+		  <div class="ui tiny header">{{field_text.breadth_track}}</div>
+		  <br/>
+		  <div class="field" ng-repeat="opt in userInfo.breadthTracks">
 		  <div class="ui checkbox">
-		  	<input type="checkbox" name="selectedBreadthTrack[]" value="{{opt}}" ng-checked="form.breadth_track.indexOf(opt) > -1">
+		  	<input type="checkbox" name="selectedBreadthTrack[]" value="{{opt.name}}" ng-checked="opt.display == 1">
 		  	<label ng-click="toggleSelection(opt, 'breadth_track')">{{opt.name}}</label>
 		  </div>
-		  <input type="text" ng-click="print()" ng-show="form.breadth_track.indexOf(opt) > -1" name="description" ng-model-options="{ updateOn: 'change' }" ng-model="opt.desc" placeholder="Please Elaborate">
+		  <input type="text" ng-click="print()" ng-show="opt.display == 1" name="description" ng-model-options="{ updateOn: 'change' }" ng-model="opt.desc" placeholder="Please Elaborate">
 			</div>
 		</div>
 
 		<div class="field">
-	  	<div class="ui tiny header">Depth Focus</div>
-	  	<div class="field" ng-repeat="val in dfocusVals" ng-click="newValue(val.name, 'dfocus')">
+	  	<div class="ui tiny header">{{field_text.depth_focus}}</div>
+	  	<br/>
+	  	<div class="field" ng-repeat="val in userInfo.dfocusVals" ng-click="newValue(val.name, 'depth_focus')">
 	  		<div class="ui radio checkbox">
-			  	<input type="radio" name="dfocus" ng-model="form.dfocus" value="{{val.name}}"/>
+			  	<input type="radio" name="depth_focus" ng-model="form.depth_focus" value="{{val.name}}"/>
 			  	<label>{{val.name}}</label>
 			</div>
 		</div>
 		<div class="field">
 	  	<div ng-show="form.dfocus == 'Other'">
-	      	<input type="text" id="dfocusother" ng-model="form.dfocusother" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
+	      	<input type="text" id="depth_focus_other" ng-model="form.depth_focus_other" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	    </div>
 		</div>
 		</div>
 
 		<div class="field">
-	    <div class="ui tiny header">Have you worked as an undergraduate researcher (other than for the research option, which was asked about earlier)?</div>
+	    <div class="ui tiny header">{{field_text.undergrad_research}}</div>
+	    <br/>
 	    <div class="field">
 	  			<div class="ui radio checkbox">
 			  	<input type="radio" name="undergrad_research" ng-model="form.undergrad_research" ng-value="true"/>
@@ -449,7 +231,8 @@
 				</div>
 				<div class="field">
 		  		<div ng-show="form.undergrad_research == true">
-		  		<div class="ui tiny header">What lab(s) and for how many semesters have you worked?</div>
+		  		<div class="ui tiny header">{{field_text.undergrad_research_desc}}</div>
+		  		<br/>
 		      	<input type="text" id="undergrad_research_desc" ng-model="form.undergrad_research_desc" placeholder="Research Lab 1 for 1 Semesters, Research Lab 2 for 2 Semesters" ng-model-options="{ updateOn: 'blur' }">
 		    	</div>
 				</div>
@@ -462,7 +245,8 @@
 
 	  <div class="field">
 	  	<div class="ui tiny header">After you graduate from Georgia Tech, what do you plan to do?</div>
-	  	<div class="field" ng-repeat="opt in postGradPlans" ng-click="newValue(opt.name, 'post_grad_plan')">
+	  	<br/>
+	  	<div class="field" ng-repeat="opt in userInfo.postGradPlans" ng-click="newValue(opt.name, 'post_grad_plan')">
 	  		<div class="ui radio checkbox">
 			  	<input type="radio" name="post_grad_plan" ng-model="form.post_grad_plan" value="{{opt.name}}"/>
 			  	<label>{{opt.name}}</label>
@@ -472,113 +256,123 @@
       	<input type="text" id="post_grad_plan_desc" ng-model="form.post_grad_plan_desc" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
-	 </div>
+	 <!-- </div> -->
 	
-	<div class="ui error form segment">
-	<h2 class="ui inverted black block header">Prior Involvement and Experiences</h2><br/>
+	<!-- <div class="ui error form segment"> -->
+	<h2 class="ui inverted black block header">{{field_text.experience_heading}}</h2><br/>
 
-	<div class="field">
+	<div class="field" ng-show="mentor_specific">
 	    <div class="ui tiny header">Please list up to three organizations you are involved in on campus in order of importance/level of involvement.</div>
+	    <br/>
 	    <div class="field">
 	    	<label>Organization One</label>
-			  <input type="text" ng-model="form.other_organization.one"/>	
+			  <input type="text" ng-model="form.organization1"/>	
 			</div>
 			<div class="field">
 	    	<label>Organization Two</label>
-			  <input type="text" ng-model="form.other_organization.two"/>	
+			  <input type="text" ng-model="form.organization2"/>	
 			</div>	
 			<div class="field">
 	    	<label>Organization Three</label>
-			  <input type="text" ng-model="form.other_organization.three"/>	
+			  <input type="text" ng-model="form.organization3"/>	
 			</div>
 	</div>
 
 	<div class="field">
-	  	<div class="ui tiny header">Have you participated in a significant way in any of the following BME student organizations? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in bmeOrganizations">
+	  	<div class="ui tiny header">{{field_text.bme_organization}}</div>
+	  	<br/>
+	  		<div class="field" ng-repeat="opt in userInfo.bmeOrganizations">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedBmeOrganizations[]" value="{{opt}}" ng-checked="form.bme_organization.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'bme_organization')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedBmeOrganizations[]" value="{{opt.name}}" ng-checked="form.bme_organization.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'bme_organization')">{{opt.name}}</label>
 	  			</div>
 				</div>
-	  	<div ng-show="form.bme_organization.indexOf(opt).name == 'Other'">
-	      	<input type="text" id="bme_organization_other" ng-model="form.bme_organization_other" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
+	  	<div ng-show="form.bme_organization.indexOf('{{opt.name}}').name == 'Other'">
+	      	<input type="text" id="bme_organization_other" ng-model="form.bme_org_other" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	    </div>
 	 </div>
 
-	 <div class="field">
+	 <div class="field" ng-show="mentor_specific">
 	  	<div class="ui tiny header">Have you served as a mentee or mentor before in any of the following organizations? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in menteeMentorOrgs">
+	  	<br/>
+	  		<div class="field" ng-repeat="opt in userInfo.menteeMentorOrgs">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedMenteeMentorOrganizations[]" value="{{opt}}" ng-checked="form.mentee_mentor_organization.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'mentee_mentor_organization')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedMenteeMentorOrganizations[]" value="{{opt.name}}" ng-checked="form.mm_org.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'mm_org')">{{opt.name}}</label>
 	  			</div>
 				</div>
   		<label>Please feel free to elaborate and/or list other mentoring programs you've participated in.</label>
-      	<input type="text" id="mentee_mentor_organization_desc" ng-model="form.mentee_mentor_organization_desc" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
+      	<input type="text" id="mm_org_other" ng-model="form.mm_org_other" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
 	 <div class="field">
-	  	<div class="ui tiny header">Have you served as a tutor/facilitator/teaching assistant in any of the following programs? Check all that apply.</div>
-	  		<div class="field" ng-repeat="opt in tutorTeachPrograms">
+	  	<div class="ui tiny header">{{field_text.tutor_teacher_program}}</div>
+	  	<br/>
+	  		<div class="field" ng-repeat="opt in userInfo.tutorTeachPrograms">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedTutorTeacherPrograms[]" value="{{opt}}" ng-checked="form.tutor_teacher_program.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'tutor_teacher_program')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedTutorTeacherPrograms[]" value="{{opt.name}}" ng-checked="form.tutor_teacher_program.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'tutor_teacher_program')">{{opt.name}}</label>
 	  			</div>
 				</div>
   		<label>Please feel free to elaborate and/or list other tutor/teacher programs you've participated in.</label>
-      	<input type="text" id="tutor_teacher_program_desc" ng-model="form.tutor_teacher_program_desc" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
+      	<input type="text" id="tutor_teacher_program_other" ng-model="form.tutor_teacher_program_other" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
 	 <div class="field">
-	 	<div class="ui tiny header">Have you taken part in any of the following significant BME academic expereinces? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in bmeAcademicPrograms">
+	 	<div class="ui tiny header">{{field_text.bme_academ_exp}}</div>
+	 	<br/>
+	 	<div class="field" ng-repeat="opt in userInfo.bmeAcademicPrograms">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedBmeAcademPrograms[]" value="{{opt}}" ng-checked="form.bme_academ_exp.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'bme_academ_exp')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedBmeAcademPrograms[]" value="{{opt.name}}" ng-checked="form.bme_academ_exp.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'bme_academ_exp')">{{opt.name}}</label>
 	  			</div>
 				</div>
   		<label>Please feel free to elaborate and/or list other BME academic experiences not listed above.</label>
-      	<input type="text" id="bme_academ_exp_desc" ng-model="form.bme_academ_exp_desc" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
+      	<input type="text" id="bme_academ_exp_other" ng-model="form.bme_academ_exp_other" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
 	 <div class="field">
-	 	<div class="ui tiny header">Have you had, or do you plan to have, any academic international experiences? For example, international plan, work abroad, research abroad, medical mission trips, or GT-Lorraine. Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in internationalPrograms">
+	 	<div class="ui tiny header">{{field_text.international_experience}}</div>
+	 	<br/>
+	 	<div class="field" ng-repeat="opt in userInfo.internationalPrograms">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedInternationalPrograms[]" value="{{opt}}" ng-checked="form.international_experience.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'international_experience')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedInternationalPrograms[]" value="{{opt.name}}" ng-checked="form.international_experience.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'international_experience')">{{opt.name}}</label>
 	  			</div>
 				</div>
   		<label>Please feel free to elaborate and/or list other international experiences not listed above.</label>
-      	<input type="text" id="international_experience_desc" ng-model="form.international_experience_desc" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
+      	<input type="text" id="international_experience_other" ng-model="form.international_experience_other" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
 	 <div class="field">
-	 	<div class="ui tiny header">Have you participated in any of the following career development programs? Check all that apply.</div>
-	 	<div class="field" ng-repeat="opt in carrerDevPrograms">
+	 	<div class="ui tiny header">{{field_text.career_dev_program}}</div>
+	 	<br/>
+	 	<div class="field" ng-repeat="opt in userInfo.careerDevPrograms">
 	  			<div class="ui checkbox">
-	  				<input type="checkbox" name="selectedCareerDevPrograms[]" value="{{opt}}" ng-checked="form.career_dev_program.indexOf(opt) > -1">
-	  				<label ng-click="toggleSelection(opt, 'career_dev_program')">{{opt.name}}</label>
+	  				<input type="checkbox" name="selectedCareerDevPrograms[]" value="{{opt.name}}" ng-checked="form.career_dev_program.indexOf('{{opt.name}}') > -1">
+	  				<label ng-click="toggleSelection(opt.name, 'career_dev_program')">{{opt.name}}</label>
 	  			</div>
 				</div>
   		<label>Please feel free to elaborate and/or list other career development experiences not listed above.</label>
-      	<input type="text" id="career_dev_program_desc" ng-model="form.career_dev_program_desc" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
+      	<input type="text" id="career_dev_program_other" ng-model="form.career_dev_program_other" placeholder="Please Elaborate" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 
 	 <div class="field">
+	 <br/>
 	  	<div class="ui tiny header">What personal interests or hobbies would you like to share with your prospective mentees (if any)?</div>
       	<input type="text" id="personal_hobby" ng-model="form.personal_hobby" placeholder="Please Specify" ng-model-options="{ updateOn: 'blur' }">
 	 </div>
 	
-	</div>
+	<!-- </div> -->
 
 
-	<div id="reg_submit_button" class="ui blue submit button" ng-click="go('/homescreen')">Next</div> <!-- add updateMentor function to ng-click -->
+	<div id="reg_submit_button" class="right floated ui blue submit button" ng-click="submitEdit()">Done</div> <!-- add updateMentor function to ng-click -->
 
-	</div>
- </div>
+</form>
 
 
-   </div>
+</div>
+
+
+   <!-- </div> -->
 </section>

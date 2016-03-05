@@ -130,7 +130,7 @@ nav {
   font-family: 'Roboto', sans-serif;
   border-radius: 5px;
   color: white;
-  background-color: #19D1FF; }
+  background-color: #F39811; }
 
 .ui.button:hover {
   color: white;
@@ -214,7 +214,8 @@ nav {
   color: white; }
 
 .custom.cols {
-  height: 10em; }
+  height: 10em;
+  text-align: center; }
 
 .custom.cols #left-col {
   float: left;
@@ -313,6 +314,30 @@ nav {
   margin: 0 auto;
   text-align: center; }
 
+.contact .menu {
+  width: 50%;
+  height: 50%;
+  min-height: 300px;
+  min-width: 250px;
+  background-color: #ebebeb;
+  border-radius: 0.325em 0 0 0.325em;
+  z-index: 100;
+  text-align: center;
+  margin: auto;
+  color: #666666;
+  padding: 20px;
+}
+.contact .message-wrapper {
+  top: 80px;
+  position: relative; }
+
+.contact .header {
+  position: relative;
+  text-align: center;
+  margin: 10px auto;
+}
+
+
 /* Mentor Search */
 .searchmentors {
   height: 100%;
@@ -328,10 +353,12 @@ nav {
   height: 100%;
   display: block;
   margin: 0 auto;
+  text-align: center;
   top: 35px; }
 
 .searchmentors .view > div {
   position: relative;
+  text-align: left;
   vertical-align: top;
   display: inline-block;
   margin-left: -3px; }
@@ -354,6 +381,7 @@ nav {
   background-color: #ebebeb;
   border-radius: 0.325em 0 0 0.325em;
   z-index: 100;
+  text-align: left;
   margin: 0 15px 0 20px;
   color: #666666; }
 
@@ -419,6 +447,11 @@ nav {
   height: 50px;
   width: 50px;
   z-index: 200; }
+
+
+.searchmentors .button-align {
+  display: inline-block; }
+
 
 #stamp {
   width: 110px;
@@ -554,7 +587,6 @@ nav {
   border-right: 0em solid transparent;
   border-bottom: 0em solid transparent;
   border-left: 0em solid transparent;
-  border-right-color: inherit;
   -webkit-transition: border-color 0.2s ease;
   -moz-transition: border-color 0.2s ease;
   transition: border-color 0.2s ease; }
@@ -580,7 +612,6 @@ nav {
   padding: 6px; }
 
 .kindling * {
-  position: absolute;
   margin: 0; }
 
 .kindling .symbol {
@@ -613,15 +644,16 @@ nav {
 
 .wishlist .view {
   position: relative;
+  text-align: center;
   width: 100%;
   height: 100%;
   display: block;
   margin: 0 auto;
-  padding: 0 20px;
   top: 35px; }
 
 .wishlist .view > div {
   position: relative;
+  text-align: left;
   vertical-align: top;
   display: inline-block;
   margin-left: -3px; }
@@ -722,12 +754,15 @@ nav {
   transform: translateY(-50%); }
   /*http://dev.m.gatech.edu/d/mcox41/w/MentorWeb/content/index.html#/register*/
 .registration-splash > .button {
-  margin-left: 110px;
+  margin-left: auto;
   margin-right: auto;
-  padding: 1.5em 3em 1.5em 3em;
-  color: black;
-  background-color: #E6E6E6;
-  border-radius: 0px;
+  color: #005652;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  line-height: 100px;
+  display: inline;
 }
 
 /* http://dev.m.gatech.edu/d/mcox41/w/MentorWeb/content/index.html#/editProfile */
@@ -816,6 +851,27 @@ div#trigger-requesting-period {
 }
 .kindling .name.color.ng-binding {
   position: initial;
+}
+
+
+.ui.label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -0.25em 0.25em 0em;
+    background-color: #E8E8E8;
+    border-color: transparent;
+    padding: 0.5em 0.8em;
+    color: rgba(0, 0, 0, 0.65);
+    text-transform: uppercase;
+    font-weight: normal;
+    border-radius: 0.325em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: background 0.1s linear;
+    -moz-transition: background 0.1s linear;
+    transition: background 0.1s linear;
 }
 .matches-table, .users-table {
   width:50%;

@@ -13,6 +13,7 @@ MentorWeb is a web based application made for Georgia Tech students to better fi
 		//2. add stfp-config.json at the end
 		//3. save and close
 
+
 2.There is a place where you might need to change the 'gtaccount' to your account name 
 	json-gen/json-generator-user-template.js
 
@@ -56,4 +57,3 @@ Albert Morlan, amorlan3, amorlan3@gatech.edu
 JD Reddaway, jreddaway3, jdreddaway@gatech.edu
 Mitchell Cox, mcox41, mcox41@gatech.edu
 Mykal Thomas, mthomas46, mthomas46@gatech.edu
-Rachel Clark, rclark39, rclark39@gatech.edu
