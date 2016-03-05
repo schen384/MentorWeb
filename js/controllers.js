@@ -289,7 +289,7 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
     {
       icon: "fa fa-sort-numeric-desc fa-3x",
       title: "Mentor Max",
-      description: "Set the maximum number of mentees any one mentor can have per semester",
+      description: "Set the maximum number of mentees a mentor can have per semester",
       meta: "Meta",
       link: "#/setMentorMax"
     }];
