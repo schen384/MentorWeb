@@ -1,19 +1,17 @@
 <section class="view-users page">
 
     <div class="view">
-        <table class="matches-table">
-            <tr>
-                <td>Mentor</td>
-                <td>Mentees</td>
-            </tr>
+        <table class="ui sortable celled table matches-table">
+            <thead><tr>
+                <th class="sorted ascending">Mentor</th>
+                <th>Mentees</th>
+            </tr></thead>
             <tbody ng-repeat="mentor in mentors">
                 <tr>
                     <td>{{mentor.first_name}} {{mentor.last_name}} ({{mentor.username}})</td>
-                    <td></td>
-                </tr>
-                <tr ng-repeat="mentee in mentor.mentees">
-                    <td></td>
-                    <td>{{mentee.first_name}} {{mentee.last_name}} ({{mentee.username}})</td>
+                    <td ng-repeat="mentee in mentor.mentees">
+                        {{mentee.first_name}} {{mentee.last_name}} ({{mentee.username}})<br>
+                    </td>
                 </tr>
             </tbody>
         </table>
