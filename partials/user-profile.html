@@ -11,14 +11,14 @@
 				<div class="user-profile personal ui grid">
 					<div class="four wide column">
 						<div class="kindling" ng-class="myMentor.alias.split(' ')[0]">
-			        <a class="like ui corner label">
-			          <i class="star icon" ng-class="myMentor.favorited"></i>
-			        </a>
-			        <div class="name color">{{myMentor.alias.split(" ")[0]}}</div>
-             	<div class="name adj">{{myMentor.alias.split(" ")[1]}}</div>
-             	<div class="name animal">{{myMentor.alias.split(" ")[2]}}</div>
-			      </div>
-			    </div>
+					        <a class="like ui corner label">
+					          <i class="star icon" ng-class="myMentor.favorited"></i>
+					        </a>
+				        	<div class="name color">{{myMentor.alias.split(" ")[0]}}</div>
+	             			<div class="name adj">{{myMentor.alias.split(" ")[1]}}</div>
+	             			<div class="name animal">{{myMentor.alias.split(" ")[2]}}</div>
+				      	</div>
+				    </div>
 
 					<div class="six wide column" id="name" ng-show="show_identifier">
 						<div class="item">
@@ -44,7 +44,7 @@
 				<!-- track, focus, etc stuff -->
 				<div class="user-profile ui grid">
 					<div class="seven wide column">
-				    <div class="user-profile ui vertical fluid">
+				    	<div class="user-profile ui vertical fluid">
 							<div class="item">
 								<div class="menu-text2">Breadth Track</div>
 								<div class="menu-text">{{myMentor.breadth_track}}</div>
@@ -60,10 +60,10 @@
 								<div class="menu-text">{{myMentor.gender}}</div>
 							</div>
 
-							<div class="item">
-								<!-- <div class="menu-text2">Student Year</div>
-								<div class="menu-text">{{myMentor.studentYear}}</div> -->
-							</div>
+							<!-- <div class="item">
+								<div class="menu-text2">Student Year</div>
+								<div class="menu-text">{{myMentor.studentYear}}</div>
+							</div> -->
 						</div>
 					</div>
 
@@ -97,7 +97,59 @@
 				<!-- extra bits of information stuff -->
 				<div class="user-info extra ">
 					<div class="menu-text2">Organizations, Extracurricular Activities, Interests, Skills, etc</div>
-					<div class="menu-text">{{myMentor.extra_info}}</div>
+					<div class="nine wide column">
+				    	<div class="user-profile ui vertical fluid">
+				    		<div class="item">
+								<div class="menu-text2">Home Country</div>
+								<div class="menu-text">{{myMentor.home_country}}</div>
+							</div>
+							<div class="item">
+								<div class="menu-text2">Live on Campus</div>
+								<div class="menu-text">{{myMentor.live_on_campus}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">First Generation Colllege Student</div>
+								<div class="menu-text">{{myMentor.first_gen_college_student}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">Transfer from Outside</div>
+								<div class="menu-text">{{myMentor.transfer_from_outside}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">Institution Name</div>
+								<div class="menu-text">{{myMentor.institution_name}}</div>
+							</div>
+
+		
+						</div>
+
+						<div class="ten wide column">
+						<div class="user-profile ui vertical fluid">
+							<div class="item">
+								<div class="menu-text2">International Student</div>
+								<div class="menu-text">{{myMentor.international_student}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">BME Organization</div>
+								<div class="menu-text">{{myMentor.bme_org1}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">Other Organization</div>
+								<div class="menu-text">{{myMentor.other_organization1}}</div>
+							</div>
+
+							<div class="item">
+								<div class="menu-text2">Interest</div>
+								<div class="menu-text">{{myMentor.personal_hobby}}</div>
+							</div>
+						</div>
+					</div>
+					</div>
 				</div>
 			</div>
 		</div>
