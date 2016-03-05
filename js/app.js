@@ -4,31 +4,6 @@ var myApp = angular.module('myApp', [
   'iso.directives'
 ]);
 
-// myApp.factory('Auth', function($http, $q, $window) {
-//   var userInfo;
-
-//   function login() {
-//     var deferred = $q.defer();
-
-//     $.get('api/welcome')
-//     .success(function(data) {
-//         // $scope.user = data;
-//         // $scope.userType = data['userType'];
-//         // $scope.$parent.username = data['username'];
-//         deferred.resolve();
-//     })
-//     .error(function(error) {
-//         deferred.reject();
-//     });
-
-//     return deferred.promise;
-//   }
-
-//   return {
-//     login: login
-//   };
-  
-// });
 
 var checkLoggedOut = ['$q', '$timeout', '$http', '$location', '$rootScope', function($q, $timeout, $http, $location, $rootScope){
   deferred = $q.defer();
@@ -83,6 +58,10 @@ myApp.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/homescreen.html',
     controller: 'UserController',
     resolve: checkLoggedOut
+  }).
+  when('/house', {
+    templateUrl: 'partials/house.html',
+    controller: 'HouseController'
   }).
   when('/searchmentors', {
     templateUrl: 'partials/searchmentors.html',
@@ -141,6 +120,7 @@ myApp.config(['$routeProvider', function($routeProvider) {
   });
 
 }]);
+
 
 
 myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$location) {
@@ -745,10 +725,39 @@ myApp.factory('FieldText', ['$q','$http','$location',function($q,$http,$location
     'mentee_field_text': mentee_field_text
   }
 
-
-
-
 }]);
 
+myApp.factory('TaskService', ['$q','$http','$location',function($q,$http,$location) {
+  var tasks = [
+    {
+      id: 1,
+      type: "type1",
+      point: 10
+    },
+    {
+      id: 2,
+      type: "type2",
+      point: 15
+    },
+    {
+      id: 3,
+      type: "type3",
+      point: 20
+    },
+    {
+      id: 4,
+      type: "type4",
+      point: 50
+    },
+    {
+      id: 5,
+      type: "type5",
+      point: 30
+    }
+  ];
 
+  return {
+    tasks:tasks
+  };
+}]);
 

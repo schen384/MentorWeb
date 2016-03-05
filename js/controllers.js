@@ -396,6 +396,24 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
 
 }]);
 
+appControllers.controller('HouseController', ['$scope','$http','TaskService', function($scope,$http,$TaskService) {
+  $('.ui.dropdown').dropdown({history:false});
+  // $('.ui.dropdown').dropdown({
+  //                   onChange: function(newValue) {
+  //                     $scope.$apply();
+  //                       // $scope.$apply(function() {
+  //                       //     $scope.ngModel = newValue;
+  //                       // })
+  //                     }
+  //                   });
+  $('.house-family-tab.menu .item').tab({history:false});
+  $('table').tablesort();
+
+  $scope.tasks = $TaskService.tasks;
+  
+
+}]);
+
 appControllers.controller('SearchController', ['$scope', '$http', function($scope, $http) {
   var open = {};
   $.ajax({
