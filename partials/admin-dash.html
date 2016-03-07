@@ -8,8 +8,8 @@
 		<div class="view">
 			<div class="widget" ng-repeat="widget in widgets">
 				<div class="user-profile message ui">
-					<div class="content">
-						<img ng-src="{{widget.image}}" align="center">
+					<div class="content" align="center">
+						<span class="{{widget.icon}}"></span>
 						<div class="menu-text" align="center">{{widget.title}}</div>
 						<div class="menu-text2">{{widget.description}}</div>
 					</div>
@@ -20,4 +20,17 @@
 			</div>
 		</div>
 
+<!-- 		<div class="view ui link cards">
+			<div class="card" ng-repeat="widget in widgets">
+				<div class="widget-icon">
+					<span class="{{widget.icon}}"></span>
+				</div>
+				<div class="widget-title">
+					<div class="menu-text" align="center">{{widget.title}}</div>
+				</div>
+				<div class="widget-description">
+					<div class="menu-text2">{{widget.description}}</div>
+				</div>
+			</div>
+		</div> -->
 </section>
