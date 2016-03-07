@@ -1562,12 +1562,9 @@
 	}
 
 	function submitTask() {
-		// echo "Update Mentee Profile in PHP \n";
 		global $_USER;	
 		$user = $_USER['uid'];
-		echo $user;
-		// $task_id = mysql_real_escape_string($_POST['task_id']);
-		echo $task_id;
+		echo $user;		
 		$task_type = mysql_real_escape_string($_POST['task_type']);
 		$task_point = mysql_real_escape_string($_POST['task_point']);
 		$task_date = mysql_real_escape_string($_POST['task_date']);
@@ -1581,6 +1578,11 @@
 	}
 
 
+	function getHouses() {
+		$housesQuery = sprintf("SELECT * FROM House");
+		$houseResult = getDBResultsArray($housesQuery);
+		echo json_encode($houseResult);
+	}
 
 
 	function listAliasNames($alias) {

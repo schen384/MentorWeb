@@ -417,7 +417,7 @@ nav {
 
 .house .task_label {
   text-align: left;
-  margin-top: 20px;
+  /*margin-top: 20px;*/
   padding-top: 10px;
 }
 
@@ -430,9 +430,12 @@ nav {
   width: 80%;
 }
 
+.house #desc_input {
+  height: 100px;
+}
+
 .house #family_label {
   text-align: left;
-  margin-top: 20px;
   padding-top: 5px;
   margin-left: 15px;
   width: 80%;
@@ -1110,7 +1113,7 @@ div#trigger-requesting-period {
   display: inline-block;
 }
 
-#q-graph {
+#house-graph {
   display: block;
   /* fixes layout wonkiness in FF1.5 */
   position: relative;
@@ -1125,7 +1128,7 @@ div#trigger-requesting-period {
   margin-right: 17.5%;
 }
 
-#q-graph caption {
+#house-graph caption {
   caption-side: top;
   width: 421px;
   text-transform: uppercase;
@@ -1138,7 +1141,7 @@ div#trigger-requesting-period {
   font-size: 20px;
 }
 
-#q-graph tr, #q-graph th, #q-graph td {
+#house-graph tr, #house-graph th, #house-graph td {
   position: absolute;
   bottom: 0;
   width: 90px;
@@ -1148,47 +1151,47 @@ div#trigger-requesting-period {
   text-align: center;
 }
 
-#q-graph td {
+#house-graph td {
   -webkit-transition: all .3s ease;
   transition: all .3s ease;
 }
-#q-graph td:hover {
+#house-graph td:hover {
   /*background-color: #4d4d4d;*/
   opacity: .8;
-  color: white;
+  color: #4d4d4d;
 }
 
 
-#q-graph tbody tr {
+#house-graph tbody tr {
   height: 296px;
   padding-top: 2px;
   /*border-right: 1px dotted #C4C4C4;*/
   color: #AAA;
 }
 
-#q-graph #house1 {
+#house-graph #house1 {
   /*left: 70px;*/
   left: 0px;
 
 }
 
-#q-graph #house2 {
+#house-graph #house2 {
   /*left: 180px;*/
   left: 110px;
 }
 
-#q-graph #house3 {
+#house-graph #house3 {
   /*left: 290px;*/
   left: 220px;
 }
 
-#q-graph #house4 {
+#house-graph #house4 {
   /*left: 400px;*/
   left: 330px;
   border-right: none;
 }
 
-#q-graph tbody th {
+#house-graph tbody th {
   bottom: -1.75em;
   vertical-align: top;
   font-weight: normal;
@@ -1196,7 +1199,7 @@ div#trigger-requesting-period {
   bottom: -25px;
 }
 
-#q-graph .bar {
+#house-graph .bar {
   width: 90%;
   border: 1px solid;
   /*border-radius: 5px;*/
@@ -1204,31 +1207,31 @@ div#trigger-requesting-period {
   color: #000;
 }
 
-#q-graph .bar p {
-  margin: 5px 0 0;
+#house-graph .bar p {
+  margin: -25px 0 0;
   padding: 0;
   opacity: .4;
 }
 
-#q-graph .bar {
+#house-graph .bar {
   left: 4.5px;
   /*background-color: #39cccc;*/
   border-color: transparent;
 }
 
-#q-graph .red {
+#house-graph .Crimson {
   background-color: #db2828;
 }
 
-#q-graph .yellow {
+#house-graph .Amber {
   background-color: #fbbd08;
 }
 
-#q-graph .green {
+#house-graph .Emerald {
   background-color: #21BA45;
 }
 
-#q-graph .blue {
+#house-graph .Sapphire {
   background-color: #2185D0;
 }
 

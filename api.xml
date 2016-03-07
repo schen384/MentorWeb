@@ -135,13 +135,23 @@
 		</post>
 	</command>
 
-	<command id='submitTask' security='protected'>
+	<command id='task' security='protected'>
 		<description><![CDATA[This is how to manage task-related information]]></description>
 
 		<post>
 			<description><![CDATA[This is how to submit a task]]></description>
 			<action file='db/db.php'><![CDATA[submitTask();]]></action>
 		</post>
+	</command>
+
+	<command id='houses' security='protected'>
+		<description><![CDATA[This is how to manage house-related information]]></description>
+
+		<index>
+			<description><![CDATA[This is how to retrieve information about four houses]]></description>
+			<action file='db/db.php'><![CDATA[getHouses();]]></action>
+		</index>
+
 	</command>
 
 	<command id='resetUser' security='protected'>

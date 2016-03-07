@@ -3,27 +3,34 @@
 	<div class="view">
 
 		<div class="isotope-container ui" id="houseView">
-			<table id="q-graph">
+			<table id="house-graph">
 				<caption>House</caption>
 
-				<tbody>
+				<tbody ng-repeat='house in houses'>
+					<tr id="house{{$index+1}}">
+						<th scope="row">{{house.house_name}}</th>
+						<td class="{{house.house_name}} bar" style="height:{{house.height}}px"><p>{{house.total_point}}</p></td>
+					</tr>
+				</tbody>
+
+				<!-- <tbody>
 					<tr id="house1">
-						<th scope="row">红</th>
-						<td class="red bar" style="height: 111px;"><p>180</p></td>
+						<th scope="row">Crimson</th>
+						<td class="red bar" style="height: 111px;"><p>110</p></td>
 					</tr>
 					<tr id="house2">
-						<th scope="row">黄</th>
+						<th scope="row">Amber</th>
 						<td class="yellow bar" style="height: 206px;"><p>200</p></td>
 					</tr>
 					<tr id="house3">
-						<th scope="row">绿</th>
-						<td class="green bar" style="height: 259px;"><p>430</p></td>
+						<th scope="row">Emerald</th>
+						<td class="green bar" style="height: 250px;"><p>430</p></td>
 					</tr>
 					<tr id="house4">
-						<th scope="row">蓝</th>
+						<th scope="row">Sapphire</th>
 						<td class="blue bar" style="height: 110px;"><p>800</p></td>
 					</tr>
-				</tbody>
+				</tbody> -->
 			</table>
 
 			<div id="house-family">
