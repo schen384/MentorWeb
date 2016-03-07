@@ -154,6 +154,16 @@
 
 	</command>
 
+	<command id='houseMembers' security='protected'>
+		<description><![CDATA[This is how to manage house member related information]]></description>
+
+		<index>
+			<description><![CDATA[This is how to retrive house members]]></description>
+			<action file='db/db.php'><![CDATA[getHouseMembers();]]></action>
+		</index>
+
+	</command>
+
 	<command id='resetUser' security='protected'>
 		<description><![CDATA[Deletes the current user in the database.]]></description>
 

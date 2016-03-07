@@ -420,7 +420,8 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $scope.user = $UserInfoService.getUser(); 
   $scope.username = $scope.user['Username'];
   $scope.houses = $HouseService.getHouses();
-  console.log($scope.houses);
+  $scope.houseMembers = $HouseService.getHouseMembers();
+  console.log($scope.houseMembers);
   $scope.dd_title  = 'Select task type';
   $scope.task_selected = true;
   $scope.validation = false;
@@ -428,8 +429,9 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $scope.prevent_sub = false;
   $scope.submit_task = {};
   $('.ui.dropdown').dropdown();
-  $('.house-family-tab.menu .item').tab({history:false});
   $('table').tablesort();
+  $('.house-family-tab.menu .item').tab({history:false});
+  
   $('.ui.form')
     .form({
       date: {

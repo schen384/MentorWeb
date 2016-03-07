@@ -480,6 +480,12 @@ nav {
   text-align: left;
 }
 
+.house #house_label {
+  color: black;
+  float: right;
+  cursor: default!important;
+}
+
 .house #house-family {
   margin-top: 50px;
 }

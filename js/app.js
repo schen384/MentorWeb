@@ -782,6 +782,24 @@ myApp.factory('HouseService', ['$q','$http','$location',function($q,$http,$locat
     return houses;
   }
 
+  var getHouseMembers = function() {
+    var houseMembers = {};
+    $.ajax({
+      url: "api/houseMembers",
+      dataType: "json",
+      async: false,
+      type: 'GET',
+      success: function(result) {
+        houseMembers = result;
+      }
+    }); 
+    return houseMembers;
+    // return $http.get('api/houseMembers')
+    //             .then(function(result) {
+    //               return result.data;
+    //             });
+  }
+
   var getHeights = function(houses) {
     var max_point = Math.max.apply(Math,houses.map(function(house){return house['total_point'];}))
     for (var i = 0;i < houses.length;i++) {
@@ -791,7 +809,8 @@ myApp.factory('HouseService', ['$q','$http','$location',function($q,$http,$locat
   }
 
   return {
-    getHouses:getHouses
+    getHouses:getHouses,
+    getHouseMembers:getHouseMembers
   };
 
 }]);
