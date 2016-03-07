@@ -366,16 +366,29 @@ nav {
   margin-left: -3px; 
 }
 
-.house #task_selection {
+.house #right_col {
   width: 20%;
   min-height: 500px;
   min-width: 250px;
-  background-color: #ebebeb;
+  background-color: #E0E0E0;
   border-radius: 0.325em 0 0 0.325em;
   z-index: 100;
   /*text-align: left;*/
   margin: 0 15px 0 20px;
   color: #666666; 
+}
+
+.house #task_control {
+  background-color: #ebebeb;
+  padding-bottom: 10px;
+  border: 1px solid lightgray;
+}
+
+.house #family_control {
+  background-color: #ebebeb;
+  margin-top: 100px;
+  padding-bottom: 15px;
+  border: 1px solid lightgray;
 }
 
 .house #task_type {
@@ -384,7 +397,7 @@ nav {
   color: #666666;
   font-size: 14px;
   height: 35px;
-  width: 204px;
+  width: 80%;
   z-index: 200;
   margin-bottom: 50px;
 }
@@ -414,16 +427,41 @@ nav {
 
 .house #task_desc_div,.house #task_date_div {
   display: inline-block;
-  width: 204px;
+  width: 80%;
+}
+
+.house #family_label {
+  text-align: left;
+  margin-top: 20px;
+  padding-top: 5px;
+  margin-left: 15px;
+  width: 80%;
+  border-bottom: 1px solid lightgray;
+}
+
+.house #buttons_div {
+  display: inherit;
+  margin-left: 15px;
+}
+
+.house .family_buttons {
+  display: inherit;
+  margin-left: 15px;
+  margin-top: 10px;
+  margin-right: 1em;
+  padding: 0.5em 1em;
+  border-radius: 5px!important;
+
 }
 
 .house #submit-task {
   padding: 0.5em 0.8em;
-  display: block;
+  display: inline-block;
   margin-left: 40%;
   width: 130px;
   background-color: #6ecff5;
 }
+
 
 .house .isotope-container {
   width: 45%;
