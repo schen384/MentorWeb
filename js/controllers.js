@@ -87,7 +87,8 @@ appControllers.controller('ContactController', ['$scope','$location', function($
 }]);
 
 appControllers.controller('EditProfileController', ['$scope', '$http', '$location','UserInfoService','FieldText', function($scope, $http, $location,$UserInfoService,$FieldText) {
-  var data = {};
+  $scope.userData = $UserInfoService.getUser();
+  $scope.username = $scope.userData['Username'];
   $scope.form = {};
   $scope.field_text = {};
   $scope.mentor_specific = false;
@@ -116,20 +117,7 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
   });
 
 
-  $.ajax({
-    url: "api/user",
-    dataType: "json",
-    async: false,
-    success: function(result) {
-      console.log(result);
-      data = result;
-      $scope.username = data['Username'];
-    },
-    type: 'GET'
-    // error: ajaxError
-  }); 
-
-  if(data["Mentor"]) {
+  if($scope.userData["Mentor"]) {
     $scope.mentor_specific = true;
     // $scope.viewMentorForm = 1;
     // $scope.viewMenteeForm = 0;
@@ -143,7 +131,7 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
       $scope.$apply();
     });
   }
-  if(data["Mentee"]) {
+  if($scope.userData["Mentee"]) {
     // $scope.viewMenteeForm = 1;
     // $scope.viewMentorForm = 0;
     $scope.field_text = $FieldText.mentee_field_text;
@@ -205,7 +193,7 @@ appControllers.controller('EditProfileController', ['$scope', '$http', '$locatio
   $scope.submitEdit = function() {
     $scope.submitData = $UserInfoService.editprofiledata($scope.form);
     if($scope.validation) {
-      if(data["Mentor"]) {
+      if($scope.userData["Mentor"]) {
         $.ajax({
           url: "api/mentorUpdate",
           dataType: "json",
@@ -428,7 +416,11 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
 
 }]);
 
-appControllers.controller('HouseController', ['$scope','$http','TaskService','$route', function($scope,$http,$TaskService,$route) {
+appControllers.controller('HouseController', ['$scope','HouseService','TaskService','UserInfoService','$route', function($scope,$HouseService,$TaskService,$UserInfoService,$route) {
+  $scope.user = $UserInfoService.getUser(); 
+  $scope.username = $scope.user['Username'];
+  $scope.houses = $HouseService.getHouses();
+  console.log($scope.houses);
   $scope.dd_title  = 'Select task type';
   $scope.task_selected = true;
   $scope.validation = false;
@@ -444,7 +436,6 @@ appControllers.controller('HouseController', ['$scope','$http','TaskService','$r
         identifier  : 'date_input',
         rules: [
           {
-            // type   : 'regExp[/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/]',
             type   : 'empty',
             prompt : 'Please enter task date'
           }
@@ -470,6 +461,7 @@ appControllers.controller('HouseController', ['$scope','$http','TaskService','$r
       }
     });
 
+
   $scope.tasks = $TaskService.tasks;
 
   $scope.toggleMessage = function() {
@@ -493,7 +485,7 @@ appControllers.controller('HouseController', ['$scope','$http','TaskService','$r
       $scope.submit_task.task_date = $TaskService.yyyymmdd($scope.date);
       console.log($scope.submit_task);
       $.ajax({
-          url: "api/submitTask",
+          url: "api/task",
           dataType: "json",
           async: false,
           data: $scope.submit_task,

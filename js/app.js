@@ -366,6 +366,20 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     name:'Other'
   }];
 
+  var getUser = function() {
+    var user = {};
+    $.ajax({
+      url: "api/user",
+      dataType: "json",
+      async: false,
+      success: function(result) {
+        user = result;
+      },
+      type: 'GET'    
+    }); 
+    return user;
+  }
+
   var ui_rules = {
       fname: {
         identifier  : 'fname',
@@ -406,15 +420,6 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
           }
         ]
       }
-      // other_major: {
-      //   identifier: 'other_major',
-      //   rules: [
-      //     {
-      //       type: 'empty',
-      //       prompt: 'Please specify your other major'
-      //     }
-      //   ]
-      // }
   };
 
   var formUI = function() {
@@ -459,15 +464,6 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
           }
         ]
       }
-      // other_major: {
-      //   identifier: 'other_major',
-      //   rules: [
-      //     {
-      //       type: 'empty',
-      //       prompt: 'Please specify your other major'
-      //     }
-      //   ]
-      // }
     },
     {
       inline: true,
@@ -686,7 +682,8 @@ myApp.factory('UserInfoService', ['$q','$http','$location',function($q,$http,$lo
     "data_expand":data_expand,
     "update_description": Update_Description,
     "editprofiledata":editProfileData,
-    "ui_rules":ui_rules
+    "ui_rules":ui_rules,
+    "getUser":getUser
   };
 }]);
 
@@ -769,3 +766,32 @@ myApp.factory('TaskService', ['$q','$http','$location',function($q,$http,$locati
   };
 }]);
 
+myApp.factory('HouseService', ['$q','$http','$location',function($q,$http,$location) {
+  var getHouses = function() {
+    var houses = {};
+    $.ajax({
+      url: "api/houses",
+      dataType: "json",
+      async: false,
+      type: 'GET',
+      success: function(result) {
+        houses = result;
+      }
+    }); 
+    houses = getHeights(houses);
+    return houses;
+  }
+
+  var getHeights = function(houses) {
+    var max_point = Math.max.apply(Math,houses.map(function(house){return house['total_point'];}))
+    for (var i = 0;i < houses.length;i++) {
+      houses[i]['height'] = Math.ceil((houses[i]['total_point']/max_point)*260);
+    }
+    return houses;
+  }
+
+  return {
+    getHouses:getHouses
+  };
+
+}]);

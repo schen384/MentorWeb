@@ -3,27 +3,34 @@
 	<div class="view">
 
 		<div class="isotope-container ui" id="houseView">
-			<table id="q-graph">
+			<table id="house-graph">
 				<caption>House</caption>
 
-				<tbody>
+				<tbody ng-repeat='house in houses'>
+					<tr id="house{{$index+1}}">
+						<th scope="row">{{house.house_name}}</th>
+						<td class="{{house.house_name}} bar" style="height:{{house.height}}px"><p>{{house.total_point}}</p></td>
+					</tr>
+				</tbody>
+
+				<!-- <tbody>
 					<tr id="house1">
-						<th scope="row">红</th>
-						<td class="red bar" style="height: 111px;"><p>180</p></td>
+						<th scope="row">Crimson</th>
+						<td class="red bar" style="height: 111px;"><p>110</p></td>
 					</tr>
 					<tr id="house2">
-						<th scope="row">黄</th>
+						<th scope="row">Amber</th>
 						<td class="yellow bar" style="height: 206px;"><p>200</p></td>
 					</tr>
 					<tr id="house3">
-						<th scope="row">绿</th>
-						<td class="green bar" style="height: 259px;"><p>430</p></td>
+						<th scope="row">Emerald</th>
+						<td class="green bar" style="height: 250px;"><p>430</p></td>
 					</tr>
 					<tr id="house4">
-						<th scope="row">蓝</th>
+						<th scope="row">Sapphire</th>
 						<td class="blue bar" style="height: 110px;"><p>800</p></td>
 					</tr>
-				</tbody>
+				</tbody> -->
 			</table>
 
 			<div id="house-family">
@@ -159,64 +166,76 @@
 				</div>
 			</div>
 		</div>
-		<div id="task_selection">
-		
-		  <form class="ui form">
-		   	<div class="field">
-			<div id="task_type" class="ui select dropdown search icon button">
-			  <i class="dropdown icon"></i>
-			  <!-- <span class="text">Select task type</span> -->
-			  <div id="dd_title" class="default text">{{dd_title}}</div>
-			  <div class="menu" >
-			  		<div data-value="{{task.task_id}}" class='item' ng-repeat="task in tasks" ng-click="setTitle(task.task_type,task)">
-			  		{{task.task_type}}
-			  		</div>
-			  </div>
-			</div>
-			<div id='task_sel_err' class="ui small red message" ng-if='!task_selected'>Please select a task type</div>
-		   	</div>
-			<div class="task_label" id="task_date">
-				<label class="title">
-			       <i class="dropdown icon"></i>
-			         Date
-			    </label>	
-			</div>
-			
-		    <div class="ui small icon input" id="task_date_div">
-		    	<div class="field">
-			  		<input ng-model="date" type="date" id="date_input">
-			  	</div>
+
+		<div id="right_col">
+			<div id="task_control">
+			  <form class="ui form">
+			   	<div class="field">
+				<div id="task_type" class="ui select dropdown search icon button">
+				  <i class="dropdown icon"></i>
+				  <!-- <span class="text">Select task type</span> -->
+				  <div id="dd_title" class="default text">{{dd_title}}</div>
+				  <div class="menu" >
+				  		<div data-value="{{task.task_id}}" class='item' ng-repeat="task in tasks" ng-click="setTitle(task.task_type,task)">
+				  		{{task.task_type}}
+				  		</div>
+				  </div>
+				</div>
+				<div id='task_sel_err' class="ui small red message" ng-if='!task_selected'>Please select a task type</div>
+			   	</div>
+				<div class="task_label" id="task_date">
+					<label class="title">
+				       <i class="dropdown icon"></i>
+				         Date
+				    </label>	
+				</div>
+				
+			    <div class="ui small icon input" id="task_date_div">
+			    	<div class="field">
+				  		<input ng-model="date" type="date" id="date_input">
+				  	</div>
+				</div>
+
+				<div class="task_label">
+					<label class="title">
+				       <i class="dropdown icon"></i>
+				         What Did You Do?
+				    </label>	
+				</div>
+				
+				<div id="task_desc_div">
+				  <!-- <div class="ui form"> -->
+				  	<div class="field">
+				    	<textarea ng-model="submit_task.task_desc" id="desc_input" placeholder="In 200 characters or less, please give a brief description of what you did"></textarea>
+				    </div>
+				  <!-- </div> -->
+				</div>
+			    
+				<div id="submit-task" class="ui submit button" ng-click="submit()" ng-disabled='sub_disable'>
+	              Submit Task
+	            </div>
+
+	            <div id="task_sub_suc" class="ui success message " ng-if='sub_suc_show'>
+				  <i class="close icon" ng-click="toggleMessage()"></i>
+				  <p>Your task submission was successful</p>
+				</div>
+	          </form>
+
 			</div>
 
-			<div class="task_label">
-				<label class="title">
-			       <i class="dropdown icon"></i>
-			         What Did You Do?
-			    </label>	
-			</div>
-			
-			<div id="task_desc_div">
-			  <!-- <div class="ui form"> -->
-			  	<div class="field">
-			    	<textarea ng-model="submit_task.task_desc" id="desc_input" placeholder="In 200 characters or less, please give a brief description of what you did"></textarea>
-			    </div>
-			  <!-- </div> -->
-			</div>
-		    
-			<div id="submit-task" class="ui submit button" ng-click="submit()" ng-disabled='sub_disable'>
-              Submit Task
-            </div>
+			<div id="family_control">
+				<div id="family_label">
+					<label class="title">Change Family</label>	
+				</div>
+          		<div class="ui buttons" id='buttons_div'>
+				  <button class="ui button family_buttons">Add/Edit</button>
+				  <!-- <div class="or"></div> -->
+				  <button class="ui button family_buttons">Leave</button>
+				</div>
+         	</div>
 
-            <div id="task_sub_suc" class="ui success message " ng-if='sub_suc_show'>
-			  <i class="close icon" ng-click="toggleMessage()"></i>
-			  <!-- <div class="header">
-			    Your task submission was successful
-			  </div> -->
-			  <p>Your task submission was successful</p>
-			</div>
+         </div>
 
-          </form>
-		</div>
 	</div>
 
 </section>
