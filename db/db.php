@@ -1561,6 +1561,25 @@
 		
 	}
 
+	function submitTask() {
+		// echo "Update Mentee Profile in PHP \n";
+		global $_USER;	
+		$user = $_USER['uid'];
+		echo $user;
+		// $task_id = mysql_real_escape_string($_POST['task_id']);
+		echo $task_id;
+		$task_type = mysql_real_escape_string($_POST['task_type']);
+		$task_point = mysql_real_escape_string($_POST['task_point']);
+		$task_date = mysql_real_escape_string($_POST['task_date']);
+		$task_desc = mysql_real_escape_string($_POST['task_desc']);
+
+		$taskQuery = sprintf("INSERT INTO Task ( task_type, task_point, task_description, owned_by, finish_date)
+							  VALUES ( '%s', '%u', '%s', '%s', '%s')",
+							  $task_type,$task_point,$task_desc,$user,$task_date);
+		$tResult = getDBRegInserted($taskQuery);
+		echo json_encode($tResult);
+	}
+
 
 
 

@@ -396,21 +396,90 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
 
 }]);
 
-appControllers.controller('HouseController', ['$scope','$http','TaskService', function($scope,$http,$TaskService) {
-  $('.ui.dropdown').dropdown({history:false});
-  // $('.ui.dropdown').dropdown({
-  //                   onChange: function(newValue) {
-  //                     $scope.$apply();
-  //                       // $scope.$apply(function() {
-  //                       //     $scope.ngModel = newValue;
-  //                       // })
-  //                     }
-  //                   });
+appControllers.controller('HouseController', ['$scope','$http','TaskService','$route', function($scope,$http,$TaskService,$route) {
+  $scope.dd_title  = 'Select task type';
+  $scope.task_selected = true;
+  $scope.validation = false;
+  $scope.sub_suc_show = false;
+  $scope.prevent_sub = false;
+  $scope.submit_task = {};
+  $('.ui.dropdown').dropdown();
   $('.house-family-tab.menu .item').tab({history:false});
   $('table').tablesort();
+  $('.ui.form')
+    .form({
+      date: {
+        identifier  : 'date_input',
+        rules: [
+          {
+            // type   : 'regExp[/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/]',
+            type   : 'empty',
+            prompt : 'Please enter task date'
+          }
+        ]
+      },
+      desc: {
+        identifier  : 'desc_input',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter task description'
+          }
+        ]
+      }
+    },
+    {
+      on: 'blur',
+      onSuccess: function() {
+        $scope.validation = true;
+      },
+      onFailure: function() {
+        $scope.validation = false;
+      }
+    });
 
   $scope.tasks = $TaskService.tasks;
+
+  $scope.toggleMessage = function() {
+    $scope.sub_suc_show = !$scope.sub_suc_show;
+
+  }
   
+  $scope.setTitle = function(title,task) {
+    $scope.dd_title = title;
+    $('.ui.dropdown').dropdown('toggle');
+    $scope.task_selected = true;
+    $.extend($scope.submit_task,task);
+  }
+
+  $scope.submit = function() {
+    if(!$scope.submit_task.task_id) {
+      $scope.task_selected = false;
+    } else if ($scope.prevent_sub) {
+      alert("Please don't submit the same task twice");
+    } else if($scope.validation) {
+      $scope.submit_task.task_date = $TaskService.yyyymmdd($scope.date);
+      console.log($scope.submit_task);
+      $.ajax({
+          url: "api/submitTask",
+          dataType: "json",
+          async: false,
+          data: $scope.submit_task,
+          type: 'POST',
+          success: $scope.success()
+          // error: ajaxError
+        }); 
+    }
+  }
+
+  $scope.success = function() {
+      // $route.reload();
+      // $('form').form('clear');
+      $scope.sub_suc_show = true;
+      $scope.prevent_sub = true;
+      setTimeout(function(){$route.reload();}, 4000);
+      console.log("Successful");
+  }
 
 }]);
 

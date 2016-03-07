@@ -730,34 +730,42 @@ myApp.factory('FieldText', ['$q','$http','$location',function($q,$http,$location
 myApp.factory('TaskService', ['$q','$http','$location',function($q,$http,$location) {
   var tasks = [
     {
-      id: 1,
-      type: "type1",
-      point: 10
+      task_id: 1,
+      task_type: "type1",
+      task_point: 10
     },
     {
-      id: 2,
-      type: "type2",
-      point: 15
+      task_id: 2,
+      task_type: "type2",
+      task_point: 15
     },
     {
-      id: 3,
-      type: "type3",
-      point: 20
+      task_id: 3,
+      task_type: "type3",
+      task_point: 20
     },
     {
-      id: 4,
-      type: "type4",
-      point: 50
+      task_id: 4,
+      task_type: "type4",
+      task_point: 50
     },
     {
-      id: 5,
-      type: "type5",
-      point: 30
+      task_id: 5,
+      task_type: "type5",
+      task_point: 30
     }
   ];
 
+  var yyyymmdd = function(date) {
+       var yyyy = date.getFullYear().toString();
+       var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+       var dd  = date.getDate().toString();
+       return yyyy + '/' + (mm[1]?mm:"0"+mm[0]) + '/' + (dd[1]?dd:"0"+dd[0]); // padding
+    };
+
   return {
-    tasks:tasks
+    tasks:tasks,
+    yyyymmdd:yyyymmdd
   };
 }]);
 

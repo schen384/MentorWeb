@@ -135,6 +135,15 @@
 		</post>
 	</command>
 
+	<command id='submitTask' security='protected'>
+		<description><![CDATA[This is how to manage task-related information]]></description>
+
+		<post>
+			<description><![CDATA[This is how to submit a task]]></description>
+			<action file='db/db.php'><![CDATA[submitTask();]]></action>
+		</post>
+	</command>
+
 	<command id='resetUser' security='protected'>
 		<description><![CDATA[Deletes the current user in the database.]]></description>
 

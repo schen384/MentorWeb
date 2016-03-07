@@ -389,6 +389,19 @@ nav {
   margin-bottom: 50px;
 }
 
+.house #task_sel_err {
+  padding: 10px;
+  margin-top: -20px;
+  width: 204px;
+  display: inline-block;
+}
+
+.house #task_sub_suc {
+  padding: 10px;
+  width: 204px;
+  display: inline-block;
+}
+
 .house .task_label {
   text-align: left;
   margin-top: 20px;
@@ -399,7 +412,7 @@ nav {
   border-top: 1px solid lightgray;
 }
 
-.house #task_desc {
+.house #task_desc_div,.house #task_date_div {
   display: inline-block;
   width: 204px;
 }
