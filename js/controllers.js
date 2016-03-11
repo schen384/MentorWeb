@@ -389,9 +389,9 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $scope.username = $scope.user['Username'];
   $scope.houses = $HouseService.getHouses();
   $scope.houseMembers = $HouseService.getHouseMembers();
-  console.log($scope.houses);
-  console.log($scope.user);
-  console.log($scope.houseMembers);
+  $scope.familyMembers = $HouseService.getFamilyMembers();
+  $scope.taskHistory = $HouseService.getTaskHistory();
+  console.log($scope.taskHistory);
   $scope.dd_title  = 'Select task type';
   $scope.task_selected = true;
   $scope.validation = false;
