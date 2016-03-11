@@ -385,10 +385,13 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
 }]);
 
 appControllers.controller('HouseController', ['$scope','HouseService','TaskService','UserInfoService','$route', function($scope,$HouseService,$TaskService,$UserInfoService,$route) {
-  $scope.user = $UserInfoService.getUser(); 
+  $scope.user = $HouseService.getUser(); 
   $scope.username = $scope.user['Username'];
   $scope.houses = $HouseService.getHouses();
+  $scope.houseMembers = $HouseService.getHouseMembers();
   console.log($scope.houses);
+  console.log($scope.user);
+  console.log($scope.houseMembers);
   $scope.dd_title  = 'Select task type';
   $scope.task_selected = true;
   $scope.validation = false;
@@ -434,7 +437,23 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
 
   $scope.toggleMessage = function() {
     $scope.sub_suc_show = !$scope.sub_suc_show;
+  }
 
+  $scope.getColor = function() {
+    switch ($scope.user.house_belongs){
+      case 'Crimson':
+        return 'red';
+        break;
+      case 'Amber':
+        return 'yellow';
+        break;
+      case 'Emerald':
+        return 'green';
+        break;
+      case 'Sapphire':
+        return 'blue';
+        break;
+    }
   }
   
   $scope.setTitle = function(title,task) {

@@ -790,8 +790,59 @@ myApp.factory('HouseService', ['$q','$http','$location',function($q,$http,$locat
     return houses;
   }
 
+  var getHouseMembers = function() {
+    var houseMembers = [];
+    $.ajax({
+      url: "api/houseMembers",
+      dataType: "json",
+      async: false,
+      success: function(result) {
+        houseMembers = result;
+      },
+      type: 'GET'    
+    }); 
+    return houseMembers;
+  }
+
+  var getUser = function() {
+    var user = {};
+    $.ajax({
+      url: "api/user",
+      dataType: "json",
+      async: false,
+      success: function(result) {
+        user = result;
+      },
+      type: 'GET'    
+    }); 
+    if (user['Mentor']) {
+      $.ajax({
+        url: "api/mentor/"+user['Username'],
+        dataType: 'json',
+        async: false,
+        success: function(result) {
+          $.extend(user,{house_belongs:result[0]['house_belongs']});
+        }
+      })
+    }
+
+    if (user['Mentee']) {
+      $.ajax({
+        url: "api/mentee/"+user['Username'],
+        dataType: 'json',
+        async: false,
+        success: function(result) {
+          $.extend(user,{house_belongs:result[0]['house_belongs']});
+        }
+      })
+    }
+    return user;
+  }
+
   return {
-    getHouses:getHouses
+    getHouses:getHouses,
+    getUser:getUser,
+    getHouseMembers:getHouseMembers
   };
 
 }]);
