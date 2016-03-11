@@ -3,43 +3,26 @@
 	<div class="view">
 
 		<div class="isotope-container ui" id="houseView">
+			<div>
 			<table id="house-graph">
 				<caption>House</caption>
 
 				<tbody ng-repeat='house in houses'>
 					<tr id="house{{$index+1}}">
-						<th scope="row">{{house.house_name}}</th>
+						<th scope="row"> {{house.house_name}}</th>
 						<td class="{{house.house_name}} bar" style="height:{{house.height}}px"><p>{{house.total_point}}</p></td>
 					</tr>
 				</tbody>
-
-				<!-- <tbody>
-					<tr id="house1">
-						<th scope="row">Crimson</th>
-						<td class="red bar" style="height: 111px;"><p>110</p></td>
-					</tr>
-					<tr id="house2">
-						<th scope="row">Amber</th>
-						<td class="yellow bar" style="height: 206px;"><p>200</p></td>
-					</tr>
-					<tr id="house3">
-						<th scope="row">Emerald</th>
-						<td class="green bar" style="height: 250px;"><p>430</p></td>
-					</tr>
-					<tr id="house4">
-						<th scope="row">Sapphire</th>
-						<td class="blue bar" style="height: 110px;"><p>800</p></td>
-					</tr>
-				</tbody> -->
 			</table>
-
+			</div>
 			<div id="house-family">
 				<div class="ui pointing secondary house-family-tab menu">
-				    <a class="active red item " data-tab="house" id="HouseTab">House</a>
-				    <a class="red item " data-tab="second" id="FamilyTab">Family</a>
-				    <div class="item tab_label" id='house_label'>Crimson</div>
+				    <a class="active {{getColor()}} item " data-tab="house-member" id="HouseTab">House</a>
+				    <a class="{{getColor()}} item " data-tab="family-member" id="FamilyTab">Family</a>
+				    <a class="{{getColor()}} item " data-tab="task-history" id="TaskHistory">Task History</a>
+				    <div class="item {{user.house_belongs}}" id="house_label">{{user.family_belongs + '-' + user.house_belongs}}</div>
 				</div>
-				<div class="ui active tab segment" data-tab="house">
+				<div class="ui active tab segment" data-tab="house-member">
 					<table class="ui sortable table house-family-table" >
 					  <thead>
 					    <tr class="odd-row">
@@ -50,46 +33,53 @@
 					    </tr>
 					  </thead>
 					  <tbody ng-repeat='member in houseMembers'>
-					  	<tr class="{{$index%2 == 0 ? 'even-row':'odd-row'}}">
-					  		<td>{{member.first_name + ' ' + member.last_name}} </td>
+					  	<tr>
+					  		<td>{{member.first_name + ' ' + member.last_name}}</td>
 					  		<td>{{member.email}}</td>
-					  		<td>{{member.is_mentee||member.is_mentor}}</td>
+					  		<td>{{member.is_mentee || member.is_mentor}}</td>
 					  		<td>{{member.mentee_breadth_tracks || member.mentor_breadth_tracks}}</td>
 					  	</tr>
 					  </tbody>
 					  
 					</table>
 				</div>
-				<div class="ui tab segment" data-tab="second">
+				<div class="ui tab segment" data-tab="family-member">
 					<table class="ui sortable table house-family-table" >
 					  <thead>
 					    <tr>
-					      <th class="sorted descending">Name</th>
+					      <th class="descending">Name</th>
 					      <th>E-mail</th>
+					      <th>Role</th>
 					      <th>Breadth Track</th>
 					    </tr>
 					  </thead>
-					  <tbody>
+					  <tbody ng-repeat='member in familyMembers'>
 					  	<tr>
-					      <td>Jill Lewis</td>
-					      <td>May 11, 2014</td>
-					      <td>jilsewris22@yahoo.com</td>
-					    </tr>
+					  		<td>{{member.first_name + ' ' + member.last_name}}</td>
+					  		<td>{{member.email}}</td>
+					  		<td>{{member.is_mentee || member.is_mentor}}</td>
+					  		<td>{{member.mentee_breadth_tracks || member.mentor_breadth_tracks}}</td>
+					  	</tr>
+					  </tbody>
+					</table>
+				</div>
+				<div class="ui tab segment" data-tab="task-history">
+					<table class="ui sortable table house-family-table" >
+					  <thead>
 					    <tr>
-					      <td>Jamie Harington</td>
-					      <td>January 11, 2014</td>
-					      <td>jamieharingonton@yahoo.com</td>
+					      <th class="descending">Date</th>
+					      <th>Type</th>
+					      <th>Description</th>
+					      <th>Points</th>
 					    </tr>
-					    <tr>
-					      <td>John Lilki</td>
-					      <td>September 14, 2013</td>
-					      <td>jhlilk22@yahoo.com</td>
-					    </tr>
-					    <tr>
-					      <td>John Lilki</td>
-					      <td>September 14, 2013</td>
-					      <td>jhlilk22@yahoo.com</td>
-					    </tr>
+					  </thead>
+					  <tbody ng-repeat='task in taskHistory'>
+					  	<tr>
+					  		<td>{{task.finish_date}}</td>
+					  		<td>{{task.task_type}}</td>
+					  		<td>{{task.task_description}}</td>
+					  		<td>{{task.task_point}}</td>
+					  	</tr>
 					  </tbody>
 					</table>
 				</div>

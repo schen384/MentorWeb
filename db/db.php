@@ -1573,8 +1573,19 @@
 		$taskQuery = sprintf("INSERT INTO Task ( task_type, task_point, task_description, owned_by, finish_date)
 							  VALUES ( '%s', '%u', '%s', '%s', '%s')",
 							  $task_type,$task_point,$task_desc,$user,$task_date);
+		$huQuery = sprintf("UPDATE House SET total_point = total_point + '%u' WHERE house_name = (SELECT house_belongs FROM USER 
+							WHERE username = '%s')",$task_point,$user);
 		$tResult = getDBRegInserted($taskQuery);
+		$huResult = getDBRegInserted($huQuery);
 		echo json_encode($tResult);
+	}
+
+	function getTaskHistory() {
+		global $_USER;	
+		$user = $_USER['uid'];
+		$thQuery = sprintf("SELECT * FROM Task WHERE owned_by='%s'",$user);
+		$thResult = getDBResultsArray($thQuery);
+		echo json_encode($thResult);
 	}
 
 
@@ -1615,6 +1626,37 @@
 		echo json_encode($hmResult);
 	}
 
+	function getFamilyMembers() {
+		global $_USER;
+		$user = $_USER['uid'];
+		$fmQuery = sprintf("SELECT u.house_belongs, u.family_belongs, u.first_name,u.last_name,u.email,
+							case when Mentee.username is not null
+            					then 'Mentee'
+            					else NULL
+       						end as is_mentee,
+							case when Mentor.username is not null
+            					then 'Mentor'
+            					else NULL 
+       						end as is_mentor,
+       						case when GROUP_CONCAT(Mentor_Breadth_Track.breadth_track) is not null 
+       							then GROUP_CONCAT(Mentor_Breadth_Track.breadth_track)
+       							else NULL
+       						end as `mentor_breadth_tracks`,
+                            case when GROUP_CONCAT(Mentee_Breadth_Track.breadth_track) is not null
+                                then GROUP_CONCAT(Mentee_Breadth_Track.breadth_track)
+								else NULL
+                            end as 'mentee_breadth_tracks'
+							FROM USER u 
+							left join Mentee on u.username = Mentee.username 
+							left join Mentor on u.username = Mentor.username
+							left join Mentor_Breadth_Track on u.username = Mentor_Breadth_Track.username
+							left join Mentee_Breadth_Track on u.username = Mentee_Breadth_Track.username
+							WHERE u.house_belongs = (SELECT house_belongs FROM USER WHERE username='%s')
+							AND   u.family_belongs = (SELECT family_belongs FROM USER WHERE username='%s')
+							group by u.username",$user,$user);
+		$fmResult = getDBResultsArray($fmQuery);
+		echo json_encode($fmResult);
+	}
 
 	function listAliasNames($alias) {
 		$countHasName = sprintf("SELECT username FROM Mentor WHERE Mentor.alias = '%s'", $alias);

@@ -138,6 +138,10 @@
 	<command id='task' security='protected'>
 		<description><![CDATA[This is how to manage task-related information]]></description>
 
+		<index>
+			<description><![CDATA[This is how to retrieve task history]]></description>
+			<action file='db/db.php'><![CDATA[getTaskHistory();]]></action>
+		</index>
 		<post>
 			<description><![CDATA[This is how to submit a task]]></description>
 			<action file='db/db.php'><![CDATA[submitTask();]]></action>
@@ -155,14 +159,24 @@
 	</command>
 
 	<command id='houseMembers' security='protected'>
-		<description><![CDATA[This is how to manage house member related information]]></description>
+		<description><![CDATA[This is how to manage house-member information]]></description>
 
 		<index>
-			<description><![CDATA[This is how to retrive house members]]></description>
+			<description><![CDATA[This is how to retrieve information about house members]]></description>
 			<action file='db/db.php'><![CDATA[getHouseMembers();]]></action>
 		</index>
 
-	</command>
+	</command>	
+
+	<command id='familyMembers' security='protected'>
+		<description><![CDATA[This is how to manage family-member information]]></description>
+
+		<index>
+			<description><![CDATA[This is how to retrieve information about family members]]></description>
+			<action file='db/db.php'><![CDATA[getFamilyMembers();]]></action>
+		</index>
+
+	</command>	
 
 	<command id='resetUser' security='protected'>
 		<description><![CDATA[Deletes the current user in the database.]]></description>
