@@ -106,17 +106,17 @@
 
 							<div class="item">
 								<div class="menu-text2">Live on Campus</div>
-								<div class="menu-text">{{myMentor.live_on_campus}}</div>
+								<div class="menu-text">{{myMentor.live_on_campus == 1?'Yes':'No'}}</div>
 							</div>
 
 							<div class="item">
 								<div class="menu-text2">First Generation Colllege Student</div>
-								<div class="menu-text">{{myMentor.first_gen_college_student}}</div>
+								<div class="menu-text">{{myMentor.first_gen_college_student == 1?'Yes':'No'}}</div>
 							</div>
 
 							<div class="item">
 								<div class="menu-text2">Transfer from Outside</div>
-								<div class="menu-text">{{myMentor.transfer_from_outside}}</div>
+								<div class="menu-text">{{myMentor.transfer_from_outside == 1?'Yes':'No'}}</div>
 							</div>
 						</div>
 					</div>
@@ -125,22 +125,22 @@
 						<div class="user-profile extra ui vertical fluid">
 							<div class="item">
 								<div class="menu-text2">International Student</div>
-								<div class="menu-text">{{myMentor.international_student}}</div>
+								<div class="menu-text">{{myMentor.international_student == 1?'Yes':'No'}}</div>
 							</div>
 
 							<div class="item">
 								<div class="menu-text2">BME Organization</div>
-								<div class="menu-text">{{myMentor.bme_org1}}</div>
+								<div class="menu-text">{{myMentor.bme_org1 ? myMentor.bme_org1 : 'None'}}</div>
 							</div>
 
 							<div class="item">
 								<div class="menu-text2">Other Organization</div>
-								<div class="menu-text">{{myMentor.other_organization1}}</div>
+								<div class="menu-text">{{myMentor.other_organization1 ? myMentor.other_organization1 : 'None'}}</div>
 							</div>
 
 							<div class="item">
 								<div class="menu-text2">Interest</div>
-								<div class="menu-text">{{myMentor.personal_hobby}}</div>
+								<div class="menu-text">{{myMentor.personal_hobby ? myMentor.personal_hobby : 'None'}}</div>
 							</div>
 						</div>
 					</div>
