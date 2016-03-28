@@ -433,6 +433,7 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $('table').tablesort();
   $('.house-family-tab.menu .item').tab({history:false});
   
+  
   $('.ui.form')
     .form({
       date: {
@@ -522,6 +523,16 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
       $scope.prevent_sub = true;
       setTimeout(function(){$route.reload();}, 4000);
       console.log("Successful");
+  }
+
+  $scope.showModal = function(){
+    // $scope.show_modal = true;
+      $('.ui.modal').modal('show');
+
+  }
+
+  $scope.close_modal = function(){
+      $scope.show_modal = false;
   }
 
 }]);
