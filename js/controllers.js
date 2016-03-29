@@ -416,7 +416,7 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
 
 }]);
 
-appControllers.controller('HouseController', ['$scope','HouseService','TaskService','UserInfoService','$route', function($scope,$HouseService,$TaskService,$UserInfoService,$route) {
+appControllers.controller('HouseController', ['$scope','HouseService','TaskService','UserInfoService','$route','$location', function($scope,$HouseService,$TaskService,$UserInfoService,$route,$location) {
   $scope.user = $HouseService.getUser(); 
   $scope.username = $scope.user['Username'];
   $scope.houses = $HouseService.getHouses();
@@ -432,7 +432,6 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $('.ui.dropdown').dropdown();
   $('table').tablesort();
   $('.house-family-tab.menu .item').tab({history:false});
-  
   
   $('.ui.form')
     .form({
@@ -464,6 +463,10 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
         $scope.validation = false;
       }
     });
+
+  $('form').submit(function(e){
+    e.preventDefault();
+  });
 
 
   $scope.tasks = $TaskService.tasks;
@@ -517,24 +520,36 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   }
 
   $scope.success = function() {
-      // $route.reload();
-      // $('form').form('clear');
       $scope.sub_suc_show = true;
       $scope.prevent_sub = true;
       setTimeout(function(){$route.reload();}, 4000);
       console.log("Successful");
   }
 
-  $scope.showModal = function(){
-    // $scope.show_modal = true;
-      $('.ui.modal').modal('show');
-
+  // $('.ui.modal').modal('show');
+  $scope.gotoFamily = function(){
+      $location.path('/editFamily');
+      // $('.ui.modal').modal('show');
   }
 
-  $scope.close_modal = function(){
-      $scope.show_modal = false;
-  }
+}]);
 
+appControllers.controller('EditFamilyController', ['$scope','HouseService','UserInfoService','$route', function($scope,$HouseService,$UserInfoService,$route) {
+  $scope.selected = {};
+  $scope.user = $HouseService.getUser(); 
+  $scope.username = $scope.user['Username'];
+  $scope.houseMembers = $HouseService.getHouseMembers();
+  $scope.familyMembers = $HouseService.getFamilyMembers();
+  $('.ui.checkbox').checkbox();
+  $('table').tablesort();
+  console.log($scope.houseMembers);
+  $scope.submit = function() {
+    $scope.reqUsers = [];
+    for (user in $scope.selected) {
+      $scope.reqUsers.push(user);
+    }
+    console.log($scope.reqUsers);
+  }
 }]);
 
 appControllers.controller('SearchController', ['$scope', '$http', function($scope, $http) {
@@ -1042,7 +1057,6 @@ appControllers.controller('RegisterMenteeController', ['$scope', '$http', '$filt
   $('form').submit(function(e){
     e.preventDefault();
     $('.ui.form').form('validate form');
-
   });
 
 

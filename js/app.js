@@ -63,6 +63,10 @@ myApp.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/house.html',
     controller: 'HouseController'
   }).
+  when('/editFamily', {
+    templateUrl: 'partials/editFamily.html',
+    controller: 'EditFamilyController'
+  }).
   when('/searchmentors', {
     templateUrl: 'partials/searchmentors.html',
     controller: 'SearchController'

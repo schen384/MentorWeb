@@ -1,0 +1,46 @@
+<section class="editFamily house  page">
+
+	<div class="view">
+
+		<div class="isotope-container ui" id="houseView">
+			<h2>Edit Your Family Members</h2>
+			<div id="house-family">
+				<div class="ui pointing secondary house-family-tab menu">
+				    <a class="active {{getColor()}} item " data-tab="house-member" id="HouseTab">House</a>
+				    <div class="item {{user.house_belongs}}" id="house_label">{{user.house_belongs}}</div>
+				</div>
+				<div class="ui active tab segment" data-tab="house-member">
+					<table class="ui sortable table house-family-table" >
+					  <thead>
+					    <tr class="odd-row">
+					      <th></th>
+					      <th class="descending">Name</th>
+					      <th>E-mail</th>
+					      <th>Role</th>
+					      <th>Breadth Track</th>
+					    </tr>
+					  </thead>
+					  <tbody ng-repeat='member in houseMembers | filter:{is_mentor:""}'>
+					  	<tr class="{{member.family_belongs != null ? 'disabled':''}}">
+					  		<td>
+						        <input type="checkbox" ng-model='selected[member.username]' ng-disabled='member.family_belongs != null'> 
+						    </td>
+					  		<td>{{member.first_name + ' ' + member.last_name}}</td>
+					  		<td>{{member.email}}</td>
+					  		<td>{{member.is_mentee || member.is_mentor}}</td>
+					  		<td>{{member.mentee_breadth_tracks || member.mentor_breadth_tracks}}</td>
+					  	</tr>
+					  </tbody>
+					</table>
+				</div>
+
+			</div>
+			<div id="submit-task" class="ui submit button" ng-click="submit()" ng-disabled='sub_disable'>
+	              Submit
+	        </div>
+		</div>
+
+	</div>
+
+</section>
+

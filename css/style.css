@@ -524,6 +524,10 @@ nav {
   background-color: #BAE5E6!important;
 }
 
+.editFamily #houseView {
+  width: 50%;
+}
+
 
 /* Mentor Search */
 .searchmentors {

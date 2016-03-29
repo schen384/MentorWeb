@@ -147,7 +147,7 @@
 					<label class="title">Change Family</label>	
 				</div>
           		<div class="ui buttons" id='buttons_div'>
-				  <button class="ui button family_buttons" ng-click='showModal()'>Add/Edit</button>
+				  <button class="ui button family_buttons" ng-click='gotoFamily()'>Add/Edit</button>
 				  <!-- <div class="or"></div> -->
 				  <button class="ui button family_buttons">Leave</button>
 				</div>
@@ -155,6 +155,47 @@
 
          </div>
 
+      <div class="modalContainer">
+         <div class="ui modal long">
+		  <i class="close icon"></i>
+		  <div class="header">
+		    Choose Your Family Member
+		  </div>
+		  <div class="content">
+		  			<table class="ui sortable table house-family-table" >
+					  <thead>
+					    <tr class="odd-row">
+					      <th class="descending">Name</th>
+					      <th>E-mail</th>
+					      <th>Role</th>
+					      <th>Breadth Track</th>
+					    </tr>
+					  </thead>
+					  <tbody ng-repeat='member in houseMembers'>
+					  	<tr>
+					  		<td>{{member.first_name + ' ' + member.last_name}}</td>
+					  		<td>{{member.email}}</td>
+					  		<td>{{member.is_mentee || member.is_mentor}}</td>
+					  		<td>{{member.mentee_breadth_tracks || member.mentor_breadth_tracks}}</td>
+					  	</tr>
+					  </tbody>
+					  
+					</table>
+		    <!-- <div class="description">
+		      <div class="ui header">We've auto-chosen a profile image for you.</div>
+		    </div> -->
+		  </div>
+		  <div class="actions">
+		    <div class="ui black deny button">
+		      Nope
+		    </div>
+		    <div class="ui positive right labeled icon button">
+		      Yep, that's me
+		      <i class="checkmark icon"></i>
+		    </div>
+		  </div>
+		</div>
+	  </div>
 	</div>
 
 </section>

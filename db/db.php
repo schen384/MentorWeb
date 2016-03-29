@@ -1598,7 +1598,7 @@
 	function getHouseMembers() {
 		global $_USER;
 		$user = $_USER['uid'];
-		$hmQuery = sprintf("SELECT u.house_belongs,u.first_name,u.last_name,u.email,
+		$hmQuery = sprintf("SELECT u.username, u.family_belongs, u.house_belongs,u.first_name,u.last_name,u.email,
 							case when Mentee.username is not null
             					then 'Mentee'
             					else NULL
