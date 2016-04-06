@@ -446,6 +446,107 @@
 		}
 	}
 
+	function familyRequest() {
+		global $_USER;	
+		$user = $_USER['uid'];
+		$members = $_POST['members'];
+		foreach ($members as $member) {
+			$member = mysql_real_escape_string($member);
+			$frQuery = sprintf("INSERT INTO Family_Request (requester, requested)
+					VALUES ('%s', '%s')", $user, $member);
+			$fqResult = getDBRegInserted($frQuery);
+			echo json_encode($fqResult);
+		}
+	}
+
+	function listUnapprovedFamily() {
+		$reqPairs = array();
+		$reqQuery = sprintf("SELECT * FROM Family_Request");
+		$requests = getDBResultsArray($reqQuery);
+		foreach ($requests as $req) {
+			// $reqPair['requested'] = [];
+			$reqPair = [];
+			$reqInfo = sprintf("SELECT u.username, u.house_belongs,u.first_name,u.last_name,u.email,
+							case when u.family_belongs is not null 
+								then u.family_belongs
+								else 'Wait to be assigned'
+							end as family_belongs,
+       						case when GROUP_CONCAT(Mentor_Breadth_Track.breadth_track) is not null 
+       							then GROUP_CONCAT(Mentor_Breadth_Track.breadth_track)
+       							else NULL
+       						end as `mentor_breadth_tracks`
+							FROM USER u 
+							left join Mentor on u.username = Mentor.username
+							left join Mentor_Breadth_Track on u.username = Mentor_Breadth_Track.username
+							WHERE u.username = '%s'",$req['requester']);
+			$reqInfo = getDBResultsArray($reqInfo);
+			$reqeeQuery = sprintf("SELECT requested FROM Family_Request WHERE requester = '%s'",$req['requester']);
+			$reqees = getDBResultsArray($reqeeQuery);
+			$reqPair['requester'] = $reqInfo[0];
+			$reqeeInfo = sprintf("SELECT u.username, u.house_belongs,u.first_name,u.last_name,u.email,
+							case when u.family_belongs is not null 
+								then u.family_belongs
+								else 'Wait to be assigned'
+							end as family_belongs,
+       						case when GROUP_CONCAT(Mentee_Breadth_Track.breadth_track) is not null 
+       							then GROUP_CONCAT(Mentee_Breadth_Track.breadth_track)
+       							else NULL
+       						end as `mentee_breadth_tracks`
+							FROM USER u 
+							left join Mentee on u.username = Mentee.username
+							left join Mentee_Breadth_Track on u.username = Mentee_Breadth_Track.username
+							WHERE u.username = '%s'",$req['requested']);
+			$reqeeInfo = getDBResultsArray($reqeeInfo);
+			$reqPair['requested'] = $reqeeInfo[0];
+			$reqPair['id'] = $req['_id'];
+			array_push($reqPairs, $reqPair);
+		}
+		echo json_encode($reqPairs);
+	}
+
+	function approveFamilyRequest($reqs) {
+
+		foreach ($reqs as $req) {
+			$requester = mysql_real_escape_string($req['requester']);
+			$requested = mysql_real_escape_string($req['requested']);
+			$house = mysql_real_escape_string($req['house']);
+			
+			if ($req['new_family'] == 1) {
+				$checkFamily = sprintf("SELECT family_belongs FROM USER WHERE username='%s'",$requester);
+				$checkResult = getDBResultsArray($checkFamily);
+				if(!$checkResult[0]['family_belongs']) {
+					createFamily($requester,$house);
+				}
+			}
+			$familyQuery = sprintf("UPDATE USER,
+									(SELECT family_belongs FROM USER WHERE username='%s') u2
+									SET USER.family_belongs = u2.family_belongs
+									WHERE USER.username='%s'",$requester,$requested);
+			$familyResult = getDBResultInserted($familyQuery);
+			$delReqQuery = sprintf("DELETE FROM Family_Request WHERE requester='%s' AND requested='%s'
+								   ",$requester,$requested);
+			$delResult = getDBResultsArray($delReqQuery);
+			$delReqQuery = sprintf("DELETE FROM Family_Request WHERE requested='%s'
+								   ",$requested);
+			$delResult = getDBResultsArray($delReqQuery);			
+		}
+		
+	}
+
+	function createFamily($member,$house) {
+		$dbQuery = sprintf("INSERT INTO Family (family_number,house_name) 
+							VALUES ((SELECT COALESCE(((SELECT f2.family_number FROM Family f2 
+									 WHERE f2.house_name = '%s' ORDER BY f2.family_number DESC LIMIT 1)+1),1)),
+							'%s')",$house,$house);
+		$dbResult = getDBResultInserted($dbQuery);
+		$dbQuery = sprintf("UPDATE USER SET family_belongs = 
+							(SELECT family_number FROM Family
+							WHERE house_name = '%s'
+							ORDER BY family_number DESC
+							LIMIT 1) WHERE username='%s'",$house, $member);		
+		$dbResult = getDBResultInserted($dbQuery);
+	}
+
 	function addMentorLoop($mentor) {
 		echo "addMEntor in PHP \n";
 		global $_USER;	

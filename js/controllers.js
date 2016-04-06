@@ -327,6 +327,14 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
     {
       // TODO: create image
       image: "/images/wireframe/image.png",
+      title: "Approve Family Changes",
+      description: "Approve family members change request",
+      meta: "Meta",
+      link: "#/approveFamily"
+    },
+    {
+      // TODO: create image
+      image: "/images/wireframe/image.png",
       title: "Mentor Max",
       description: "Set the maximum number of mentees any one mentor can have per semester",
       meta: "Meta",
@@ -404,6 +412,13 @@ appControllers.controller('UserController', ['$scope', '$http', '$location', fun
       description: "Approve registered users to mentor students",
       meta: "Meta",
       link: "#/approveMentors"
+    },
+    {
+      icon: "fa fa-user fa-3x",
+      title: "Approve Family Changes",
+      description: "Approve family members change request",
+      meta: "Meta",
+      link: "#/approveFamily"
     },
     {
       icon: "fa fa-sort-numeric-desc fa-3x",
@@ -534,22 +549,37 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
 
 }]);
 
-appControllers.controller('EditFamilyController', ['$scope','HouseService','UserInfoService','$route', function($scope,$HouseService,$UserInfoService,$route) {
+appControllers.controller('EditFamilyController', ['$scope','HouseService','UserInfoService','$location', function($scope,$HouseService,$UserInfoService,$location) {
   $scope.selected = {};
   $scope.user = $HouseService.getUser(); 
   $scope.username = $scope.user['Username'];
   $scope.houseMembers = $HouseService.getHouseMembers();
   $scope.familyMembers = $HouseService.getFamilyMembers();
+  $scope.tab_text = $scope.user.family_belongs != null ? 'Family ' + $scope.user.family_belongs + '-' + $scope.user.house_belongs : $scope.user.house_belongs; 
+  $scope.family_status = $scope.user.family_belongs == null ? "Currently you don't belong to any family" : ''; 
   $('.ui.checkbox').checkbox();
   $('table').tablesort();
   console.log($scope.houseMembers);
+
   $scope.submit = function() {
     $scope.reqUsers = [];
     for (user in $scope.selected) {
       $scope.reqUsers.push(user);
     }
     console.log($scope.reqUsers);
+    $.ajax({
+      url: "api/familyRequest",
+      dataType: "json",
+      async: true,
+      type: 'POST',
+      data: {'members': $scope.reqUsers}
+    });
   }
+
+  $scope.cancel = function() {
+    $location.path('/house');
+  }
+
 }]);
 
 appControllers.controller('SearchController', ['$scope', '$http', function($scope, $http) {
@@ -842,6 +872,65 @@ appControllers.controller('ApproveMentorController', ['$scope', '$http', functio
     });
     $scope.go('/homescreen');
   };
+}]);
+
+appControllers.controller('ApproveFamilyController', ['$scope', '$http','$route', function($scope, $http,$route) {
+    $scope.selected = {};
+    $scope.approveId = []
+    $scope.approveMem = [];
+    $scope.unapprovedReqs = [];
+    $.ajax({
+      url: "api/familyRequest",
+      dataType: "json",
+      async: true,
+      type: 'GET',
+      success: function(data) {
+        console.log(data);
+        $scope.unapprovedReqs = data;
+        $scope.$apply();
+      }
+    });
+
+    $scope.checkSelection = function(username,id) {
+      var index = $scope.approveMem.indexOf(username);
+      if (index != -1) {
+        $scope.approveMem.splice(index,1);
+        $scope.approveId.splice(index,1);
+      } else {
+        $scope.approveMem.push(username);
+        $scope.approveId.push(id);
+      }
+    }
+
+    $scope.approve = function() {
+      $scope.approvePairs = [];
+      for (var req in $scope.unapprovedReqs) {
+        if ($scope.selected[$scope.unapprovedReqs[req].id] == true) {
+          $scope.approvePairs.push({house:$scope.unapprovedReqs[req].requester.house_belongs,
+                                    requester:$scope.unapprovedReqs[req].requester.username,
+                                    requested:$scope.unapprovedReqs[req].requested.username,
+                                    new_family:$scope.unapprovedReqs[req].requester.family_belongs == 'Wait to be assigned' ? 1 : 0});
+        }
+      }
+      if($scope.approvePairs.length == 0) {
+        console.log("None selected");
+        return;
+      } else {
+        $.ajax({
+          url: "api/approveFamilyrequest",
+          dataType: "json",
+          async: true,
+          type: 'POST',
+          data: {'FRequests': $scope.approvePairs},
+          success: function() {
+            // $route.reload();
+          }
+        });
+        console.log($scope.approvePairs);
+      }
+    }
+
+
 }]);
 
 appControllers.controller('RequestingPeriodController', ['$scope', '$http', function($scope, $http) {

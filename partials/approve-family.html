@@ -1,0 +1,47 @@
+<section class="approve-family approve-mentors page">
+
+		<div class="view">
+			<form>
+				<table class="ui celled structured definition table">
+				  <thead>
+				    <tr>
+				      <th></th>
+				      <th></th>
+					  <th colspan="4">Requester</th>
+				      <th colspan="3">Requested</th>
+				    </tr>
+				    <tr>
+				      <th></th>
+				      <th>House</th>
+				      <th>Family</th>
+				      <th class="descending">Name</th>
+				      <th >E-mail</th>
+				      <th>Breadth Track</th>
+				      <th class="descending">Name</th>
+				      <th>E-mail</th>
+				      <th>Breadth Track</th>
+				    </tr>
+				  </thead>
+				  <tbody ng-repeat='req in unapprovedReqs'>
+				    <tr>
+				      <td>
+						<input type="checkbox" ng-click='checkSelection(req.requested.username,req.id)' ng-model='selected[req.id]' ng-disabled="approveMem.indexOf(req.requested.username) > -1 && approveId.indexOf(req.id) == -1"> 
+						<!-- <input name='approveFamily' type="radio" ng-model='selected[req.id]'>  -->
+					  </td>
+					  <td>{{req.requester.house_belongs}}</td>
+					  <td>{{req.requester.family_belongs}}</td>
+				      <td>{{req.requester.first_name + ' ' + req.requester.last_name}}</td>
+				      <td>{{req.requester.email}}</td>
+				      <td class="center aligned">{{req.requester.mentor_breadth_tracks}}</td>
+				      <td>{{req.requested.first_name + ' ' + req.requested.last_name}}</td>
+				      <td>{{req.requested.email}}</td>
+				      <td class="center aligned">{{req.requested.mentee_breadth_tracks}}</td>
+				    </tr>
+				    
+				  </tbody>
+				</table>
+				<button type="submit" ng-click="approve()">Approve Family Requests</button>
+			</form>
+		</div>
+
+</section>

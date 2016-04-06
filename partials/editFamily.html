@@ -4,10 +4,13 @@
 
 		<div class="isotope-container ui" id="houseView">
 			<h2>Edit Your Family Members</h2>
+			<div>
+				<div id='family-status'>{{family_status}}</div>
+			</div>
 			<div id="house-family">
 				<div class="ui pointing secondary house-family-tab menu">
 				    <a class="active {{getColor()}} item " data-tab="house-member" id="HouseTab">House</a>
-				    <div class="item {{user.house_belongs}}" id="house_label">{{user.house_belongs}}</div>
+				    <div class="item {{user.house_belongs}}" id="house_label">{{tab_text}}</div>
 				</div>
 				<div class="ui active tab segment" data-tab="house-member">
 					<table class="ui sortable table house-family-table" >
@@ -35,8 +38,12 @@
 				</div>
 
 			</div>
-			<div id="submit-task" class="ui submit button" ng-click="submit()" ng-disabled='sub_disable'>
-	              Submit
+			
+			<div class="ui submit button editFamilyBtn" ng-click="submit()" ng-disabled='sub_disable'>
+	              Add
+	        </div>
+	        <div id='cancel' class="ui submit button editFamilyBtn" ng-click="cancel()" ng-disabled='sub_disable'>
+	              Cancel
 	        </div>
 		</div>
 

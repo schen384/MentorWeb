@@ -102,6 +102,38 @@
 		</post>
 	</command>
 
+	<command id='familyRequest' security='protected'>
+		<description><![CDATA[submit family changes request]]></description>
+
+		<index>
+			<description><![CDATA[get all unapproved family change request]]></description>
+
+			 <action file='db/db.php'><![CDATA[listUnapprovedFamily();]]></action>
+		</index>
+		<post>
+			<description><![CDATA[Submit family change request]]></description>
+
+			 <action file='db/db.php'><![CDATA[familyRequest($_POST['members']);]]></action>
+		</post>
+	</command>
+
+	<command id='approveFamilyrequest' security='protected'>
+		<description><![CDATA[Approves the list of username pairs provided for family changes.]]></description>
+
+		<index>
+			<description><![CDATA[Approves the list of usernames pairs provided for family changes.]]></description>
+
+			 <action file='db/db.php'><![CDATA[approveFamilyRequest($_POST['FRequests']);]]></action>
+		</index>
+		<post>
+			<description><![CDATA[Approves the list of usernames pair provided for family changes.]]></description>
+
+			 <action file='db/db.php'><![CDATA[approveFamilyRequest($_POST['FRequests']);]]></action>
+		</post>
+	</command>
+
+
+
 	<command id='alias' security='protected'>
 		<description><![CDATA[Manages the aliases in the system.]]></description>
 		<get>
