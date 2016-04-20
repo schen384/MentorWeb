@@ -524,6 +524,10 @@ nav {
   background-color: #BAE5E6!important;
 }
 
+.house #leaveOpt {
+  top: 200px;
+}
+
 .editFamily #houseView {
   width: 50%;
 }
@@ -1110,6 +1114,7 @@ div#trigger-requesting-period {
 .approve-mentors.page button {
    position: absolute;
    left: 25%;
+   margin-top: 20px;
 }
 .user-profile.message.ui {
   z-index: 1;
@@ -1284,6 +1289,12 @@ div#trigger-requesting-period {
 
 #house-family .Sapphire {
   color: #2185D0;
+}
+
+.approve-family h2 {
+  text-align: center;
+  margin-top: 70px;
+  margin-bottom: 20px;
 }
 
 /*#ticks {

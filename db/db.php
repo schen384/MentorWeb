@@ -504,6 +504,23 @@
 		echo json_encode($reqPairs);
 	}
 
+	function leaveFamily($reason) {
+		global $_USER;	
+		$user = $_USER['uid'];
+		$dbQuery = sprintf("INSERT INTO Leave_Request (username,house_belongs,family_belongs,leave_reason) 
+							VALUES ('%s',(SELECT house_belongs FROM USER u WHERE u.username='%s'),
+										 (SELECT family_belongs FROM USER u WHERE u.username='%s'),
+										 '%s')",$user,$user,$user,$reason);
+		$dbResult = getDBRegInserted($dbQuery);
+	}
+
+	function getLeaveRequests() {
+		$dbQuery = sprintf("SELECT u.username, u.first_name,u.last_name,lr.house_belongs,lr.family_belongs,lr.leave_reason
+							FROM Leave_Request lr INNER JOIN USER u ON lr.username = u.username");
+		$dbResult = getDBResultsArray($dbQuery);
+		echo json_encode($dbResult);
+	}
+
 	function approveFamilyRequest($reqs) {
 
 		foreach ($reqs as $req) {
@@ -518,11 +535,20 @@
 					createFamily($requester,$house);
 				}
 			}
+			//requested mentor
 			$familyQuery = sprintf("UPDATE USER,
 									(SELECT family_belongs FROM USER WHERE username='%s') u2
 									SET USER.family_belongs = u2.family_belongs
 									WHERE USER.username='%s'",$requester,$requested);
 			$familyResult = getDBResultInserted($familyQuery);
+			//mentee of requested mentor
+			$familyQuery = sprintf("UPDATE USER,
+									(SELECT family_belongs FROM USER WHERE username='%s') u2
+									SET USER.family_belongs = u2.family_belongs
+									WHERE USER.username=(SELECT mentee_user FROM Matches 
+												WHERE mentor_user='%s')",$requested,$requested);
+			$familyResult = getDBResultInserted($familyQuery);
+
 			$delReqQuery = sprintf("DELETE FROM Family_Request WHERE requester='%s' AND requested='%s'
 								   ",$requester,$requested);
 			$delResult = getDBResultsArray($delReqQuery);
@@ -530,7 +556,26 @@
 								   ",$requested);
 			$delResult = getDBResultsArray($delReqQuery);			
 		}
-		
+	}
+
+	function approveLeaverequest($reqs) {
+		foreach ($reqs as $req) {
+			$requester = mysql_real_escape_string($req);
+			$dbQuery = sprintf("UPDATE USER SET family_belongs=null WHERE username='%s'",$requester);
+			$dbResult = getDBRegInserted($dbQuery);
+
+			$dbQuery = sprintf("UPDATE USER SET family_belongs=null 
+								WHERE username=(SELECT mentee_user FROM Matches 
+												WHERE mentor_user='%s')"
+								,$requester);
+			$dbResult = getDBRegInserted($dbQuery);
+
+			$delReqQuery = sprintf("DELETE FROM Leave_Request WHERE username='%s'
+								   ",$requester);
+			$delResult = getDBResultsArray($delReqQuery);
+			echo json_encode($dbResult);	
+		}
+
 	}
 
 	function createFamily($member,$house) {

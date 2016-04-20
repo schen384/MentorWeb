@@ -468,6 +468,7 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
           }
         ]
       }
+
     },
     {
       on: 'blur',
@@ -545,6 +546,30 @@ appControllers.controller('HouseController', ['$scope','HouseService','TaskServi
   $scope.gotoFamily = function(){
       $location.path('/editFamily');
       // $('.ui.modal').modal('show');
+  }
+
+  $scope.toggleNote = function() {
+    $('#mentor-note').dimmer('toggle');
+  }
+
+  $scope.leaveFamily = function() {
+    if($scope.leave_reason == null) {
+      alert('Please state your reason');
+    } else {
+      $.ajax({
+          url: "api/leaveRequest",
+          dataType: "json",
+          async: false,
+          data: {reason:$scope.leave_reason},
+          type: 'POST',
+          success: $scope.success()
+      }); 
+    }
+  }
+
+  $scope.success = function() {
+    $('#mentor-note').dimmer('toggle');
+    console.log("Leave Request Submitted");
   }
 
 }]);
@@ -876,9 +901,11 @@ appControllers.controller('ApproveMentorController', ['$scope', '$http', functio
 
 appControllers.controller('ApproveFamilyController', ['$scope', '$http','$route', function($scope, $http,$route) {
     $scope.selected = {};
+    $scope.leave_sel = {};
     $scope.approveId = []
     $scope.approveMem = [];
     $scope.unapprovedReqs = [];
+    $scope.leaveRequests = [];
     $.ajax({
       url: "api/familyRequest",
       dataType: "json",
@@ -887,6 +914,17 @@ appControllers.controller('ApproveFamilyController', ['$scope', '$http','$route'
       success: function(data) {
         console.log(data);
         $scope.unapprovedReqs = data;
+        $scope.$apply();
+      }
+    });
+    $.ajax({
+      url: "api/leaveRequest",
+      dataType: "json",
+      async: true,
+      type: 'GET',
+      success: function(data) {
+        console.log(data);
+        $scope.leaveRequests = data;
         $scope.$apply();
       }
     });
@@ -922,12 +960,31 @@ appControllers.controller('ApproveFamilyController', ['$scope', '$http','$route'
           async: true,
           type: 'POST',
           data: {'FRequests': $scope.approvePairs},
-          success: function() {
-            // $route.reload();
-          }
+          success: $scope.success()
         });
         console.log($scope.approvePairs);
       }
+    }
+
+    $scope.approveLeave = function() {
+      $scope.leaveUsers = [];
+      for (username in $scope.leave_sel) {
+        $scope.leaveUsers.push(username);
+      }
+      if($scope.leaveUsers.length > 0) {
+        $.ajax({
+          url: "api/approveLeaverequest",
+          dataType: "json",
+          async: true,
+          type: 'POST',
+          data: {'leaveUsers': $scope.leaveUsers},
+          success: $scope.success()
+        });
+      }
+    }
+
+    $scope.success = function() {
+      $route.reload();
     }
 
 

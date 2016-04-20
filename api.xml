@@ -117,6 +117,37 @@
 		</post>
 	</command>
 
+	<command id="leaveRequest" security='protected'>
+		<description><![CDATA[submit leave family request]]></description>
+
+		<index>
+			<description><![CDATA[get leave family requests]]></description>
+
+			 <action file='db/db.php'><![CDATA[getLeaveRequests();]]></action>
+		</index>
+
+		<post>
+			<description><![CDATA[submit leave family request]]></description>
+
+			 <action file='db/db.php'><![CDATA[leaveFamily($_POST['reason']);]]></action>
+		</post>
+	</command>
+
+	<command id='approveLeaverequest' security='protected'>
+		<description><![CDATA[Approves the list of username  to leave family.]]></description>
+
+		<index>
+			<description><![CDATA[Approves the list of username  to leave family.]]></description>
+
+			 <action file='db/db.php'><![CDATA[approveLeaverequest($_POST['leaveUsers']);]]></action>
+		</index>
+		<post>
+			<description><![CDATA[Approves the list of username  to leave family.]]></description>
+
+			 <action file='db/db.php'><![CDATA[approveLeaverequest($_POST['leaveUsers']);]]></action>
+		</post>
+	</command>
+
 	<command id='approveFamilyrequest' security='protected'>
 		<description><![CDATA[Approves the list of username pairs provided for family changes.]]></description>
 

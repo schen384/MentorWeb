@@ -123,11 +123,9 @@
 				</div>
 				
 				<div id="task_desc_div">
-				  <!-- <div class="ui form"> -->
 				  	<div class="field">
 				    	<textarea ng-model="submit_task.task_desc" id="desc_input" placeholder="In 200 characters or less, please give a brief description of what you did"></textarea>
 				    </div>
-				  <!-- </div> -->
 				</div>
 			    
 				<div id="submit-task" class="ui submit button" ng-click="submit()" ng-disabled='sub_disable'>
@@ -149,54 +147,46 @@
           		<div class="ui buttons" id='buttons_div'>
 				  <button class="ui button family_buttons" ng-click='gotoFamily()'>Add/Edit</button>
 				  <!-- <div class="or"></div> -->
-				  <button class="ui button family_buttons">Leave</button>
+				  <button class="ui button family_buttons" ng-click='toggleNote()'>Leave</button>
 				</div>
          	</div>
 
          </div>
-
-      <div class="modalContainer">
-         <div class="ui modal long">
-		  <i class="close icon"></i>
-		  <div class="header">
-		    Choose Your Family Member
-		  </div>
-		  <div class="content">
-		  			<table class="ui sortable table house-family-table" >
-					  <thead>
-					    <tr class="odd-row">
-					      <th class="descending">Name</th>
-					      <th>E-mail</th>
-					      <th>Role</th>
-					      <th>Breadth Track</th>
-					    </tr>
-					  </thead>
-					  <tbody ng-repeat='member in houseMembers'>
-					  	<tr>
-					  		<td>{{member.first_name + ' ' + member.last_name}}</td>
-					  		<td>{{member.email}}</td>
-					  		<td>{{member.is_mentee || member.is_mentor}}</td>
-					  		<td>{{member.mentee_breadth_tracks || member.mentor_breadth_tracks}}</td>
-					  	</tr>
-					  </tbody>
-					  
-					</table>
-		    <!-- <div class="description">
-		      <div class="ui header">We've auto-chosen a profile image for you.</div>
-		    </div> -->
-		  </div>
-		  <div class="actions">
-		    <div class="ui black deny button">
-		      Nope
-		    </div>
-		    <div class="ui positive right labeled icon button">
-		      Yep, that's me
-		      <i class="checkmark icon"></i>
-		    </div>
-		  </div>
-		</div>
-	  </div>
 	</div>
+
+	<div id="mentor-note" class="ui page dimmer" ng-click="noteHeight()">
+      <div class="ui info message note-message">
+        <i class="close icon" ng-click="toggleNote()"></i>
+        <div class="title">
+          Are you sure you want to leave this family?
+        </div>
+        <div class="back-strip">
+          <form class="ui form">
+          	
+          <!-- <div class="text-message">
+            Are you sure you want to leave this family?
+          </div> -->
+          	<div class="field">
+				    	<textarea ng-model="leave_reason" id="desc_input" style="width:500px;" placeholder="Please briefly state your reason of why you want to leave this family"></textarea>
+			</div>
+          
+          <div class="text-message">
+            Note*: If you confirm, a leave request will be sent to admin  
+          </div>
+
+        </div>
+        <div class="ui options" id='leaveOpt'>
+          <div class="ui Negative medium button" ng-click="toggleNote()"> <!--notification() -->
+            Cancel
+          </div>
+          <div class="ui positive medium button" ng-click="leaveFamily()" ng-disabled='true'>
+            Yes
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+
 
 </section>
 

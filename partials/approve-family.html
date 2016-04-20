@@ -2,6 +2,7 @@
 
 		<div class="view">
 			<form>
+				<h2>Family Edit Requests</h2>
 				<table class="ui celled structured definition table">
 				  <thead>
 				    <tr>
@@ -41,6 +42,30 @@
 				  </tbody>
 				</table>
 				<button type="submit" ng-click="approve()">Approve Family Requests</button>
+				<h2>Family Leave Requests</h2>
+				<table class="ui celled  table" id="leave-table">
+				  <thead>
+				    <tr>
+				      <th></th>
+					  <th>Requester</th>
+					  <th>House</th>
+					  <th>Family</th>
+					  <th>Leave Reason</th>
+				    </tr>
+				  </thead>
+				  <tbody ng-repeat='req in leaveRequests'>
+				    	<tr>
+				    		<td>
+				    			<input type="checkbox" ng-model='leave_sel[req.username]'> 
+				    		</td>
+				    		<td>{{req.first_name + ' ' + req.last_name}}</td>
+				    		<td>{{req.house_belongs}}</td>
+					  		<td>{{req.family_belongs}}</td>
+					  		<td>{{req.leave_reason}}</td>
+				    	</tr>
+				  </tbody>
+				</table>
+				<button type="submit" ng-click="approveLeave()">Approve leave-family request</button>
 			</form>
 		</div>
 
